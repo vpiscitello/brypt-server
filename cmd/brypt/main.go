@@ -1,55 +1,40 @@
-package main
+//package main
 
 // Setup MySql Connection
 // Setup MongoDB Connection
 // Register Routes
 // Run Server
 
-import {
-    "fmt"
-    "log"
-    "time"
-    "net/http"
-    "encoding/json"
-
-    "github.com/go-chi/chi"
-    "github.com/go-chi/chi/middleware"
-}
-
-func main()  {
-    r := chi.NewRouter()
-
-    r.Use( middleware.requestID )
-    r.Use( middleware.realIP )
-    r.Use( middleware.Logger )
-    r.Use( middleware.Recoverer )
-
-    router.Get( "/", func( w http.ResponseWriter, r *http.requestID )  {
-        w.Write( []byte( "." ) )
-    } )
-
-    // router.Mount( "/route", routeResources{}.Routes() )
-
-    http.ListenAndServe( ":3005", r )
-
-}
-
-Skip to content
-
-Search…
-All gists
-GitHub
-
-Instantly share code, notes, and snippets.
-
-6 1 @ahmdrzahmdrz/subdomains.go
-Created 2 years ago
-
-<script src="https://gist.github.com/ahmdrz/c0f18f69e7409fcc47a73c78d41d5f64.js"></script>
-
- Code  Revisions 1  Stars 6  Forks 1
-How to use SubDomains in Golang , Subdomains With Go , http://codepodu.com/subdomains-with-golang/
- subdomains.go
+//import {
+//    "fmt"
+//    "log"
+//    "time"
+//    "net/http"
+//    "encoding/json"
+//
+//    "github.com/go-chi/chi"
+//    "github.com/go-chi/chi/middleware"
+//}
+//
+//func main()  {
+//    r := chi.NewRouter()
+//
+//    r.Use( middleware.requestID )
+//    r.Use( middleware.realIP )
+//    r.Use( middleware.Logger )
+//    r.Use( middleware.Recoverer )
+//
+//    router.Get( "/", func( w http.ResponseWriter, r *http.requestID )  {
+//        w.Write( []byte( "." ) )
+//    } )
+//
+//    // router.Mount( "/route", routeResources{}.Routes() )
+//
+//    http.ListenAndServe( ":3005", r )
+//
+//}
+//How to use SubDomains in Golang , Subdomains With Go , http://codepodu.com/subdomains-with-golang/
+// subdomains.go
 //
 // Please read http://codepodu.com/subdomains-with-golang/
 // It's just copy and paste :smile:
@@ -123,17 +108,3 @@ func main() {
 
 	http.ListenAndServe(":8080", subdomains)
 }
- to join this conversation on GitHub. Already have an account? Sign in to comment
-© 2018 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-Press h to open a hovercard with more details.
