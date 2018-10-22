@@ -50,7 +50,7 @@
         - Description:
         - Corequisites: Networks Document, Nodes Table, Users Table
 - Users
-    - Domain: (www.)brypt.com
+    - Domain: (www.) brypt.com
     - Profile
         - Description:
         - Corequisites: Users Table, Authentication Method
@@ -61,7 +61,7 @@
     -Domain: dashboard.brypt.com
     - Base:
         - Description:
-        -Corequisites: Networks Table, Users Table, Authentication Method
+        - Corequisites: Networks Table, Users Table, Authentication Method
 
 ## Authentication
 - JWT or OAuth or Nah
@@ -72,47 +72,47 @@
     - id
         - Primary Key
         - 32 Char
-    -username
+    - username
         - 32 Char
-    -first_name
+    - first_name
         - 32 Char
-    -last_name
+    - last_name
         - 255 Char
-    -email
+    - email
         - 255 Char
-    -organization
+    - organization
         - 255 Char
-    -networks
+    - networks
         - Array
             - 32 Char
-    -age
+    - age
         - Datetime
-    -join_date
+    - join_date
         - Datetime
-    -last_login
+    - last_login
         - Datetime
-    -login_attempts
+    - login_attempts
         - Integer
-    -login_token
+    - login_token
         - 255 Char
-    -region
+    - region
         - 255 Char
 
 ## Networks
 - MongoDB
-    -id
+    - id
         - Primary Key
         - String
-    -network_name
+    - network_name
         - String
-    -owner_name
+    - owner_name
         - Foreign Key
         - String
-    -managers
+    - managers
         - Array
             - Foreign Key
             - String
-    -direct_peers
+    - direct_peers
         - Integer
     - total_peers
         - Integer
@@ -123,7 +123,7 @@
     - connection_token
         - String
     - clusters
-        -JSON Array
+        - JSON Array
            - id
               - String
            - connection_token
