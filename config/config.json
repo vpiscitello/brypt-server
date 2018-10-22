@@ -1,0 +1,47 @@
+{
+    "Database": {
+        "MongoDB": {
+            "Username": "",
+            "Password": "",
+            "Hostname": "",
+            "Port": 0,
+        },
+        "MySQL": {
+            "Username": "",
+            "Password": "",
+            "Hostname": "",
+            "Port": 0,
+        },
+        "Postgres": {
+            "Username": "",
+            "Password": "",
+            "Hostname": "",
+            "Port": 0,
+        }
+    },
+    "Session": {
+        "Secret": "",
+        "Pptions": {
+            "Path": "/",
+            "Domain": "",
+            "MaxAge": 28800,
+            "Secure": false,
+            "UseHTTPS": true,
+            "HTTPSOnly": true
+        }
+    },
+    "Template": {
+        "Root": "main",
+        "Children": [
+            "partial/menu",
+            "partial/footer"
+        ]
+    },
+    "View": {
+        "BaseURI": "/",
+        "Extension": "",
+        "Folder": "assets/templates",
+        "Name": "",
+        "Caching": true
+    }
+}

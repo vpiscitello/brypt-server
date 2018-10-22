@@ -1,1 +1,1 @@
-# brypt-server
+# Brypt Server
