@@ -1,0 +1,11 @@
+*.o
+*.a
+*.so
+*.exe
+*.test
+
+/bin
+/test
+/vendor/*/
+
+.DS_Store

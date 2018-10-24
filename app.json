@@ -1,0 +1,18 @@
+{
+    "name": "Brypt Server",
+    "description": "Central Server for Brypt Node Management and Connections",
+    "keywords": [
+        "go"
+    ],
+    "buildpacks": [{}, {
+        "url": "heroku/go"
+    }],
+    "website": "https://brypt.com",
+    "repository": "https://github.com/Stygain/brypt-server",
+    "addons": [],
+    "formation": {
+        "web": {
+            "quantity": 1
+        }
+    }
+}

@@ -6,35 +6,29 @@ help:
 	@echo 'Available commands:'
 	@echo
 	@echo 'Usage:'
-	@echo '    make deps     		Install go deps.'
 	@echo '    make build    		Compile the project.'
-	@echo '    make build/docker	Restore all dependencies.'
-	@echo '    make restore  		Restore all dependencies.'
-	@echo '    make clean    		Clean the directory tree.'
+	@echo '    make test    		Run project tests.'
+	@echo '    make deps     		Install go deps.'
+	@echo '    make add_deps		Add dependencies with govendor.'
+	@echo '    make clean    		Clean the project.'
 	@echo
 
-test: ## run tests, except integration tests
+test:
 	@go test ${RACE} ${PACKAGES}
 
 deps:
-	go get -u github.com/tcnksm/ghr
-	go get -u github.com/mitchellh/gox
-	go get -u github.com/golang/dep/cmd/dep
+	go get -u github.com/kardianos/govendor
+	go get -u github.com/go-chi/chi
+	go get -u github.com/go-chi/chi/middleware
+	go get -u github.com/go-chi/hostrouter
+
+add_deps:
+	govendor fetch github.com/go-chi/chi
+	govendor fetch github.com/go-chi/chi/middleware
+	govendor fetch github.com/go-chi/hostrouter
 
 build:
-	@echo "Compiling..."
+	@echo "Compiling Brypt Server"
 	@mkdir -p ./bin
-	@gox -output "bin/{{.Dir}}_${VERSION}_{{.OS}}_{{.Arch}}" -os="linux" -os="darwin" -arch="386" -arch="amd64" ./
-	@go build -i -o ./bin/Brypt
-	@echo "All done! The binaries is in ./bin let's have fun!"
-
-build/docker: build
-	@docker build -t Brypt:latest .
-
-vet: ## run go vet
-	@test -z "$$(go vet ${PACKAGES} 2>&1 | grep -v '*composite literal uses unkeyed fields|exit status 0)' | tee /dev/stderr)"
-
-ci: vet test
-
-restore:
-	@dep ensure
+	@go build -o ./bin/bserv ./cmd/brypt-server
+	@echo "Completed!"

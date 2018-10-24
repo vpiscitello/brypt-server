@@ -1,8 +1,9 @@
 # Server
+
 ## Setup
-- Docker
 - Server
 - Databases
+
 ## Routes
 - Base
     - Domain: (www.) brypt.com
@@ -158,9 +159,3 @@
     - connected_network
         - Foreign Key
         - 32 Char
-
-# Routing
-
-# Nodes
-
-# Security Protocol
