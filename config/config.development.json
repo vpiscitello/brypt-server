@@ -1,27 +1,13 @@
 {
-    "Database": {
-        "MongoDB": {
-            "Username": "",
-            "Password": "",
-            "Hostname": "",
-            "Port": 0,
-        },
-        "MySQL": {
-            "Username": "",
-            "Password": "",
-            "Hostname": "",
-            "Port": 0,
-        },
-        "Postgres": {
-            "Username": "",
-            "Password": "",
-            "Hostname": "",
-            "Port": 0,
-        }
+    "Server": {
+        "Domain": "localhost",
+        "AccessDomain": "access.localhost:3005",
+        "BridgeDomain": "bridge.localhost:3005",
+        "DashboardDomain": "dashboard.localhost:3005",
+        "Port": 3005
     },
     "Session": {
-        "Secret": "",
-        "Pptions": {
+        "Options": {
             "Path": "/",
             "Domain": "",
             "MaxAge": 28800,

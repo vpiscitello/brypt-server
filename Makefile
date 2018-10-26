@@ -18,11 +18,13 @@ test:
 
 deps:
 	go get -u github.com/kardianos/govendor
+	go get -u github.com/tkanos/gonfig
 	go get -u github.com/go-chi/chi
 	go get -u github.com/go-chi/chi/middleware
 	go get -u github.com/go-chi/hostrouter
 
 add_deps:
+	govendor fetch github.com/tkanos/gonfig
 	govendor fetch github.com/go-chi/chi
 	govendor fetch github.com/go-chi/chi/middleware
 	govendor fetch github.com/go-chi/hostrouter

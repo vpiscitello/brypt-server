@@ -1,0 +1,33 @@
+{
+    "Server": {
+        "Domain": "brypt.com",
+        "AccessDomain": "access.brypt.com",
+        "BridgeDomain": "bridge.brypt.com",
+        "DashboardDomain": "dashboard.brypt.com",
+        "Port": 3005
+    },
+    "Session": {
+        "Options": {
+            "Path": "/",
+            "Domain": "",
+            "MaxAge": 28800,
+            "Secure": true,
+            "UseHTTPS": true,
+            "HTTPSOnly": true
+        }
+    },
+    "Template": {
+        "Root": "main",
+        "Children": [
+            "partial/menu",
+            "partial/footer"
+        ]
+    },
+    "View": {
+        "BaseURI": "/",
+        "Extension": "",
+        "Folder": "assets/templates",
+        "Name": "",
+        "Caching": true
+    }
+}

@@ -195,6 +195,12 @@
 			"revisionTime": "2017-03-13T13:21:15Z"
 		},
 		{
+			"checksumSHA1": "nZ6wCpN+GZWccQ+Qap7K77B7X5w=",
+			"path": "github.com/tkanos/gonfig",
+			"revision": "3950e265aebb13653233a0a99eebf2b939fb8151",
+			"revisionTime": "2018-09-18T20:01:25Z"
+		},
+		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
 			"path": "golang.org/x/net/context",
 			"revision": "9b4f9f5ad5197c79fd623a3638e70d8b26cef344",
