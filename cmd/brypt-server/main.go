@@ -5,8 +5,10 @@ package main
 
 import (
    "fmt"
+   "strings"
    "strconv"
    "net/http"
+   "net/url"
 
    config "brypt-server/config"
 
@@ -18,11 +20,25 @@ import (
 
 var configuration = config.Configuration{}
 
+func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
+    // Build the HTTPS target URL using URL builder
+    target := url.URL{
+        Scheme: "https",
+        Host: strings.Split(r.Host, ":")[0] + ":" + strconv.Itoa( configuration.Server.HTTPSPort ), // Pop off the HTTP port and add the proper HTTPS port
+        Path: r.URL.Path,
+        RawQuery: r.URL.RawQuery,
+    }
+    http.Redirect( w, r, target.String(), http.StatusTemporaryRedirect )    // Redirect requests to the HTTPS equiv.
+}
+
 func main()  {
     config.Setup()  // Setup the Server Configuration
     configuration = config.GetConfig()  // Get the Configuration Settings
 
-    portString := strconv.Itoa( configuration.Server.Port )
+    HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
+    HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )
+
+    go http.ListenAndServe( ":" + HTTPPortString, http.HandlerFunc( redirectToHTTPS ) )  // Start the Server
 
     router := chi.NewRouter()
 
@@ -43,9 +59,9 @@ func main()  {
 
     router.Mount("/", hr)
 
-    fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + portString + "\n" )
+    fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + HTTPPortString + "\n" )
 
-    http.ListenAndServe( ":" + strconv.Itoa( configuration.Server.Port ), router )  // Start the Server
+    http.ListenAndServeTLS( ":" + HTTPSPortString, "config/ssl/cert.pem", "config/ssl/key.pem", router )  // Start the Server
 
 }
 
@@ -88,19 +104,25 @@ func renderDashboard(w http.ResponseWriter, r *http.Request) {
 func baseRouter() chi.Router {
     router := chi.NewRouter()
 
+
     // Redirect requests to host/access to access.host
     router.Get( "/access", func ( w http.ResponseWriter, r *http.Request ) {
-        http.Redirect( w, r, "http://" + configuration.Server.AccessDomain, http.StatusMovedPermanently )
+        http.Redirect( w, r, "https://" + configuration.Server.AccessDomain, http.StatusMovedPermanently )
+    })
+
+    // Redirect requests to host/access/* to access.host/*
+    router.Get( "/access/*", func ( w http.ResponseWriter, r *http.Request ) {
+        http.Redirect( w, r, "https://" + configuration.Server.AccessDomain + r.RequestURI, http.StatusMovedPermanently )
     })
 
     // Redirect requests to host/bridge to bridge.host
     router.Get( "/bridge", func ( w http.ResponseWriter, r *http.Request ) {
-        http.Redirect( w, r, "http://" + configuration.Server.BridgeDomain, http.StatusMovedPermanently )
+        http.Redirect( w, r, "https://" + configuration.Server.BridgeDomain, http.StatusMovedPermanently )
     })
 
     // Redirect requests to host/dashboard to dashboard.host
     router.Get( "/dashboard", func ( w http.ResponseWriter, r *http.Request ) {
-        http.Redirect( w, r, "http://" + configuration.Server.DashboardDomain, http.StatusMovedPermanently )
+        http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain, http.StatusMovedPermanently )
     })
 
     router.Get( "/", renderIndex )

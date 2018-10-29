@@ -23,7 +23,8 @@ type Configuration struct {
         AccessDomain string
         BridgeDomain string
         DashboardDomain string
-        Port int
+        HTTPPort int
+        HTTPSPort int
     }
     Session struct {
         Options struct {
