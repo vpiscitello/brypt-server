@@ -8,7 +8,7 @@ To build/run:
 - 127.0.0.1   bridge.localhost
 - 127.0.0.1   dashboard.localhost
 3) If testing local: Generate TLS certificate key pair and place in /config/ssl
-- Install "generate_cert" via "go install $GOROOT/src/crypto/tls/generate-cert.go"
+- Install "generate_cert" via "go install $GOROOT/src/crypto/tls/generate_cert.go"
     - May need "export $GOBIN=$GOROOT/bin"
 - Run "generate_cert -host=127.0.0.1,localhost,access.localhost,bridge.localhost,dashboard.localhost,brypt.com -ca -ecdsa-curve=P384"
 - Place "cert.pem" and "key.pem" in /config/ssl
