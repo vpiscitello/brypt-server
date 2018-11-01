@@ -125,7 +125,8 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain, http.StatusMovedPermanently )
     })
 
-    router.Get( "/", renderIndex )
+    //router.Get( "/", renderIndex )
+    router.Mount( "/", http.FileServer( http.Dir( "../../docs/sketchpad/UI Elements" ) ) )
 
 
     return router
