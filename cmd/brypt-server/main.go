@@ -61,7 +61,7 @@ func main()  {
 
     fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + HTTPPortString + "\n" )
 
-    http.ListenAndServeTLS( ":" + HTTPSPortString, "config/ssl/cert.pem", "config/ssl/key.pem", router )  // Start the Server
+    http.ListenAndServeTLS( ":" + HTTPSPortString, "/config/ssl/cert.pem", "/config/ssl/key.pem", router )  // Start the Server
 
 }
 
