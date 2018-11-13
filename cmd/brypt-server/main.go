@@ -57,11 +57,11 @@ func main()  {
 
     hr.Map( "*", baseRouter() ) // Handle everything else
 
-    router.Mount("/", hr)
+    router.Mount( "/", hr )
 
-    fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + HTTPPortString + "\n" )
+    fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + HTTPSPortString + "\n" )
 
-    http.ListenAndServeTLS( ":" + HTTPSPortString, "/config/ssl/cert.pem", "/config/ssl/key.pem", router )  // Start the Server
+    http.ListenAndServeTLS( ":" + HTTPSPortString, "./config/ssl/cert.pem", "./config/ssl/key.pem", router )  // Start the Server
 
 }
 
@@ -101,6 +101,11 @@ func renderDashboard(w http.ResponseWriter, r *http.Request) {
     w.Write( []byte( "Dashboard!\n" ) )
 }
 
+
+func buildWildRedirectURI( subdomain string, URI string ) string {
+    return "/" + strings.Replace( URI, "/" + subdomain + "/", "", 1 )
+}
+
 func baseRouter() chi.Router {
     router := chi.NewRouter()
 
@@ -112,7 +117,8 @@ func baseRouter() chi.Router {
 
     // Redirect requests to host/access/* to access.host/*
     router.Get( "/access/*", func ( w http.ResponseWriter, r *http.Request ) {
-        http.Redirect( w, r, "https://" + configuration.Server.AccessDomain + r.RequestURI, http.StatusMovedPermanently )
+	redirectURI := buildWildRedirectURI( "access", r.RequestURI )
+	http.Redirect( w, r, "https://" + configuration.Server.AccessDomain + redirectURI, http.StatusMovedPermanently )
     })
 
     // Redirect requests to host/bridge to bridge.host
@@ -120,14 +126,24 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.BridgeDomain, http.StatusMovedPermanently )
     })
 
+    // Redirect requests to host/bridge/* to bridge.host/*
+    router.Get( "/bridge/*", func ( w http.ResponseWriter, r *http.Request ) {
+	redirectURI := buildWildRedirectURI( "bridge", r.RequestURI )
+	http.Redirect( w, r, "https://" + configuration.Server.BridgeDomain + redirectURI, http.StatusMovedPermanently )
+    })
+
     // Redirect requests to host/dashboard to dashboard.host
     router.Get( "/dashboard", func ( w http.ResponseWriter, r *http.Request ) {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain, http.StatusMovedPermanently )
     })
 
-    //router.Get( "/", renderIndex )
-    router.Mount( "/", http.FileServer( http.Dir( "../../docs/sketchpad/UI Elements" ) ) )
+    // Redirect requests to host/dashboard/* to dashboard.host/*
+    router.Get( "/dashboard/*", func ( w http.ResponseWriter, r *http.Request ) {
+	redirectURI := buildWildRedirectURI( "dashboard", r.RequestURI )
+	http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
+    })
 
+    router.Get( "/", renderIndex )
 
     return router
 }
