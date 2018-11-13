@@ -11,7 +11,13 @@ import (
    "net/url"
 
    config "brypt-server/config"
-
+   
+   "brypt-server/api/access"
+   "brypt-server/api/base"
+   "brypt-server/api/bridge"
+   "brypt-server/api/dashboard"
+   "brypt-server/api/users"
+   
    "github.com/go-chi/chi"
    "github.com/go-chi/chi/middleware"
 
@@ -49,7 +55,7 @@ func main()  {
 
     hr := hostrouter.New()
 
-    hr.Map( configuration.Server.AccessDomain, accessRouter() ) // Handle access.host routing requests
+    hr.Map( configuration.Server.AccessDomain, accessResources{}.Routes() ) // Handle access.host routing requests
 
     hr.Map( configuration.Server.BridgeDomain, bridgeRouter() ) // Handle bridge.host routing requests
 
@@ -65,17 +71,13 @@ func main()  {
 
 }
 
-func accessRouter() chi.Router {
+/* func accessRouter() chi.Router {
     router := chi.NewRouter()
 
     router.Get( "/", renderAccess )
 
     return router
-}
-
-func renderAccess(w http.ResponseWriter, r *http.Request) {
-    w.Write( []byte( "Access!\n" ) )
-}
+} */
 
 func bridgeRouter() chi.Router {
     router := chi.NewRouter()
