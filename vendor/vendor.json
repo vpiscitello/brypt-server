@@ -35,14 +35,14 @@
 		{
 			"checksumSHA1": "2Ae4bfJqmW2ktRsSP+ARgkr1JEc=",
 			"path": "github.com/go-chi/chi",
-			"revision": "0ebf7795c516423a110473652e9ba3a59a504863",
-			"revisionTime": "2018-10-24T10:12:33Z"
+			"revision": "263880db92251ff501a733d7fdb8f5fb026ac548",
+			"revisionTime": "2018-11-06T16:38:48Z"
 		},
 		{
-			"checksumSHA1": "Z+dpDHNJex1xke6MYRNp23ARQCQ=",
+			"checksumSHA1": "3843jWR7LYKLRVjwYp7mrilUe8c=",
 			"path": "github.com/go-chi/chi/middleware",
-			"revision": "0ebf7795c516423a110473652e9ba3a59a504863",
-			"revisionTime": "2018-10-24T10:12:33Z"
+			"revision": "263880db92251ff501a733d7fdb8f5fb026ac548",
+			"revisionTime": "2018-11-06T16:38:48Z"
 		},
 		{
 			"checksumSHA1": "HLibNtTZ8oW903Eq5Ir5qurTq+k=",
@@ -195,10 +195,10 @@
 			"revisionTime": "2017-03-13T13:21:15Z"
 		},
 		{
-			"checksumSHA1": "nZ6wCpN+GZWccQ+Qap7K77B7X5w=",
+			"checksumSHA1": "Nl8u5pNlN3FyZ/ieMgodi/+vp38=",
 			"path": "github.com/tkanos/gonfig",
-			"revision": "3950e265aebb13653233a0a99eebf2b939fb8151",
-			"revisionTime": "2018-09-18T20:01:25Z"
+			"revision": "896f3d81fadfe082262467a1c22fd43278806a02",
+			"revisionTime": "2018-11-12T18:52:42Z"
 		},
 		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
