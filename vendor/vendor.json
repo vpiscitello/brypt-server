@@ -33,6 +33,12 @@
 			"revisionTime": "2015-10-22T10:31:44Z"
 		},
 		{
+			"checksumSHA1": "nlMa0NX11OCS5UHuJszVGTBboWU=",
+			"path": "github.com/ghodss/yaml",
+			"revision": "c7ce16629ff4cd059ed96ed06419dd3856fd3577",
+			"revisionTime": "2018-08-20T08:47:58Z"
+		},
+		{
 			"checksumSHA1": "2Ae4bfJqmW2ktRsSP+ARgkr1JEc=",
 			"path": "github.com/go-chi/chi",
 			"revision": "0ebf7795c516423a110473652e9ba3a59a504863",
@@ -195,10 +201,10 @@
 			"revisionTime": "2017-03-13T13:21:15Z"
 		},
 		{
-			"checksumSHA1": "nZ6wCpN+GZWccQ+Qap7K77B7X5w=",
+			"checksumSHA1": "ACkz/zzKDJESgyv6pLkvEFQoeds=",
 			"path": "github.com/tkanos/gonfig",
-			"revision": "3950e265aebb13653233a0a99eebf2b939fb8151",
-			"revisionTime": "2018-09-18T20:01:25Z"
+			"revision": "d119f39e8aa10b540cc36ce50e150b7c4f6de09e",
+			"revisionTime": "2018-10-26T19:58:35Z"
 		},
 		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",
