@@ -7,6 +7,9 @@
         "HTTPPort": 80,
         "HTTPSPort": 443
     },
+    "Database": {
+        "MongoURI": "mongodb://heroku_ckmt3tbl:h6ar518r1kkers5rfiulk42spt@ds161913.mlab.com:61913/heroku_ckmt3tbl"
+    },
     "Session": {
         "Options": {
             "Path": "/",

@@ -1,7 +1,8 @@
 package database
 
 import(
-				"github.com/mongodb/mongo-go-driver/mongo"
+    config "brypt-server/config"
+    "github.com/mongodb/mongo-go-driver/mongo"
 				"context"
 				"encoding/json"
 				"fmt"
@@ -9,6 +10,8 @@ import(
 				"net/http"
 				"os"
 )
+
+var configuration = config.Configuration{}
 
 type key string
 
@@ -76,8 +79,13 @@ func Disconnect() {
 	defer client.Disconnect(nil)	// Disconnection client
 }
 
+/* **************************************************************************
+** Function: Setup
+** URI:
+** Description: 
+** *************************************************************************/
+func Setup() {
+    configuration = config.getConfigFile()
 
 
-
-
-
+}
