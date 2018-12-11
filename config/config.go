@@ -26,6 +26,9 @@ type Configuration struct {
         HTTPPort int
         HTTPSPort int
     }
+    Database struct {
+        MongoURI string
+    }
     Session struct {
         Options struct {
             Path string
