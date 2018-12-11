@@ -215,10 +215,10 @@ func AddFileServer(router chi.Router, path string, root http.FileSystem) {
 }
 
 /* **************************************************************************
-** Function: 
+** Function: renderPage
 ** URI: 
-** Description: 
-** Client: 
+** Description: Handles the serving and rendering of the webpages
+** Client: Displays a specified page
 ** *************************************************************************/
 func renderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
 
