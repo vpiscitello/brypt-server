@@ -14,18 +14,20 @@ import (
 
    config "brypt-server/config"
 
+   db "brypt-server/api/database"
+
    "brypt-server/api/access"
    // "brypt-server/api/base"
    // "brypt-server/api/bridge"
    // "brypt-server/api/dashboard"
    // "brypt-server/api/users"
 
+   "brypt-server/internal/handlebars"
+
    "github.com/go-chi/chi"
    "github.com/go-chi/chi/middleware"
 
    "github.com/go-chi/hostrouter"
-
-   "github.com/aymerick/raymond"
 
 )
 
@@ -57,6 +59,10 @@ func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
 func main()  {
     config.Setup()  // Setup the Server Configuration
     configuration = config.GetConfig()  // Get the Configuration Settings
+
+    db.Setup()
+
+    handlebars.Setup()
 
     HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
     HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )
@@ -167,7 +173,10 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
     })
 
-    router.Get( "/", renderIndex )
+    //router.Get( "/", renderIndex )
+    m := make(map[string]string)
+    m["title"] = "qwer"
+    router.Get( "/", handlebars.RenderPage( "index", m ) )
 
     workingDir, _ := os.Getwd() // Get the current working directory
 
@@ -200,61 +209,4 @@ func AddFileServer(router chi.Router, path string, root http.FileSystem) {
         fs.ServeHTTP( w, r )
     } ) )
 
-}
-
-/* **************************************************************************
-** Function: renderIndex
-** URI: index
-** Description: Handles serving and rendering of the index page.
-** Client: Displays the index page.
-** *************************************************************************/
-func renderIndex(w http.ResponseWriter, r *http.Request) {
-
-    workingDir, _ := os.Getwd()
-
-    layoutPath := filepath.Join( workingDir, "/web/views/layouts/main.hbs" )
-    bodyPath := filepath.Join( workingDir, "/web/views/pages/index.hbs" )
-
-    headerPath := filepath.Join( workingDir, "/web/views/partials/header.hbs" )
-    footerPath := filepath.Join( workingDir, "/web/views/partials/footer.hbs" )
-
-    bodyCTX := map[string]string {}
-
-    bodyTmpl, err := raymond.ParseFile( bodyPath )
-    if err != nil {
-        panic( "Something went wrong parsing the body!" )
-    }
-
-    err = bodyTmpl.RegisterPartialFiles( headerPath, footerPath )
-    if err != nil {
-        panic( "Something went wrong registering partials!" )
-    }
-
-    body, err := bodyTmpl.Exec( bodyCTX )
-    if err != nil {
-        panic( err )
-    }
-
-    pageCTX := map[string]string {
-        "title": "Brypt",
-        "pagestyle": "index",
-        "body": body,
-    }
-
-    layoutTmpl, err := raymond.ParseFile( layoutPath )
-    if err != nil {
-        panic( "Something went wrong parsing the full!" )
-    }
-
-    page, err := layoutTmpl.Exec( pageCTX )
-    if err != nil {
-        panic( err )
-    }
-
-    // Sends a download
-    // w.Header().Set( "Content-Type", "application/html" )
-    // fmt.Fprint( w, page )
-
-    w.Header().Set( "Content-Type", "text/html" )
-    w.Write( []byte( page ) )
 }
