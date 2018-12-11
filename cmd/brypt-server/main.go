@@ -14,6 +14,8 @@ import (
 
    config "brypt-server/config"
 
+   db "brypt-server/api/database"
+
    "brypt-server/api/access"
    // "brypt-server/api/base"
    // "brypt-server/api/bridge"
@@ -57,6 +59,8 @@ func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
 func main()  {
     config.Setup()  // Setup the Server Configuration
     configuration = config.GetConfig()  // Get the Configuration Settings
+
+    db.Setup()
 
     HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
     HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )
