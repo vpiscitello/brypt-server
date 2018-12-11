@@ -30,6 +30,11 @@ import (
 )
 
 var configuration = config.Configuration{}
+var workingDir, _ = os.Getwd()
+var headerPath = filepath.Join( workingDir, "/web/views/partials/header.hbs" )
+var footerPath = filepath.Join( workingDir, "/web/views/partials/footer.hbs" )
+var layoutPath = filepath.Join( workingDir, "/web/views/layouts/main.hbs" )
+
 
 /* **************************************************************************
 ** Function:
@@ -167,7 +172,10 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
     })
 
-    router.Get( "/", renderIndex )
+    //router.Get( "/", renderIndex )
+    m := make(map[string]string)
+    m["title"] = "qwer"
+    router.Get( "/", renderPage( "index", m ) )
 
     workingDir, _ := os.Getwd() // Get the current working directory
 
@@ -203,6 +211,79 @@ func AddFileServer(router chi.Router, path string, root http.FileSystem) {
 }
 
 /* **************************************************************************
+** Function: 
+** URI: 
+** Description: 
+** Client: 
+** *************************************************************************/
+func renderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
+
+    //var partials[2]string
+    bodyPath := ""
+    switch page {
+        case "index":
+            bodyPath = filepath.Join( workingDir, "/web/views/pages/index.hbs" )
+            //partials[0] = "headerPath"
+            //partials[1] = "footerPath"
+    }
+
+    return http.HandlerFunc( func(w http.ResponseWriter, r *http.Request) {
+        //bodyCTX := map[string]string {}
+
+        bodyTmpl, err := raymond.ParseFile( bodyPath )
+        if err != nil {
+            panic( "Something went wrong parsing the body!" )
+        }
+
+        err = bodyTmpl.RegisterPartialFiles( headerPath, footerPath )
+        if err != nil {
+            panic( "Something went wrong registering partials!" )
+        }
+
+        //for i := 0; i < len(partials); i++ {
+        //    fmt.Println("registering: ", partials[i])
+        //    err = bodyTmpl.RegisterPartialFile( partials[i], partials[i] )
+        //    if err != nil {
+        //        panic( "Something went wrong registering partials!" )
+        //    }
+        //}
+
+        //err = bodyTmpl.RegisterPartialFile( partials[0], "header" )
+        //if err != nil {
+        //    panic( "Something went wrong registering partials!" )
+        //}
+        //err = bodyTmpl.RegisterPartialFile( partials[1], "footer" )
+        //if err != nil {
+        //    panic( "Something went wrong registering partials!" )
+        //}
+
+        body, err := bodyTmpl.Exec( bodyCTX )
+        if err != nil {
+            panic( err )
+        }
+
+        pageCTX := map[string]string {
+            "title": "Brypt",
+            "pagestyle": "index",
+            "body": body,
+        }
+
+        layoutTmpl, err := raymond.ParseFile( layoutPath )
+        if err != nil {
+            panic( "Something went wrong parsing the full!" )
+        }
+
+        page, err := layoutTmpl.Exec( pageCTX )
+        if err != nil {
+            panic( err )
+        }
+
+        w.Header().Set( "Content-Type", "text/html" )
+        w.Write( []byte( page ) )
+    } )
+}
+
+/* **************************************************************************
 ** Function: renderIndex
 ** URI: index
 ** Description: Handles serving and rendering of the index page.
@@ -210,13 +291,7 @@ func AddFileServer(router chi.Router, path string, root http.FileSystem) {
 ** *************************************************************************/
 func renderIndex(w http.ResponseWriter, r *http.Request) {
 
-    workingDir, _ := os.Getwd()
-
-    layoutPath := filepath.Join( workingDir, "/web/views/layouts/main.hbs" )
     bodyPath := filepath.Join( workingDir, "/web/views/pages/index.hbs" )
-
-    headerPath := filepath.Join( workingDir, "/web/views/partials/header.hbs" )
-    footerPath := filepath.Join( workingDir, "/web/views/partials/footer.hbs" )
 
     bodyCTX := map[string]string {}
 
