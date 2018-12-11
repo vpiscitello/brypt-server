@@ -2,7 +2,10 @@
     "name": "Brypt Server",
     "description": "Central Server for Brypt Node Management and Connections",
     "keywords": [
-        "go"
+        "go",
+        "iot",
+        "security",
+        "bridge"
     ],
     "buildpacks": [{}, {
         "url": "heroku/go"

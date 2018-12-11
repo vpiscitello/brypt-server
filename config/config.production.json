@@ -4,7 +4,8 @@
         "AccessDomain": "access.brypt.com",
         "BridgeDomain": "bridge.brypt.com",
         "DashboardDomain": "dashboard.brypt.com",
-        "Port": 3005
+        "HTTPPort": 80,
+        "HTTPSPort": 443
     },
     "Session": {
         "Options": {

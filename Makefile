@@ -22,12 +22,16 @@ deps:
 	go get -u github.com/go-chi/chi
 	go get -u github.com/go-chi/chi/middleware
 	go get -u github.com/go-chi/hostrouter
+	go get -u github.com/mongodb/mongo-go-driver/mongo
+	go get -u github.com/aymerick/raymond
 
 add_deps:
 	govendor fetch github.com/tkanos/gonfig
 	govendor fetch github.com/go-chi/chi
 	govendor fetch github.com/go-chi/chi/middleware
 	govendor fetch github.com/go-chi/hostrouter
+	govendor fetch github.com/mongodb/mongo-go-driver/mongo
+	govendor fetch github.com/aymerick/raymond
 
 build:
 	@echo "Compiling Brypt Server"

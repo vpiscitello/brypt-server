@@ -3,6 +3,7 @@
 *.so
 *.exe
 *.test
+*.pem
 
 /bin
 /test

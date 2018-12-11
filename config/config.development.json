@@ -1,10 +1,11 @@
 {
     "Server": {
         "Domain": "localhost",
-        "AccessDomain": "access.localhost:3005",
-        "BridgeDomain": "bridge.localhost:3005",
-        "DashboardDomain": "dashboard.localhost:3005",
-        "Port": 3005
+        "AccessDomain": "access.localhost:3006",
+        "BridgeDomain": "bridge.localhost:3006",
+        "DashboardDomain": "dashboard.localhost:3006",
+        "HTTPPort": 3005,
+        "HTTPSPort": 3006
     },
     "Session": {
         "Options": {

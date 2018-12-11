@@ -23,7 +23,8 @@ type Configuration struct {
         AccessDomain string
         BridgeDomain string
         DashboardDomain string
-        Port int
+        HTTPPort int
+        HTTPSPort int
     }
     Session struct {
         Options struct {
@@ -50,6 +51,12 @@ type Configuration struct {
 
 var configuration = Configuration{}
 
+/* **************************************************************************
+** Function:
+** URI:
+** Description:
+** *************************************************************************/
+
 func Setup() {
     err := gonfig.GetConf( getConfigFile(), &configuration )
     if err != nil {
@@ -60,6 +67,12 @@ func Setup() {
 func GetConfig() Configuration {
     return configuration
 }
+
+/* **************************************************************************
+** Function:
+** URI:
+** Description:
+** *************************************************************************/
 
 func getConfigFile() string {
 	env := os.Getenv( "ENV" )
