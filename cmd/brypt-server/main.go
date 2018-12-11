@@ -29,8 +29,6 @@ import (
 
    "github.com/go-chi/hostrouter"
 
-   //"github.com/aymerick/raymond"
-
 )
 
 var configuration = config.Configuration{}
