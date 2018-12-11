@@ -18,3 +18,25 @@ To build/run:
 - $make build
 5) To run use: $./bin/bserv
 6) If testing local: Run "curl -L -k -X GET http://access.localhost:3005"
+
+
+Troubleshooting:
+
+Permissions:
+-	If getting permission errors during step 4, perform the following steps:
+	1) Run $sudo su
+	2) Source ~/.bashrc file
+	3) Try running the command which failed again
+
+Not a go package or not in GOPATH error:
+	1) $export name/go
+	2) "name" being something like /home/username/go
+
+.bashrc File Configuration:
+-	Include the following at the bottom of your bashrc file:
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin
+export GOROOT=/usr/local/go
+export GOBIN=$GOROOT/bin 
