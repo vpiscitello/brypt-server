@@ -46,6 +46,8 @@ func RenderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
     switch page {
         case "index":
             bodyPath = filepath.Join( workingDir, "/web/views/pages/index.hbs" )
+        case "access":
+            bodyPath = filepath.Join( workingDir, "/web/views/pages/access.hbs" )
     }
 
     return http.HandlerFunc( func(w http.ResponseWriter, r *http.Request) {
@@ -62,7 +64,7 @@ func RenderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
 
         pageCTX := map[string]string {
             "title": "Brypt",
-            "pagestyle": "index",
+            "pagestyle": page,
             "body": body,
         }
 
