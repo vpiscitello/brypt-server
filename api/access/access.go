@@ -3,6 +3,8 @@ package access
 import (
 	"net/http"
 
+    "brypt-server/internal/handlebars"
+
 	"github.com/go-chi/chi"
 	// "github.com/aymerick/raymond"
 
@@ -20,6 +22,19 @@ func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
+    m := make(map[string]string)
+    m["login"] = ""
+    m["register"] = "bck"
+    m["active"] = "log"
+    m["inactive_text"] = "Register"
+    r.Get( "/login", handlebars.RenderPage( "access", m ) )
+    n := make(map[string]string)
+    n["login"] = "bck"
+    n["register"] = ""
+    n["active"] = "reg"
+    n["inactive_text"] = "Login"
+    r.Get( "/register", handlebars.RenderPage( "access", n ) )
+
 	r.Post( "/login", rs.Login )		// Post request for user login
 	r.Post( "/register", rs.Register )	// Post request for registering an account
 	r.Post( "/link", rs.Link )	// Post request for linking a device to a user account
