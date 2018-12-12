@@ -83,3 +83,41 @@ func RenderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
     } )
 }
 
+/* **************************************************************************
+** Function: CompilePage
+** Description: Compiles a provided page source using handlers.
+** Client: NA
+** *************************************************************************/
+func CompilePage(page string, bodyCTX map[string]string) string {
+
+    bodyPath := filepath.Join( workingDir, "web/views/pages/" + page + ".hbs" )
+
+    bodyTmpl, err := raymond.ParseFile( bodyPath )
+    if err != nil {
+        panic( "Something went wrong parsing the body!" )
+    }
+
+    body, err := bodyTmpl.Exec( bodyCTX )
+    if err != nil {
+        panic( err )
+    }
+
+    pageCTX := map[string]string {
+        "title": "Brypt",
+        "pagestyle": page,
+        "body": body,
+    }
+
+    layoutTmpl, err := raymond.ParseFile( layoutPath )
+    if err != nil {
+        panic( "Something went wrong parsing the full!" )
+    }
+
+    source, err := layoutTmpl.Exec( pageCTX )
+    if err != nil {
+        panic( err )
+    }
+
+    return source
+
+}

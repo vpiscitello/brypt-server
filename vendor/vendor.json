@@ -219,10 +219,40 @@
 			"revisionTime": "2018-08-24T03:58:58Z"
 		},
 		{
+			"checksumSHA1": "kdh4Z/aGP1ERJNWw+dvmnQjopoI=",
+			"path": "github.com/mongodb/ftdc/bsonx",
+			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
+			"revisionTime": "2018-12-04T22:03:37Z"
+		},
+		{
+			"checksumSHA1": "cXva2PPO1OVY7UKgfWFQXNYauUQ=",
+			"path": "github.com/mongodb/ftdc/bsonx/bsontype",
+			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
+			"revisionTime": "2018-12-04T22:03:37Z"
+		},
+		{
+			"checksumSHA1": "7SuSp+2/4qTd6x2TrEo/2nBKs2o=",
+			"path": "github.com/mongodb/ftdc/bsonx/decimal",
+			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
+			"revisionTime": "2018-12-04T22:03:37Z"
+		},
+		{
+			"checksumSHA1": "lkA4jNDZ7raQvHHCAlFtd7apvdc=",
+			"path": "github.com/mongodb/ftdc/bsonx/elements",
+			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
+			"revisionTime": "2018-12-04T22:03:37Z"
+		},
+		{
+			"checksumSHA1": "0rpXrANTXY/EsKkMS5rKLtKmsU8=",
+			"path": "github.com/mongodb/ftdc/bsonx/objectid",
+			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
+			"revisionTime": "2018-12-04T22:03:37Z"
+		},
+		{
 			"checksumSHA1": "Oo0ZbxRtBpS1h7P3CMtZH0cc9NE=",
 			"path": "github.com/mongodb/mongo-go-driver/bson",
-			"revision": "5004250aa306ad1b460ee6625eb42a4baf49f24c",
-			"revisionTime": "2018-12-07T22:21:31Z"
+			"revision": "e247edb628e9e149011d5f04a46dcc5729255e94",
+			"revisionTime": "2018-12-05T20:43:56Z"
 		},
 		{
 			"checksumSHA1": "ZgY0iEmm9wTz4rW+NzVLuQw2Q4g=",
@@ -263,8 +293,8 @@
 		{
 			"checksumSHA1": "Owch46vKOBaO7Ck5OtyiwRojVhQ=",
 			"path": "github.com/mongodb/mongo-go-driver/mongo",
-			"revision": "5004250aa306ad1b460ee6625eb42a4baf49f24c",
-			"revisionTime": "2018-12-07T22:21:31Z"
+			"revision": "e247edb628e9e149011d5f04a46dcc5729255e94",
+			"revisionTime": "2018-12-05T20:43:56Z"
 		},
 		{
 			"checksumSHA1": "FLDH89wOQhjpTf9ltvwlwsim4nA=",
@@ -347,8 +377,8 @@
 		{
 			"checksumSHA1": "d5l1FpOk+2AiQfdxaujw7WC6qNc=",
 			"path": "github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid",
-			"revision": "5004250aa306ad1b460ee6625eb42a4baf49f24c",
-			"revisionTime": "2018-12-07T22:21:31Z"
+			"revision": "e247edb628e9e149011d5f04a46dcc5729255e94",
+			"revisionTime": "2018-12-05T20:43:56Z"
 		},
 		{
 			"checksumSHA1": "yONewovD/yZCNqNlP0Z4+fWC87w=",

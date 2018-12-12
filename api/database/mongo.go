@@ -13,7 +13,7 @@ import (
 
 	"github.com/mongodb/mongo-go-driver/mongo/options"
 	"github.com/mongodb/mongo-go-driver/mongo"
-	"github.com/mongodb/mongo-go-driver/bson"
+	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
 	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
 )
@@ -34,7 +34,7 @@ type Manager struct {
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-	ID                uuid.UUID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -45,7 +45,7 @@ type Cluster struct {
 ** Networks
 ** *************************************************************************/
 type Network struct {
-	ID                uuid.UUID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
 	Managers          []Manager         `bson:"managers" json:"managers"`
@@ -63,7 +63,7 @@ type Network struct {
 ** Users
 ** *************************************************************************/
 type User struct {
-	ID                uuid.UUID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
@@ -82,7 +82,7 @@ type User struct {
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-	ID                uuid.UUID `bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                uuid.UUID			`bson:"_id,omitempty" json:"_id,omitempty"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -130,9 +130,12 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		users_collection := Client.Database("brypt_server").Collection("brypt_users")
 
+		var sort *options.FindOptions
+		var err error
+
 		//sort, err := users_collection.find({}, {"username":1, _id:0}).sort({"username":1})
 		// TODO: implement SetSort
-		sort, err := mongo.Opt.Sort(bsonx.NewDocument(bsonx.EC.Int32("username", 1)))   // Sort by username?
+		// sort, err := mongo.Opt.Sort(bsonx.NewDocument(bsonx.EC.Int32("username", 1)))   // Sort by username?
 
 		if err != nil { // Error handler for sort
 			log.Fatal("Error in usersHandler() sorting: ", err)
