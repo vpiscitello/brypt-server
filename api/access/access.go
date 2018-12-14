@@ -48,7 +48,7 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 			accessCTX["register"] = "bck"
 			accessCTX["active"] = "log"
 			accessCTX["inactive_text"] = "Register"
-		case "register":
+		default:
 			accessCTX["login"] = "bck"
 			accessCTX["register"] = ""
 			accessCTX["active"] = "reg"
