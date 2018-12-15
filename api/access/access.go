@@ -2,6 +2,7 @@ package access
 
 import (
 	// "fmt"
+	db "brypt-server/api/database"
 	"net/http"
 
     "brypt-server/internal/handlebars"
@@ -38,7 +39,9 @@ func (rs Resources) Routes() chi.Router {
 ** Client: Displays the compiled page/
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
-
+	
+	db.Connect()	
+	db.UserHandler(w, r)
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
 

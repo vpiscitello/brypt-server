@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"context"
-	"encoding/json"
+//	"context"
+//	"encoding/json"
 	"time"
-
+	"os"
 	config "brypt-server/config"
 
-	"github.com/mongodb/mongo-go-driver/mongo/options"
+//	"github.com/mongodb/mongo-go-driver/mongo/options"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
@@ -126,7 +126,10 @@ func Setup() {
 }
 
 func UserHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
+	
+	print("In users handler!\n")
+	WriteManager(w)
+	/*switch r.Method {
 	case "GET":
 		users_collection := Client.Database("brypt_server").Collection("brypt_users")
 
@@ -186,7 +189,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		bsonx.EC.String("last_name", r.Form.Get("last_name")))
 		WriteUsers(newUser, w)
 		return
-	}
+	}*/
 	return
 }
 
@@ -213,6 +216,52 @@ func WriteNodes(n Node) {
 	// TODO
 }
 
+func WriteManager(w http.ResponseWriter){
+	newManager := bsonx.NewDocument(bsonx.EC.String("Manager_name", "testname"))
+
+	m_collection := Client.Database("brypt_server").Collection("brypt_managers")
+
+	_, err := m_collection.InsertOne(nil, newManager)
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return
+}
+
+func CreateClient() {
+
+	var err error
+	print("\n\nSetting up client...\n")
+
+	configuration = config.GetConfig()
+
+	connectionURL := configuration.Database.MongoURI
+	if connectionURL == "" {
+		panic( "Connection variable is not set!" )
+	}
+
+	cert_path, cert_exists := os.LookupEnv("MONGODB_CERT_PATH")
+
+	if cert_exists {  // If user has certification, create a new client with cert info
+		print(cert_path)
+		Client, err = mongo.NewClient(connectionURL)
+		//Client, err = mongo.NewClientWithOptions(connectionURL, mongo.ClientOpt.SSLCaFile(cert_path))
+	} else {  // Else create a new client without cert info
+		Client, err = mongo.NewClient(connectionURL)
+	}
+
+	if err != nil {
+		panic( err )
+	}
+
+	print("\nFinished setting up client...\n\n")
+	fmt.Print( Client )
+	return
+}
 
 // /* **************************************************************************
 // ** Function: CreateClient
@@ -242,24 +291,24 @@ func WriteNodes(n Node) {
 // 				}
 //
 // }
-//
-// /* **************************************************************************
-// ** Function: Connect
-// ** URI:
-// ** Description: Creates client connection
-// ** *************************************************************************/
-// func Connect() {
-// 				var err error
-//
-// 				err = Client.Connect(nil)
-//
-// 				if err != nil {
-// 								log.Fatal(err)  // Log any errors thrown during connection
-// 				}
-//
-// }
-//
-//
+
+/* **************************************************************************
+** Function: Connect
+** URI:
+** Description: Creates client connection
+** *************************************************************************/
+func Connect() {
+	var err error
+
+	err = Client.Connect(nil)
+
+	if err != nil {
+		log.Fatal(err)  // Log any errors thrown during connection
+	}
+
+ }
+
+
 // /* **************************************************************************
 // ** Function: Disconnect
 // ** URI:
