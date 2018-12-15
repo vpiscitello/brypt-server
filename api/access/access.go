@@ -40,15 +40,15 @@ func (rs Resources) Routes() chi.Router {
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 
 	action := r.URL.Query().Get( "action" )
-	accessCTX := make( map[string]string )
+	accessCTX := make( map[string]interface{} )
 
 	switch action {
-		case "login":
+		default:
 			accessCTX["login"] = ""
 			accessCTX["register"] = "bck"
 			accessCTX["active"] = "log"
 			accessCTX["inactive_text"] = "Register"
-		default:
+		case "register":
 			accessCTX["login"] = "bck"
 			accessCTX["register"] = ""
 			accessCTX["active"] = "reg"

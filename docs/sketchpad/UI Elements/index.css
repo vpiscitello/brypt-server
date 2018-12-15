@@ -9,7 +9,7 @@ html {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #2D383C;
+    color: #4a5c62;
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;
     font-weight: 300;
@@ -36,18 +36,20 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+    position: relative;
     margin: 0;
     font-weight: 700;
 }
 
 h1, h2, h3 {
+    position: relative;
     font-family: 'Chivo', sans-serif;
 }
 
-h1 { font-size: 2.4em; }
-h2 { font-size: 2em; }
-h3 { font-size: 1.8em; }
-h4 { font-size: 1em; }
+h1 { font-size: 2.6em; }
+h2 { font-size: 2.4em; }
+h3 { font-size: 2.2em; }
+h4 { font-size: 1.3em; }
 h5 { font-size: 0.8em; }
 h6 { font-size: 0.6em; }
 
@@ -814,7 +816,14 @@ div.fs-msg {
 
 /* Button Styles */
 
-button {
+.wrapper.btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button, .btn a {
     height: 40px;
     width: 140px;
     margin: 0 20px 0 0;
@@ -824,38 +833,44 @@ button {
     letter-spacing: 0.1em;
     color: rgba(251, 251, 251, 0.65);
     cursor: pointer;
+    text-decoration: none;
     -webkit-appearance: none;
     border: none;
     border-radius: 4px;
     transition: 0.3s ease-in-out all;
 }
 
-button:last-child {
+.btn a {
+    display: block;
+    background: #FBFBFB;
+}
+
+button:last-child, button:last-child {
     margin: 0;
 }
 
-button.py {
+button.py, a.btn.py {
     opacity: 0.85;
     background: rgb(26, 204, 149);
     background: linear-gradient(to right top, rgb(26, 204, 148) 0%, rgb(67, 231, 179) 100%);
     box-shadow: 2px 2px 10px #7fefcc, 2px 8px 24px #bbf6e4;
 }
 
-button.sy {
+button.sy, a.btn.sy {
     opacity: 0.85;
     background: rgb(126, 154, 148);
     background: linear-gradient(to top right,  rgba(126, 154, 148, 0.15), rgba(126, 154, 148, 0.05));
     box-shadow: 0px 0px 20px  rgba(126, 154, 148, 0.1);
 }
 
-button.ty {
+button.ty, a.btn.ty {
     opacity: 0.85;
     background: transparent;
     border: 2px solid rgba(126, 154, 148, 0.15);
     box-shadow: none;
 }
 
-button.cl {
+button.cl, a.btn.cl {
     opacity: 0.85;
     background: rgba(231, 76, 60, 0.8);
     box-shadow: 0px 0px 20px rgba(231, 76, 60, 0.4);
