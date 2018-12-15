@@ -1,0 +1,21 @@
+[{
+    "title": "See Our Research",
+    "image": "card-one.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida.",
+    "link": "../research"
+}, {
+    "title": "Download Our Binaries",
+    "image": "card-two.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida.",
+    "link": "../download"
+}, {
+    "title": "Embedded Nodes",
+    "image": "card-three.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida.",
+    "link": "../embedded"
+}, {
+    "title": "Check Out Our Github",
+    "image": "card-four.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna id volutpat lacus laoreet non curabitur gravida.",
+    "link": "https://github.com"
+}]

@@ -31,6 +31,8 @@ import (
 
 )
 
+var workingDir, _ = os.Getwd()
+
 var configuration = config.Configuration{}
 
 /* **************************************************************************
@@ -138,7 +140,8 @@ func buildWildRedirectURI( subdomain string, URI string ) string {
 func baseRouter() chi.Router {
     router := chi.NewRouter()
 
-
+    // TODO: Append parameters
+    
     // Redirect requests to host/access to access.host
     router.Get( "/access", func ( w http.ResponseWriter, r *http.Request ) {
         http.Redirect( w, r, "https://" + configuration.Server.AccessDomain, http.StatusMovedPermanently )
@@ -173,12 +176,7 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
     })
 
-    //router.Get( "/", renderIndex )
-    m := make(map[string]string)
-    m["title"] = "qwer"
-    router.Get( "/", handlebars.RenderPage( "index", m ) )
-
-    workingDir, _ := os.Getwd() // Get the current working directory
+    router.Get( "/", renderIndex )
 
     cssDir := filepath.Join( workingDir, "/web/public/css" )    // Build the path to the CSS files
     scriptsDir := filepath.Join( workingDir, "/web/public/js" ) // Build the path to the JS files
@@ -208,5 +206,28 @@ func AddFileServer(router chi.Router, path string, root http.FileSystem) {
     router.Get( path + "*", http.HandlerFunc( func(w http.ResponseWriter, r *http.Request) {
         fs.ServeHTTP( w, r )
     } ) )
+
+}
+
+/* **************************************************************************
+** Function: renderIndex
+** URI: /
+** Description: Renders and servers the index page
+** *************************************************************************/
+func renderIndex(w http.ResponseWriter, r *http.Request) {
+
+    qlDataPath := filepath.Join( workingDir, "/web/data/quick-links.json" )    // Build the path to quick links data
+    tmDataPath := filepath.Join( workingDir, "/web/data/team.json" ) // Build the path to team member data
+
+    indexCTX := make(map[string]interface{})
+
+    indexCTX["title"] = "Brypt"
+    indexCTX["quickLink"], _ = os.Open( qlDataPath )
+    indexCTX["teamMember"], _ = os.Open( tmDataPath )
+
+    page := handlebars.CompilePage( "index", indexCTX )
+
+    w.Header().Set( "Content-Type", "text/html" )
+    w.Write( []byte( page ) )
 
 }
