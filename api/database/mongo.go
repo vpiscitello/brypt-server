@@ -131,7 +131,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	WriteManager(w)
 	/*switch r.Method {
 	case "GET":
-		users_collection := Client.Database("brypt_server").Collection("brypt_users")
+		users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 		var sort *options.FindOptions
 		var err error
@@ -181,7 +181,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	case "PUT":
 		r.ParseForm()
-		//	users_collection := Client.Database("brypt_server").Collection("brypt_users")
+		//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 		// TODO: Perform error checking
 		newUser := bsonx.NewDocument(bsonx.EC.String("username", r.Form.Get("username")),
@@ -195,7 +195,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 
 func WriteUsers(newUser *bsonx.Document, w http.ResponseWriter){
-	users_collection := Client.Database("brypt_server").Collection("brypt_users")
+	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 	_, err := users_collection.InsertOne(nil, newUser)
 	if err != nil {
@@ -219,7 +219,7 @@ func WriteNodes(n Node) {
 func WriteManager(w http.ResponseWriter){
 	newManager := bsonx.NewDocument(bsonx.EC.String("Manager_name", "testname"))
 
-	m_collection := Client.Database("brypt_server").Collection("brypt_managers")
+	m_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
 
 	_, err := m_collection.InsertOne(nil, newManager)
 	if err != nil {
