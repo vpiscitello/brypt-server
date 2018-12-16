@@ -40,8 +40,8 @@ func (rs Resources) Routes() chi.Router {
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
-	db.Connect()	
-	db.UserHandler(w, r)
+	TestInsert(w, r)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
 
@@ -103,4 +103,21 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 ** *************************************************************************/
 func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 	w.Write( []byte( "Linking...\n" ) )
+}
+
+/* **************************************************************************
+** Function: TestInsert
+** Description: Just a test function to demonstrate db insert functionality
+**	TODO: Remove when finished testing db insert
+** *************************************************************************/
+func TestInsert(w http.ResponseWriter, r *http.Request) {
+	db.Connect()	
+
+	testCTX := make( map[string]interface{} )
+	testCTX["username"] = "AwesomeAlice"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	testCTX["region"] = "Wonderland"
+
+	db.ReqHandler(w, r, "users", testCTX)
 }

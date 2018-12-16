@@ -125,10 +125,27 @@ func Setup() {
 
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
+func ReqHandler(w http.ResponseWriter, r *http.Request, collection string, dataCTX map[string]interface{}) {
 	
 	print("In users handler!\n")
-	WriteManager(w)
+	switch collection {
+		case "users":
+				WriteUser(w, dataCTX)
+				break
+		case "nodes":
+				WriteNode(w, dataCTX)
+				break
+		case "networks":
+				WriteNetwork(w, dataCTX)
+				break
+		case "clusters":
+				WriteCluster(w, dataCTX)
+				break
+		case "managers":
+				WriteManager(w, dataCTX)
+				break
+	}
+
 	/*switch r.Method {
 	case "GET":
 		users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
@@ -193,10 +210,28 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func getValue(ctx map[string]interface{}, key string) map[string]interface{} {
+	returnCTX := make( map[string]interface{} )
+	returnCTX["return"] = "something"
 
-func WriteUsers(newUser *bsonx.Document, w http.ResponseWriter){
+	for k, data := range ctx {
+			print("\nkey: ")
+			print(k)
+			print("\ndata: ")
+			print(data)
+			print("\n")
+	}
+
+	return returnCTX
+}
+
+func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
 	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
+	newCTX := getValue(userCTX, "username")
+	username := newCTX["return"].(string)
+	newUser := bsonx.NewDocument(bsonx.EC.String("Username", username))
+	
 	_, err := users_collection.InsertOne(nil, newUser)
 	if err != nil {
 		log.Println("Error inserting new user: ", err)
@@ -208,15 +243,19 @@ func WriteUsers(newUser *bsonx.Document, w http.ResponseWriter){
 	return
 }
 
-func WriteNetworks(n Network) {
+func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) {
 	// TODO
 }
 
-func WriteNodes(n Node) {
+func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) {
 	// TODO
 }
 
-func WriteManager(w http.ResponseWriter){
+func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) {
+	// TODO
+}
+
+func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}){
 	newManager := bsonx.NewDocument(bsonx.EC.String("Manager_name", "testname"))
 
 	m_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
