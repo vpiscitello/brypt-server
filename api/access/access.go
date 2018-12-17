@@ -4,7 +4,7 @@ import (
 	// "fmt"
 	db "brypt-server/api/database"
 	"net/http"
-
+	"time"
     "brypt-server/internal/handlebars"
 
 	"github.com/go-chi/chi"
@@ -113,11 +113,14 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 func TestInsert(w http.ResponseWriter, r *http.Request) {
 	db.Connect()	
 
+//	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = "AwesomeAlice"
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
+	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 4
 
 	db.ReqHandler(w, r, "users", testCTX)
 }

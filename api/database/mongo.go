@@ -15,6 +15,7 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
+	//"github.com/mongodb/ftdc/bsonx/elements"
 	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
 )
 
@@ -49,10 +50,10 @@ type Network struct {
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
 	Managers          []Manager         `bson:"managers" json:"managers"`
-	Direct_peers      int               `bson:"direct_peers" json:"direct_peers"`
-	Total_peers       int               `bson:"total_peers" json:"total_peers"`
+	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
+	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
-	Port              int               `bson:"port" json:"port"`
+	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Clusters          []Cluster         `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -73,7 +74,7 @@ type User struct {
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
-	Login_attempts    int               `bson:"login_attempts" json:"login_attempts"`
+	Login_attempts    int32             `bson:"login_attempts" json:"login_attempts"`
 	Login_token       string            `bson:"login_token" json:"login_token"`
 	Region            string            `bson:"region" json:"region"`
 }
@@ -128,6 +129,9 @@ func Setup() {
 func ReqHandler(w http.ResponseWriter, r *http.Request, collection string, dataCTX map[string]interface{}) {
 	
 	print("In users handler!\n")
+
+	sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
+		
 	switch collection {
 		case "users":
 				WriteUser(w, dataCTX)
@@ -210,28 +214,122 @@ func ReqHandler(w http.ResponseWriter, r *http.Request, collection string, dataC
 	return
 }
 
-func getValue(ctx map[string]interface{}, key string) map[string]interface{} {
-	returnCTX := make( map[string]interface{} )
-	returnCTX["return"] = "something"
+func sterlizeCTXData(ctx map[string]interface{}) {
+	// TODO: Loop through ctx and check that values don't contain invalid characters
+	for k := range ctx {
+		print(k)
+	}
+}
 
-	for k, data := range ctx {
-			print("\nkey: ")
-			print(k)
-			print("\ndata: ")
-			print(data)
-			print("\n")
+// TODO: Change to createBSONDocument(ctx, keys) and return a document
+func getStringValues(ctx map[string]interface{}, keys []string) map[string]interface{} {
+	tempCTX := make( map[string]interface{} )
+
+	for i := range keys {	
+		tempCTX[keys[i]] = ""	// Initialize all key value pairs to empty
 	}
 
-	return returnCTX
+	for k := range ctx {
+		for j := range keys {
+			if k == keys[j] {	// Store value if k matches a key in the users collection
+				tempCTX[keys[j]] = ctx[k]
+			}
+		}
+	}
+
+	return tempCTX
+}
+
+func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
+	valStr, okStr := ctx[key].(string)	// Check if the type is a string
+	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
+	if okStr {
+			doc = bsonx.NewDocument(bsonx.EC.String(key, valStr))
+	} else {
+			valInt, okInt := ctx[key].(int)
+		if okInt {
+			valInt32 := int32(valInt)
+			doc = bsonx.NewDocument(bsonx.EC.Int32(key, valInt32))
+		} else {
+			fmt.Print("\nFailed to insert value!\n")
+			//doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
+		}
+	}
+
+	print("\ninserted!\n")
+	return doc
+}
+
+func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
+	valStr, okStr := ctx[key].(string)	// Check if the type is a string
+	if okStr {
+		doc.Append(bsonx.EC.String(key, valStr))
+	} else {
+		valInt, okInt := ctx[key].(int)
+		if okInt {
+			valInt32 := int32(valInt)
+			doc.Append(bsonx.EC.Int32(key, valInt32))
+		} else {			
+			fmt.Print("\nFailed to append value!\n")
+		}
+	}
+
+	print("\nappended!\n")
+}
+
+func createBSONDocument(ctx map[string]interface{}, keys []string) *bsonx.Document {
+	firstPass := true	// Used to know when to start appending to the new document
+	var NewUser *bsonx.Document
+	//	tempCTX := make( map[string]interface{} )
+
+/*	for i := range keys {	
+		tempCTX[keys[i]] = ""	// Initialize all key value pairs to empty
+	}
+*/
+	for k := range ctx {
+		for j := range keys {
+			if k == keys[j] {	// Store value if k matches a key in the users collection
+				if firstPass {
+					NewUser = insertValue(ctx, keys[j])
+					firstPass = false
+				} else {
+					appendValue(NewUser, ctx, keys[j])
+				}
+				//	tempCTX[keys[j]] = ctx[k]
+			}
+		}
+	}
+
+//	NewUser = bsonx.NewDocument(bsonx.EC.String("username", tempCTX["username"].(string)))
+//	print("\n\nBefore append...\n\n")
+//	fmt.Print(NewUser)	
+//	NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
+//	bsonx.NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
+						//									 bsonx.EC.String("email", stringCTX["email"].(string)))
+	print("\n\nAfter append...\n\n")
+	fmt.Print(NewUser)
+	print("\n\n")
+	return NewUser 
 }
 
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
-	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+	var keys = []string {"username","first_name","last_name","email", "region", "login_attempts"}
 
-	newCTX := getValue(userCTX, "username")
-	username := newCTX["return"].(string)
-	newUser := bsonx.NewDocument(bsonx.EC.String("Username", username))
-	
+	newUser := createBSONDocument(userCTX, keys)
+	print("\n\n In Write User...\n\n")
+	fmt.Print(newUser)
+	/*	tempCTX := getStringValues(userCTX, keys)
+	NewUser := bsonx.NewDocument(bsonx.EC.String("username", tempCTX["username"].(string)),															 							 bsonx.EC.String("first_name", tempCTX["first_name"].(string)))
+
+	print("\n\nBefore append...\n\n")
+	fmt.Print(NewUser)	
+	NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
+//	bsonx.NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
+						//									 bsonx.EC.String("email", stringCTX["email"].(string)))
+	print("\n\nAfter append...\n\n")
+	fmt.Print(NewUser)
+	print("\n\n")
 	_, err := users_collection.InsertOne(nil, newUser)
 	if err != nil {
 		log.Println("Error inserting new user: ", err)
@@ -240,7 +338,7 @@ func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
 	}
 
 	w.WriteHeader(http.StatusAccepted)
-	return
+*/	return
 }
 
 func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) {
@@ -256,7 +354,7 @@ func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) {
 }
 
 func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}){
-	newManager := bsonx.NewDocument(bsonx.EC.String("Manager_name", "testname"))
+	newManager := bsonx.NewDocument(bsonx.EC.String("manager_name", "testname"))
 
 	m_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
 

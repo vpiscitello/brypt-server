@@ -93,7 +93,7 @@
     - last_login
         - Datetime
     - login_attempts
-        - Integer
+        - Int32
     - login_token
         - 255 Char
     - region
@@ -114,13 +114,13 @@
             - Foreign Key
             - String
     - direct_peers
-        - Integer
+        - Int32
     - total_peers
-        - Integer
+        - Int32
     - IP_address
         - String
     - port
-        - Integer
+        - Int32
     - connection_token
         - String
     - clusters
