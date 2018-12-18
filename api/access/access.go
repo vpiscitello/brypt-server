@@ -2,11 +2,13 @@ package access
 
 import (
 	// "fmt"
+	db "brypt-server/api/database"
 	"net/http"
-
+	"time"
     "brypt-server/internal/handlebars"
 
 	"github.com/go-chi/chi"
+	"github.com/mongodb/ftdc/bsonx/objectid"
 	// "github.com/aymerick/raymond"
 
 	// "brypt-server/api/users"
@@ -38,7 +40,10 @@ func (rs Resources) Routes() chi.Router {
 ** Client: Displays the compiled page/
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
-
+	
+	TestInsert(w, r)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	TestDelete(w, r)	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
+	
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
 
@@ -72,9 +77,6 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-
-
-
     w.Write( []byte( "Login...\n" ) )
 }
 
@@ -100,4 +102,46 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 ** *************************************************************************/
 func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 	w.Write( []byte( "Linking...\n" ) )
+}
+
+/* **************************************************************************
+** Function: TestInsert
+** Description: Just a test function to demonstrate db insert functionality
+**	TODO: Remove when finished testing db insert
+** *************************************************************************/
+func TestInsert(w http.ResponseWriter, r *http.Request) {
+	// db.Connect()	
+
+	objID1 := objectid.New()
+	objID2 := objectid.New()
+	objID3 := objectid.New()
+//	var login_attempts int32 = 4
+	testCTX := make( map[string]interface{} )
+	testCTX["username"] = "AwesomeAlice"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	testCTX["region"] = "Wonderland"
+	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 4
+	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
+	db.ReqHandler(w, r, "PUT", "brypt_users", testCTX)
+
+	testCTX["username"] = "TotallyTom"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	testCTX["region"] = "Wonderland"
+	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 4
+	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
+	db.ReqHandler(w, r, "PUT", "brypt_users", testCTX)
+//	defer db.Disconnect()	// Causes an internal server error for some reason...
+}
+
+func TestDelete(w http.ResponseWriter, r *http.Request) {
+
+	testCTX := make( map[string]interface{} )
+	testCTX["username"] = "AwesomeAlice"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	db.ReqHandler(w, r, "DELETE", "brypt_users", testCTX)
 }

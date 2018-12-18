@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>UI Template</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:600,700,800,900|Chivo:400,700,900|Changa:400,500,600,700,800">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
+        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="bridge.css">
+
+    </head>
+    <body>
+
+        <header class="navigation sw">
+            <div class="company">
+                <!-- <img class="logo" src="./assets/img/small-line-logo.svg" alt=""> -->
+                <h2 class="title">Brypt</h2>
+            </div>
+            <nav class="primary nv-m hd-m">
+                <div class="cover">
+                    <div class="toggle" id="menu-toggle"><span></span></div>
+                </div>
+                <div class="menu drsw sc">
+                    <ul class="sc mi">
+                        <li>
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#">Profile</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="">
+            <article id="bridge">
+                <h3>Enter Node Identification Code</h3>
+                <p>To add a node to your network enter the serial number on your embedded device or the code that was provided when you ran the downloaded binary.</p>
+                <div class="context">
+                    <form class="fs" action="index.html" method="post">
+                        <fieldset class="">
+                            <div class="wrapper">
+                                <input type="text" name="serial" value="">
+                                <label for="serial">Serial Number</label>
+                            </div>
+                            <button type="submit" name="next"><h4>Next</h4><i class="fas fa-arrow-right"></i></button>
+                        </fieldset>
+                    </form>
+                </div>
+            </article>
+
+            <div id="particle"></div>
+
+        </main>
+
+        <footer>
+
+        </footer>
+
+        <div class="overlay nd nv"></div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="/Users/vpiscitello/go/src/brypt-server/web/public/js/particles.min.js"></script>
+        <script src="index.js"></script>
+        <script src="bridge.js"></script>
+        <script src="components.js"></script>
+
+    </body>
+
+</html>

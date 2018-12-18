@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>UI Template</title>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:600,700,800,900|Chivo:400,700,900|Changa:400,500,600,700,800">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
+        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="dashboard.css">
+
+    </head>
+    <body>
+
+        <header class="navigation sw">
+            <div class="company">
+                <!-- <img class="logo" src="./assets/img/small-line-logo.svg" alt=""> -->
+                <h2 class="title">Brypt</h2>
+            </div>
+            <nav class="primary nv-m hd-m">
+                <div class="cover">
+                    <div class="toggle" id="menu-toggle"><span></span></div>
+                </div>
+                <div class="menu drsw sc">
+                    <ul class="sc mi">
+                        <li>
+                            <a href="#">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#">Profile</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main class="">
+            <div class="wrapper">
+                <div id="flg-mesg" class="flash">
+
+                </div>
+                <article id="network">
+                    <section id="user">
+                        <div class="context">
+                            <!-- <img src="" alt=""> -->
+                            <div class="icon">
+                                <i class="fas fa-user-astronaut"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Hello, <span id="name">User</span>!</h4>
+                                <!-- <p id="net-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Et ultrices neque ornare aenean euismod elementum nisi.</p> -->
+                            </div>
+                        </div>
+                    </section>
+                    <section id="clusters">
+                        <script type="text/x-template" id="node-template">
+                            <div class="nd-item">
+                                <div class="header">
+                                    <div class="icon"><i class="fas fa-atom"></i></div>
+                                </div>
+                                <div class="content">
+                                    <h4>{{ id }}</h4>
+                                </div>
+                                <div class="footer">
+                                    <div class="wrapper btn">
+                                        <a class="sw" href="."><i class="fas fa-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <script type="text/x-template" id="ng-template">
+                            <div class="nd-group">
+                                <node-item v-for="node in nodes"
+                                     v-bind:key="node.id"
+                                     v-bind:node="node"
+                                     @click="openDetail()">
+                                </node-item>
+                            </div>
+                        </script>
+                        <script type="text/x-template" id="cluster-template">
+                            <div class="context">
+                                <node-group id="coordinator" v-bind:nodes="coordinators"></node-group>
+                                <node-group id="neighbors" v-bind:nodes="neighbors"></node-group>
+                            </div>
+                        </script>
+                        <cluster-context v-bind:coordinators="coordinators"
+                                         v-bind:neighbors="neighbors">
+                        </cluster-context>
+                    </section>
+                </article>
+                <article id="data">
+                    <section id="chart">
+
+                    </section>
+                    <section id="overview">
+                        <div id="avg-read" class="ov-badge">
+
+                        </div>
+                        <div id="at-rate" class="ov-badge">
+
+                        </div>
+                    </section>
+                    <section id="stats">
+                        <div id="cl-count" class="st-badge">
+
+                        </div>
+                        <div id="tc-count" class="st-badge">
+
+                        </div>
+                        <div id="up-time" class="st-badge">
+
+                        </div>
+                    </section>
+                </article>
+                <article id="detail">
+
+                </article>
+            </div>
+        </main>
+
+        <footer>
+
+        </footer>
+
+        <div class="overlay nd nv"></div>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="index.js"></script>
+        <script src="components.js"></script>
+
+    </body>
+
+</html>

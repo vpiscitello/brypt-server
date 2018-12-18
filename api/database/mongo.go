@@ -2,20 +2,24 @@ package database
 
 import (
 
+//	"reflect"	// For printing types
 	"fmt"
 	"log"
 	"net/http"
-	"context"
-	"encoding/json"
+//	"context"
+//	"encoding/json"
 	"time"
-
+	"os"
 	config "brypt-server/config"
 
-	"github.com/mongodb/mongo-go-driver/mongo/options"
+//	"github.com/mongodb/mongo-go-driver/mongo/options"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
-	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
+	"github.com/mongodb/ftdc/bsonx/objectid"
+//	"github.com/mongodb/ftdc/bsonx/bsontype"
+	//"github.com/mongodb/ftdc/bsonx/elements"
+//	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
 )
 
 var configuration = config.Configuration{}
@@ -26,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	ID                uuid.UUID					`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -34,7 +38,7 @@ type Manager struct {
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -45,16 +49,16 @@ type Cluster struct {
 ** Networks
 ** *************************************************************************/
 type Network struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-	Managers          []Manager         `bson:"managers" json:"managers"`
-	Direct_peers      int               `bson:"direct_peers" json:"direct_peers"`
-	Total_peers       int               `bson:"total_peers" json:"total_peers"`
+	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
+	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
+	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
-	Port              int               `bson:"port" json:"port"`
+	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Clusters          []Cluster         `bson:"clusters" json:"clusters"`
+	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
 }
@@ -63,17 +67,17 @@ type Network struct {
 ** Users
 ** *************************************************************************/
 type User struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
-	Networks          []Network         `bson:"networks" json:"networks"`
+	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
-	Login_attempts    int               `bson:"login_attempts" json:"login_attempts"`
+	Login_attempts    int32             `bson:"login_attempts" json:"login_attempts"`
 	Login_token       string            `bson:"login_token" json:"login_token"`
 	Region            string            `bson:"region" json:"region"`
 }
@@ -82,7 +86,7 @@ type User struct {
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-	ID                uuid.UUID			`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -125,10 +129,60 @@ func Setup() {
 
 }
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
+/* **************************************************************************
+** Function: ReqHandler
+** URI:
+** Description:
+** *************************************************************************/
+func ReqHandler(w http.ResponseWriter, r *http.Request, action string, collection string, dataCTX map[string]interface{}) {
+	
+	print("In request handler!\n")
+
+	switch action {
+		case "PUT":
+			sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
+		
+			var id objectid.ObjectID
+
+			switch collection {
+				case "brypt_users":
+						print("Handling request to add new user\n")
+						id = WriteUser(w, dataCTX)
+						print("New user id: ")
+						fmt.Print(id)
+						print("\n")
+					break
+				case "brypt_nodes":
+						print("Handling request to add new node\n")
+						id = WriteNode(w, dataCTX)
+					break
+				case "brypt_networks":
+						print("Handling request to add new network\n")
+						id = WriteNetwork(w, dataCTX)
+					break
+				case "brypt_clusters":
+						print("Handling request to add new cluster\n")
+						id = WriteCluster(w, dataCTX)
+					break
+				case "brypt_managers":
+						print("Handling request to add new manager\n")
+						id = WriteManager(w, dataCTX)
+					break
+				default:
+						print("ERROR: Invalid POST request\n")
+					break
+			}
+			break
+		case "DELETE":
+				DeleteMany(w, collection, dataCTX)
+			break
+		default:
+				print("\nAction not recognized\n")
+			break
+	}
+	/*switch r.Method {
 	case "GET":
-		users_collection := Client.Database("brypt_server").Collection("brypt_users")
+		users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 		var sort *options.FindOptions
 		var err error
@@ -178,7 +232,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	case "PUT":
 		r.ParseForm()
-		//	users_collection := Client.Database("brypt_server").Collection("brypt_users")
+		//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 		// TODO: Perform error checking
 		newUser := bsonx.NewDocument(bsonx.EC.String("username", r.Form.Get("username")),
@@ -186,17 +240,274 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		bsonx.EC.String("last_name", r.Form.Get("last_name")))
 		WriteUsers(newUser, w)
 		return
-	}
+	}*/
 	return
 }
 
+/* **************************************************************************
+** Function: sterlizeCTXData
+** URI:
+** Description:
+** *************************************************************************/
+func sterlizeCTXData(ctx map[string]interface{}) {
+	// TODO: Loop through ctx and check that values don't contain invalid characters
+	print("\nIn sterlizeCTXData\n")
+}
 
-func WriteUsers(newUser *bsonx.Document, w http.ResponseWriter){
-	users_collection := Client.Database("brypt_server").Collection("brypt_users")
+/* **************************************************************************
+** Function: insertValue
+** URI:
+** Description:
+** *************************************************************************/
+/*func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
+	valStr, okStr := ctx[key].(string)	// Check if the type is a string
+	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
+	if okStr {	
+			doc = bsonx.NewDocument(bsonx.EC.String(key, valStr))
+	} else {	// Check if int
+			valInt, okInt := ctx[key].(int)
+		if okInt {
+			valInt32 := int32(valInt)
+			doc = bsonx.NewDocument(bsonx.EC.Int32(key, valInt32))
+		} else {	// Check if int 32
+			valInt32_c, okInt32 := ctx[key].(int32)
+			if okInt32 {
+				doc = bsonx.NewDocument(bsonx.EC.Int32(key, valInt32_c))
+			} else {	// Check if time
+				valTime, okTime := ctx[key].(time.Time)
+				if okTime {
+					doc = bsonx.NewDocument(bsonx.EC.Time(key, valTime))
+				}	else {
+					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					if okObjID {
+						arr := bsonx.NewArray()
+						for i := range valObjID {
+							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+						}
+						doc = bsonx.NewDocument(bsonx.EC.Array(key, arr))
+					}	else {	// Value is not a string, int, int32, or time
+						fmt.Print("\nFailed to insert value: ")
+						print(key)
+						print("\n")
+						fmt.Println(reflect.TypeOf(ctx[key]))
+						print("\n")
+					}
+				}
+			}
+			//doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
+		}
+	}
 
-	_, err := users_collection.InsertOne(nil, newUser)
+	print("\ninserted!\n")
+	return doc
+}*/
+
+/* **************************************************************************
+** Function: appendValue
+** URI:
+** Description:
+** *************************************************************************/
+func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
+	valStr, okStr := ctx[key].(string)	// Check if the type is a string
+	if okStr {	
+		doc.Append(bsonx.EC.String(key, valStr))
+	} else {	// Check if int
+		valInt, okInt := ctx[key].(int)
+		if okInt {
+			valInt32 := int32(valInt)
+			doc.Append(bsonx.EC.Int32(key, valInt32))
+		} else {	// Check if int32
+			valInt32_c, okInt32 := ctx[key].(int32)
+			if okInt32 {
+				doc.Append(bsonx.EC.Int32(key, valInt32_c))
+			} else {	// Check if time
+				valTime, okTime := ctx[key].(time.Time)
+				if okTime {
+					doc.Append(bsonx.EC.Time(key, valTime))
+				} else {	// Check if array of object ids
+					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					if okObjID {
+						arr := bsonx.NewArray()
+						for i := range valObjID {	// Build array type *Array of object ids
+							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+						}
+						doc.Append(bsonx.EC.Array(key, arr))	// Append the object id array to the BSON document
+					} else {
+						fmt.Print("\nFailed to append value!\n")
+					}
+				}
+			}
+		}
+	}
+
+	print("\nappended!\n")
+}
+
+/* **************************************************************************
+** Function: createBSONDocument
+** URI:
+** Description:
+** Returns: Object ID and BSON Document
+** *************************************************************************/
+func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.ObjectID, *bsonx.Document) {
+//	firstPass := true	// Used to know when to start appending to the new document
+	var NewDoc *bsonx.Document
+	objID := objectid.New()	// Create and store new object id
+
+	NewDoc = bsonx.NewDocument(bsonx.EC.ObjectID("ID", objID))
+	
+	for k := range ctx {
+		for j := range keys {
+			if k == keys[j] {	// Store value if k matches a key in the users collection
+			//	if firstPass {
+			//		NewDoc = insertValue(ctx, keys[j])	// Initializes a new BSON document
+			//		firstPass = false
+			//	} else {
+					appendValue(NewDoc, ctx, keys[j])
+			//	}
+			}
+		}
+	}
+
+	return objID, NewDoc 
+}
+
+/* **************************************************************************
+** Function: WriteUser
+** URI:
+** Description:
+** *************************************************************************/
+func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.ObjectID {
+//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
+
+	objID, newUser := createBSONDocument(userCTX, keys)
+	print("\n\n In Write User...\n\n")
+	fmt.Print(newUser)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+
+	_, err := collection.InsertOne(nil, newUser)
 	if err != nil {
 		log.Println("Error inserting new user: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+
+/* **************************************************************************
+** Function: WriteNetwork
+** URI:
+** Description:
+** *************************************************************************/
+func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) objectid.ObjectID {
+	var keys = []string {"network_name", "owner_name", "managers", "direct_peers", "total_peers", "ip_address", "port", "connection_token", "clusters", "created_on", "last_accessed"}
+	objID, newNetwork := createBSONDocument(networkCTX, keys)
+	print("\n\n In Write Network...\n\n")
+	fmt.Print(newNetwork)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_networks")
+
+	_, err := collection.InsertOne(nil, newNetwork)
+	if err != nil {
+		log.Println("Error inserting new network: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+
+/* **************************************************************************
+** Function: WriteNode
+** URI:
+** Description:
+** *************************************************************************/
+func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) objectid.ObjectID {
+	var keys = []string {"serial_number", "type", "created_on", "registered_on", "registered_to", "connected_network"}
+	objID, newNode := createBSONDocument(nodeCTX, keys)
+	print("\n\n In Write Node...\n\n")
+	fmt.Print(newNode)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_nodes")
+
+	_, err := collection.InsertOne(nil, newNode)
+	if err != nil {
+		log.Println("Error inserting new node: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+
+/* **************************************************************************
+** Function: WriteCluster
+** URI:
+** Description:
+** *************************************************************************/
+func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) objectid.ObjectID {
+	var keys = []string {"connection_token", "coord_ip", "coord_port", "comm_tech"}
+	objID, newCluster := createBSONDocument(clusterCTX, keys)
+	print("\n\n In Write Cluster...\n\n")
+	fmt.Print(newCluster)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_clusters")
+
+	_, err := collection.InsertOne(nil, newCluster)
+	if err != nil {
+		log.Println("Error inserting new cluster: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+
+/* **************************************************************************
+** Function: WriteManager 
+** URI:
+** Description:
+** *************************************************************************/
+func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) objectid.ObjectID {
+	var keys = []string {"manager_name"}
+	objID, newManager := createBSONDocument(managerCTX, keys)
+	print("\n\n In Write Manager...\n\n")
+	fmt.Print(newManager)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
+
+	_, err := collection.InsertOne(nil, newManager)
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+
+/* **************************************************************************
+** Function: DeleteMany 
+** URI:
+** Description:
+** *************************************************************************/
+func DeleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) {
+		
+	sterlizeCTXData(filterCTX)
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	_, err := collection.DeleteMany(nil, filterCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -205,66 +516,66 @@ func WriteUsers(newUser *bsonx.Document, w http.ResponseWriter){
 	return
 }
 
-func WriteNetworks(n Network) {
-	// TODO
+/* **************************************************************************
+** Function: CreateClient 
+** URI:
+** Description: Creates and configures a new client
+** *************************************************************************/
+func CreateClient() {
+
+	var err error
+	print("\n\nSetting up client...\n")
+
+	configuration = config.GetConfig()
+
+	connectionURL := configuration.Database.MongoURI
+	if connectionURL == "" {
+		panic( "Connection variable is not set!" )
+	}
+
+	cert_path, cert_exists := os.LookupEnv("MONGODB_CERT_PATH")
+
+	if cert_exists {  // If user has certification, create a new client with cert info
+		print(cert_path)
+		Client, err = mongo.NewClient(connectionURL)
+		//Client, err = mongo.NewClientWithOptions(connectionURL, mongo.ClientOpt.SSLCaFile(cert_path))
+	} else {  // Else create a new client without cert info
+		Client, err = mongo.NewClient(connectionURL)
+	}
+
+	if err != nil {
+		panic( err )
+	}
+
+	print("\nFinished setting up client...\n\n")
+	fmt.Print( Client )
+	return
 }
 
-func WriteNodes(n Node) {
-	// TODO
+/* **************************************************************************
+** Function: Connect
+** URI:
+** Description: Creates client connection
+** *************************************************************************/
+func Connect() {
+	err := Client.Connect(nil)
+
+	if err != nil {
+		log.Fatal(err)  // Log any errors thrown during connect
+	}
+
 }
 
-
-// /* **************************************************************************
-// ** Function: CreateClient
-// ** URI:
-// ** Description: Creates a database client
-// ** *************************************************************************/
-//
-// func CreateClient() {
-//
-// 				var err error
-//
-// 				connection_url, url_exists := os.LookupEnv("COMPOSE_MONGODB_URL")
-// 				if !url_exists) {
-// 								log.Fatal("COMPOSE_MONGODB_URL environmental variable is not set. This needs to be set to ...")
-// 				}
-//
-// 				cert_path, cert_exists := os.LookupEnv("MONGODB_CERT_PATH")
-//
-// 				if cert_exists {  // If user has certification, create a new client with cert info
-// 								Client, err = mongo.NewClientWithOptions(connection_url, mongo.ClientOpt.SSLCaFile(cert_path))
-// 				} else {  // Else create a new client without cert info
-// 								Client, err = mongo.NewClient(connection_url)
-// 				}
-//
-// 				if err != nil {
-// 								log.Fatal(err)  // Log any errors which come up during client connection
-// 				}
-//
-// }
-//
-// /* **************************************************************************
-// ** Function: Connect
-// ** URI:
-// ** Description: Creates client connection
-// ** *************************************************************************/
-// func Connect() {
-// 				var err error
-//
-// 				err = Client.Connect(nil)
-//
-// 				if err != nil {
-// 								log.Fatal(err)  // Log any errors thrown during connection
-// 				}
-//
-// }
-//
-//
-// /* **************************************************************************
-// ** Function: Disconnect
-// ** URI:
-// ** Description: Disconnects client
-// ** *************************************************************************/
-// func Disconnect() {
-// 	defer Client.Disconnect(nil)	// Disconnection client
-// }
+//TODO: Figure out how to disconnect client without causing internal server error
+/* **************************************************************************
+** Function: Disconnect
+** URI:
+** Description: Disconnects client
+** *************************************************************************/
+/*func Disconnect() {
+	err := Client.Disconnect(nil)	// Disconnection client
+	
+	if err != nil {
+		log.Fatal(err)  // Log any errors thrown during disconnect
+	}
+}*/
