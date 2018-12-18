@@ -76,9 +76,6 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-
-
-
     w.Write( []byte( "Login...\n" ) )
 }
 

@@ -21,7 +21,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     background: #F4F7F8;
     background: -webkit-linear-gradient(to right, #E6E9F0, #F4F7F8);
@@ -31,6 +31,7 @@ body {
 /************ Text Styles ************/
 
 .title {
+    margin-left: 16px;
     font-family: 'Bebas Neue', sans-serif;
     font-weight : 700;
 }
