@@ -109,7 +109,7 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 **	TODO: Remove when finished testing db insert
 ** *************************************************************************/
 func TestInsert(w http.ResponseWriter, r *http.Request) {
-	db.Connect()	
+	// db.Connect()	
 
 	objID1 := objectid.New()
 	objID2 := objectid.New()
@@ -124,4 +124,6 @@ func TestInsert(w http.ResponseWriter, r *http.Request) {
 	testCTX["login_attempts"] = 4
 	testCTX["objids"] = []objectid.ObjectID{objID1, objID2, objID3}
 	db.ReqHandler(w, r, "users", testCTX)
+
+//	defer db.Disconnect()	// Causes an internal server error for some reason...
 }

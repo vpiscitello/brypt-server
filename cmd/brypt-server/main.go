@@ -63,8 +63,8 @@ func main()  {
     configuration = config.GetConfig()  // Get the Configuration Settings
 
     db.Setup()
-
-    handlebars.Setup()
+		db.Connect()
+		handlebars.Setup()
 
     HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
     HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )

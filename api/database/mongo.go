@@ -480,22 +480,24 @@ func CreateClient() {
 ** Description: Creates client connection
 ** *************************************************************************/
 func Connect() {
-	var err error
-
-	err = Client.Connect(nil)
+	err := Client.Connect(nil)
 
 	if err != nil {
-		log.Fatal(err)  // Log any errors thrown during connection
+		log.Fatal(err)  // Log any errors thrown during connect
 	}
 
- }
+}
 
 
-// /* **************************************************************************
-// ** Function: Disconnect
-// ** URI:
-// ** Description: Disconnects client
-// ** *************************************************************************/
-// func Disconnect() {
-// 	defer Client.Disconnect(nil)	// Disconnection client
-// }
+/* **************************************************************************
+** Function: Disconnect
+** URI:
+** Description: Disconnects client
+** *************************************************************************/
+func Disconnect() {
+	err := Client.Disconnect(nil)	// Disconnection client
+	
+	if err != nil {
+		log.Fatal(err)  // Log any errors thrown during disconnect
+	}
+}
