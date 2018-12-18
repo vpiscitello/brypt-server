@@ -25,8 +25,8 @@ deps:
 	go get -u github.com/mongodb/mongo-go-driver/mongo
 	go get -u github.com/aymerick/raymond
 	go get -u github.com/mongodb/mongo-go-driver/bson
-	go get -u github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid
 	go get -u github.com/mongodb/ftdc/bsonx
+	go get -u github.com/mongodb/ftdc/bsonx/objectid
 
 add_deps:
 	govendor fetch github.com/tkanos/gonfig
@@ -36,8 +36,8 @@ add_deps:
 	govendor fetch github.com/mongodb/mongo-go-driver/mongo
 	govendor fetch github.com/aymerick/raymond
 	govendor fetch github.com/mongodb/mongo-go-driver/bson
-	govendor fetch github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid
 	govendor fetch github.com/mongodb/ftdc/bsonx
+	govendor fetch github.com/mongodb/ftdc/bsonx/objectid
 
 build:
 	@echo "Compiling Brypt Server"

@@ -8,6 +8,7 @@ import (
     "brypt-server/internal/handlebars"
 
 	"github.com/go-chi/chi"
+	"github.com/mongodb/ftdc/bsonx/objectid"
 	// "github.com/aymerick/raymond"
 
 	// "brypt-server/api/users"
@@ -113,6 +114,9 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 func TestInsert(w http.ResponseWriter, r *http.Request) {
 	db.Connect()	
 
+	objID1 := objectid.New()
+	objID2 := objectid.New()
+	objID3 := objectid.New()
 //	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = "AwesomeAlice"
@@ -121,6 +125,6 @@ func TestInsert(w http.ResponseWriter, r *http.Request) {
 	testCTX["region"] = "Wonderland"
 	testCTX["age"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
-
+	testCTX["objids"] = []objectid.ObjectID{objID1, objID2, objID3}
 	db.ReqHandler(w, r, "users", testCTX)
 }

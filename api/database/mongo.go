@@ -2,6 +2,7 @@ package database
 
 import (
 
+	"reflect"	// For printing types
 	"fmt"
 	"log"
 	"net/http"
@@ -15,8 +16,10 @@ import (
 	"github.com/mongodb/mongo-go-driver/mongo"
 	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
+	"github.com/mongodb/ftdc/bsonx/objectid"
+//	"github.com/mongodb/ftdc/bsonx/bsontype"
 	//"github.com/mongodb/ftdc/bsonx/elements"
-	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
+//	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
 )
 
 var configuration = config.Configuration{}
@@ -27,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	ID                uuid.UUID					`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -35,7 +38,7 @@ type Manager struct {
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -46,16 +49,16 @@ type Cluster struct {
 ** Networks
 ** *************************************************************************/
 type Network struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-	Managers          []Manager         `bson:"managers" json:"managers"`
+	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
 	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
 	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
 	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Clusters          []Cluster         `bson:"clusters" json:"clusters"`
+	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
 }
@@ -64,13 +67,13 @@ type Network struct {
 ** Users
 ** *************************************************************************/
 type User struct {
-	ID                uuid.UUID 		`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
-	Networks          []Network         `bson:"networks" json:"networks"`
+	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
@@ -83,7 +86,7 @@ type User struct {
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-	ID                uuid.UUID			`bson:"_id,omitempty" json:"_id,omitempty"`
+	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -243,15 +246,38 @@ func getStringValues(ctx map[string]interface{}, keys []string) map[string]inter
 func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
-	if okStr {
+	if okStr {	
 			doc = bsonx.NewDocument(bsonx.EC.String(key, valStr))
-	} else {
+	} else {	// Check if int
 			valInt, okInt := ctx[key].(int)
 		if okInt {
 			valInt32 := int32(valInt)
 			doc = bsonx.NewDocument(bsonx.EC.Int32(key, valInt32))
-		} else {
-			fmt.Print("\nFailed to insert value!\n")
+		} else {	// Check if int 32
+			valInt32_c, okInt32 := ctx[key].(int32)
+			if okInt32 {
+				doc = bsonx.NewDocument(bsonx.EC.Int32(key, valInt32_c))
+			} else {	// Check if time
+				valTime, okTime := ctx[key].(time.Time)
+				if okTime {
+					doc = bsonx.NewDocument(bsonx.EC.Time(key, valTime))
+				}	else {
+					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					if okObjID {
+						arr := bsonx.NewArray()
+						for i := range valObjID {
+							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+						}
+						doc = bsonx.NewDocument(bsonx.EC.Array(key, arr))
+					}	else {	// Value is not a string, int, int32, or time
+						fmt.Print("\nFailed to insert value: ")
+						print(key)
+						print("\n")
+						fmt.Println(reflect.TypeOf(ctx[key]))
+						print("\n")
+					}
+				}
+			}
 			//doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
 		}
 	}
@@ -262,15 +288,34 @@ func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 
 func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
-	if okStr {
+	if okStr {	
 		doc.Append(bsonx.EC.String(key, valStr))
-	} else {
+	} else {	// Check if int
 		valInt, okInt := ctx[key].(int)
 		if okInt {
 			valInt32 := int32(valInt)
 			doc.Append(bsonx.EC.Int32(key, valInt32))
-		} else {			
-			fmt.Print("\nFailed to append value!\n")
+		} else {	// Check if int32
+			valInt32_c, okInt32 := ctx[key].(int32)
+			if okInt32 {
+				doc.Append(bsonx.EC.Int32(key, valInt32_c))
+			} else {	// Check if time
+				valTime, okTime := ctx[key].(time.Time)
+				if okTime {
+					doc.Append(bsonx.EC.Time(key, valTime))
+				} else {	// Check if array of object ids
+					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					if okObjID {
+						arr := bsonx.NewArray()
+						for i := range valObjID {	// Build array type *Array of object ids
+							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+						}
+						doc.Append(bsonx.EC.Array(key, arr))	// Append the object id array to the BSON document
+					} else {
+						fmt.Print("\nFailed to append value!\n")
+					}
+				}
+			}
 		}
 	}
 
@@ -314,7 +359,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) *bsonx.Docume
 
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-	var keys = []string {"username","first_name","last_name","email", "region", "login_attempts"}
+	var keys = []string {"username","first_name","last_name","email", "region", "login_attempts", "age", "objids"}
 
 	newUser := createBSONDocument(userCTX, keys)
 	print("\n\n In Write User...\n\n")
