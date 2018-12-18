@@ -42,6 +42,7 @@ func (rs Resources) Routes() chi.Router {
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
 	TestInsert(w, r)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	TestDelete(w, r)	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
 	
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
@@ -122,8 +123,25 @@ func TestInsert(w http.ResponseWriter, r *http.Request) {
 	testCTX["region"] = "Wonderland"
 	testCTX["age"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
-	testCTX["objids"] = []objectid.ObjectID{objID1, objID2, objID3}
-	db.ReqHandler(w, r, "users", testCTX)
+	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
+	db.ReqHandler(w, r, "PUT", "brypt_users", testCTX)
 
+	testCTX["username"] = "TotallyTom"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	testCTX["region"] = "Wonderland"
+	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 4
+	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
+	db.ReqHandler(w, r, "PUT", "brypt_users", testCTX)
 //	defer db.Disconnect()	// Causes an internal server error for some reason...
+}
+
+func TestDelete(w http.ResponseWriter, r *http.Request) {
+
+	testCTX := make( map[string]interface{} )
+	testCTX["username"] = "AwesomeAlice"
+	testCTX["first_name"] = "Alice"
+	testCTX["last_name"] = "Allen"
+	db.ReqHandler(w, r, "DELETE", "brypt_users", testCTX)
 }
