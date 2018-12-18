@@ -129,26 +129,36 @@ func Setup() {
 
 }
 
+/* **************************************************************************
+** Function: ReqHandler
+** URI:
+** Description:
+** *************************************************************************/
 func ReqHandler(w http.ResponseWriter, r *http.Request, collection string, dataCTX map[string]interface{}) {
 	
-	print("In users handler!\n")
+	print("In request handler!\n")
 
 	sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
 		
 	switch collection {
 		case "users":
+				print("Handling request to add new user\n")
 				WriteUser(w, dataCTX)
 				break
 		case "nodes":
+				print("Handling request to add new node\n")
 				WriteNode(w, dataCTX)
 				break
 		case "networks":
+				print("Handling request to add new network\n")
 				WriteNetwork(w, dataCTX)
 				break
 		case "clusters":
+				print("Handling request to add new cluster\n")
 				WriteCluster(w, dataCTX)
 				break
 		case "managers":
+				print("Handling request to add new manager\n")
 				WriteManager(w, dataCTX)
 				break
 	}
@@ -217,32 +227,21 @@ func ReqHandler(w http.ResponseWriter, r *http.Request, collection string, dataC
 	return
 }
 
+/* **************************************************************************
+** Function: sterlizeCTXData
+** URI:
+** Description:
+** *************************************************************************/
 func sterlizeCTXData(ctx map[string]interface{}) {
 	// TODO: Loop through ctx and check that values don't contain invalid characters
-	for k := range ctx {
-		print(k)
-	}
+	print("\nIn sterlizeCTXData\n")
 }
 
-// TODO: Change to createBSONDocument(ctx, keys) and return a document
-func getStringValues(ctx map[string]interface{}, keys []string) map[string]interface{} {
-	tempCTX := make( map[string]interface{} )
-
-	for i := range keys {	
-		tempCTX[keys[i]] = ""	// Initialize all key value pairs to empty
-	}
-
-	for k := range ctx {
-		for j := range keys {
-			if k == keys[j] {	// Store value if k matches a key in the users collection
-				tempCTX[keys[j]] = ctx[k]
-			}
-		}
-	}
-
-	return tempCTX
-}
-
+/* **************************************************************************
+** Function: insertValue
+** URI:
+** Description:
+** *************************************************************************/
 func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
@@ -286,6 +285,11 @@ func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	return doc
 }
 
+/* **************************************************************************
+** Function: appendValue
+** URI:
+** Description:
+** *************************************************************************/
 func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	if okStr {	
@@ -322,60 +326,47 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 	print("\nappended!\n")
 }
 
+/* **************************************************************************
+** Function: createBSONDocument
+** URI:
+** Description:
+** *************************************************************************/
 func createBSONDocument(ctx map[string]interface{}, keys []string) *bsonx.Document {
 	firstPass := true	// Used to know when to start appending to the new document
-	var NewUser *bsonx.Document
-	//	tempCTX := make( map[string]interface{} )
-
-/*	for i := range keys {	
-		tempCTX[keys[i]] = ""	// Initialize all key value pairs to empty
-	}
-*/
+	var NewDoc *bsonx.Document
+	
 	for k := range ctx {
 		for j := range keys {
 			if k == keys[j] {	// Store value if k matches a key in the users collection
 				if firstPass {
-					NewUser = insertValue(ctx, keys[j])
+					NewDoc = insertValue(ctx, keys[j])	// Initializes a new BSON document
 					firstPass = false
 				} else {
-					appendValue(NewUser, ctx, keys[j])
+					appendValue(NewDoc, ctx, keys[j])
 				}
-				//	tempCTX[keys[j]] = ctx[k]
 			}
 		}
 	}
 
-//	NewUser = bsonx.NewDocument(bsonx.EC.String("username", tempCTX["username"].(string)))
-//	print("\n\nBefore append...\n\n")
-//	fmt.Print(NewUser)	
-//	NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
-//	bsonx.NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
-						//									 bsonx.EC.String("email", stringCTX["email"].(string)))
-	print("\n\nAfter append...\n\n")
-	fmt.Print(NewUser)
-	print("\n\n")
-	return NewUser 
+	return NewDoc 
 }
 
+/* **************************************************************************
+** Function: WriteUser
+** URI:
+** Description:
+** *************************************************************************/
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-	var keys = []string {"username","first_name","last_name","email", "region", "login_attempts", "age", "objids"}
+	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
 
 	newUser := createBSONDocument(userCTX, keys)
 	print("\n\n In Write User...\n\n")
 	fmt.Print(newUser)
-	/*	tempCTX := getStringValues(userCTX, keys)
-	NewUser := bsonx.NewDocument(bsonx.EC.String("username", tempCTX["username"].(string)),															 							 bsonx.EC.String("first_name", tempCTX["first_name"].(string)))
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
-	print("\n\nBefore append...\n\n")
-	fmt.Print(NewUser)	
-	NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
-//	bsonx.NewUser.Append(bsonx.EC.String("last_name", tempCTX["last_name"].(string)))
-						//									 bsonx.EC.String("email", stringCTX["email"].(string)))
-	print("\n\nAfter append...\n\n")
-	fmt.Print(NewUser)
-	print("\n\n")
-	_, err := users_collection.InsertOne(nil, newUser)
+	_, err := collection.InsertOne(nil, newUser)
 	if err != nil {
 		log.Println("Error inserting new user: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -383,27 +374,92 @@ func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}){
 	}
 
 	w.WriteHeader(http.StatusAccepted)
-*/	return
+	return
 }
 
+/* **************************************************************************
+** Function: WriteNetwork
+** URI:
+** Description:
+** *************************************************************************/
 func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) {
-	// TODO
+	var keys = []string {"network_name", "owner_name", "managers", "direct_peers", "total_peers", "ip_address", "port", "connection_token", "clusters", "created_on", "last_accessed"}
+	newNetwork := createBSONDocument(networkCTX, keys)
+	print("\n\n In Write Network...\n\n")
+	fmt.Print(newNetwork)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_networks")
+
+	_, err := collection.InsertOne(nil, newNetwork)
+	if err != nil {
+		log.Println("Error inserting new network: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
+/* **************************************************************************
+** Function: WriteNode
+** URI:
+** Description:
+** *************************************************************************/
 func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) {
-	// TODO
+	var keys = []string {"serial_number", "type", "created_on", "registered_on", "registered_to", "connected_network"}
+	newNode := createBSONDocument(nodeCTX, keys)
+	print("\n\n In Write Node...\n\n")
+	fmt.Print(newNode)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_nodes")
+
+	_, err := collection.InsertOne(nil, newNode)
+	if err != nil {
+		log.Println("Error inserting new node: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
+/* **************************************************************************
+** Function: WriteCluster
+** URI:
+** Description:
+** *************************************************************************/
 func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) {
-	// TODO
+	var keys = []string {"connection_token", "coord_ip", "coord_port", "comm_tech"}
+	newCluster := createBSONDocument(clusterCTX, keys)
+	print("\n\n In Write Cluster...\n\n")
+	fmt.Print(newCluster)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_clusters")
+
+	_, err := collection.InsertOne(nil, newCluster)
+	if err != nil {
+		log.Println("Error inserting new cluster: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusAccepted)
 }
 
+/* **************************************************************************
+** Function: WriteManager 
+** URI:
+** Description:
+** *************************************************************************/
 func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}){
-	newManager := bsonx.NewDocument(bsonx.EC.String("manager_name", "testname"))
+	var keys = []string {"manager_name"}
+	newManager := createBSONDocument(managerCTX, keys)
+	print("\n\n In Write Manager...\n\n")
+	fmt.Print(newManager)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
 
-	m_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
-
-	_, err := m_collection.InsertOne(nil, newManager)
+	_, err := collection.InsertOne(nil, newManager)
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -414,6 +470,11 @@ func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}){
 	return
 }
 
+/* **************************************************************************
+** Function: CreateClient 
+** URI:
+** Description: Creates and configures a new client
+** *************************************************************************/
 func CreateClient() {
 
 	var err error
@@ -445,35 +506,6 @@ func CreateClient() {
 	return
 }
 
-// /* **************************************************************************
-// ** Function: CreateClient
-// ** URI:
-// ** Description: Creates a database client
-// ** *************************************************************************/
-//
-// func CreateClient() {
-//
-// 				var err error
-//
-// 				connection_url, url_exists := os.LookupEnv("COMPOSE_MONGODB_URL")
-// 				if !url_exists) {
-// 								log.Fatal("COMPOSE_MONGODB_URL environmental variable is not set. This needs to be set to ...")
-// 				}
-//
-// 				cert_path, cert_exists := os.LookupEnv("MONGODB_CERT_PATH")
-//
-// 				if cert_exists {  // If user has certification, create a new client with cert info
-// 								Client, err = mongo.NewClientWithOptions(connection_url, mongo.ClientOpt.SSLCaFile(cert_path))
-// 				} else {  // Else create a new client without cert info
-// 								Client, err = mongo.NewClient(connection_url)
-// 				}
-//
-// 				if err != nil {
-// 								log.Fatal(err)  // Log any errors which come up during client connection
-// 				}
-//
-// }
-
 /* **************************************************************************
 ** Function: Connect
 ** URI:
@@ -488,16 +520,16 @@ func Connect() {
 
 }
 
-
+//TODO: Figure out how to disconnect client without causing internal server error
 /* **************************************************************************
 ** Function: Disconnect
 ** URI:
 ** Description: Disconnects client
 ** *************************************************************************/
-func Disconnect() {
+/*func Disconnect() {
 	err := Client.Disconnect(nil)	// Disconnection client
 	
 	if err != nil {
 		log.Fatal(err)  // Log any errors thrown during disconnect
 	}
-}
+}*/
