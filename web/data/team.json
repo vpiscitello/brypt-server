@@ -2,6 +2,7 @@
     "name": "Vincenzo Piscitello",
     "image": "",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",
@@ -11,6 +12,7 @@
     "name": "Sean Caster",
     "image": "",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",
@@ -20,6 +22,7 @@
     "name": "Terri Hewitt",
     "image": "",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",
@@ -29,6 +32,7 @@
     "name": "Adam Barton",
     "image": "",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",
@@ -38,6 +42,7 @@
     "name": "Ryan Howerton",
     "image": "",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
         "linkedin": "https://linkedin.com",
         "github": "https://github.com",

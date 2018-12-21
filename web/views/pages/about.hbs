@@ -1,0 +1,17 @@
+{{> header}}
+
+<main class="">
+
+    <article id="team">
+        <h3>Our Team</h3>
+        <div class="context">
+            {{#each teamMember}}
+                {{> tmCardDetail}}
+            {{/each}}
+        </div>
+    </article>
+</main>
+
+{{> footer}}
+
+<div class="overlay nv nd"></div>
