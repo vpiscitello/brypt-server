@@ -33,7 +33,7 @@ add_deps:
 	govendor fetch github.com/go-chi/chi
 	govendor fetch github.com/go-chi/chi/middleware
 	govendor fetch github.com/go-chi/hostrouter
-	govendor fetch github.com/mongodb/mongo-go-driver/mongo
+	govendor fetch github.com/mongodb/mongo-go-driver/mongo@79e6c40817d03b8b514c92ef62e10ec18e31b220
 	govendor fetch github.com/aymerick/raymond
 	govendor fetch github.com/mongodb/mongo-go-driver/bson
 	govendor fetch github.com/mongodb/ftdc/bsonx
