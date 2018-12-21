@@ -129,6 +129,46 @@ func Setup() {
 
 }
 
+func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) objectid.ObjectID {
+	
+	print("In write request handler!\n")
+
+	sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
+		
+	var id objectid.ObjectID
+
+	switch collection {
+		case "brypt_users":
+				print("Handling request to add new user\n")
+				id = WriteUser(w, dataCTX)
+				print("New user id: ")
+				fmt.Print(id)
+				print("\n")
+			break
+		case "brypt_nodes":
+				print("Handling request to add new node\n")
+				id = WriteNode(w, dataCTX)
+			break
+		case "brypt_networks":
+				print("Handling request to add new network\n")
+				id = WriteNetwork(w, dataCTX)
+			break
+		case "brypt_clusters":
+				print("Handling request to add new cluster\n")
+				id = WriteCluster(w, dataCTX)
+			break
+		case "brypt_managers":
+				print("Handling request to add new manager\n")
+				id = WriteManager(w, dataCTX)
+			break
+		default:
+				print("ERROR: Invalid POST request\n")
+				id = objectid.NilObjectID
+			break
+	}
+	return id
+}
+
 /* **************************************************************************
 ** Function: ReqHandler
 ** URI:
@@ -140,7 +180,7 @@ func ReqHandler(w http.ResponseWriter, r *http.Request, action string, collectio
 
 	switch action {
 		case "PUT":
-			sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
+			sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
 		
 			var id objectid.ObjectID
 
@@ -245,13 +285,13 @@ func ReqHandler(w http.ResponseWriter, r *http.Request, action string, collectio
 }
 
 /* **************************************************************************
-** Function: sterlizeCTXData
+** Function: sterilizeCTXData
 ** URI:
 ** Description:
 ** *************************************************************************/
-func sterlizeCTXData(ctx map[string]interface{}) {
+func sterilizeCTXData(ctx map[string]interface{}) {
 	// TODO: Loop through ctx and check that values don't contain invalid characters
-	print("\nIn sterlizeCTXData\n")
+	print("\nIn sterilizeCTXData\n")
 }
 
 /* **************************************************************************
@@ -377,6 +417,9 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 ** URI:
 ** Description:
 ** *************************************************************************/
+
+//Combine (w, ctx, keys, collectionName)
+//Return an error if an error
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.ObjectID {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
@@ -501,7 +544,7 @@ func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) obje
 ** *************************************************************************/
 func DeleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) {
 		
-	sterlizeCTXData(filterCTX)
+	sterilizeCTXData(filterCTX)
 
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteMany(nil, filterCTX)
