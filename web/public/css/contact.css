@@ -1,0 +1,154 @@
+main {
+    width: 100vw;
+    padding: 0;
+    overflow: visible;
+}
+
+article {
+    position: relative;
+    width: 80vw;
+    margin: 0 auto;
+    padding: 30px 40px;
+
+}
+
+p {
+    margin-top: 24px;
+}
+
+h3 {
+    display: inline-block;
+    position: relative;
+}
+
+h3::after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    bottom: -8px;
+    /* width: 240px; */
+    width: 110%;
+    height: 24px;
+    background: rgba(26, 204, 148, 0.2);
+    z-index: -999;
+}
+
+#contact {
+    margin-top: 24px;
+}
+
+#contact .context {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
+}
+
+#contact form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 90vw;
+    max-width: 1260px;
+    margin-top: 0px;
+    margin-right: 0px;
+    padding: 32px 48px;
+    border-radius: 8px;
+    background: linear-gradient(to top right, rgb(26, 204, 148) 0%, rgb(126, 238, 203) 100%);
+}
+
+#contact form::before {
+    display: none;
+}
+
+#contact fieldset {
+    width: auto;
+    margin: 0;
+    margin-right: 60px;
+    padding: 0;
+}
+
+#contact form input, #contact form textarea {
+    background: #FBFBFB;
+    box-shadow: 2px 4px 6px #E6E9F0;
+}
+
+#contact fieldset input:focus, #contact fieldset textarea:focus {
+    border: 2px solid #4a5c62;
+    box-shadow: 2px 4px 6px rgba(60, 74, 79, 0.6);
+}
+
+#contact fieldset label {
+    position: absolute;
+    top: 50%;
+    margin-left: 14px;
+    font-weight: 700;
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    color: #CFCFCF;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition: 0.2s ease all;
+    z-index: 999;
+}
+
+#contact fieldset textarea + label {
+    top: 28px;
+    transform: translateY(0%);
+}
+
+#contact fieldset input[type=text]:focus + label,
+#contact fieldset textarea:focus + label {
+    margin-left: 0px;
+    opacity: 0;
+}
+
+#contact form button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    bottom: 0px;
+    width: 240px;
+    margin-top: 18px;
+    margin-left: auto;
+    color: rgba(26, 204, 148, 0.8);
+    border-radius: 4px;
+    background: rgba(251, 251, 251, 0.95);
+    box-shadow: 0px 4px 20px rgba(251, 251, 251, 0.2);
+    transition: 0.4s ease-in-out all;
+}
+
+#contact form button:hover {
+    bottom: 4px;
+    color: rgba(26, 204, 149, 1);
+    background: rgba(251, 251, 251, 1);
+    box-shadow: 0px 4px 20px rgba(251, 251, 251, 0.6);
+}
+
+#contact form button h4 {
+    margin-left: 14px;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+}
+
+#contact form button i {
+    margin-right: 14px;
+}
+
+@keyframes shift-right {
+    0% {
+        left: 0px;
+    }
+    50% {
+        left: 6px;
+    }
+    100% {
+        left: 0px;
+    }
+}
