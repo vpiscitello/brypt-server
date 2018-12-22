@@ -42,7 +42,7 @@ func (rs Resources) Routes() chi.Router {
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
 //	TestInsert(w)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-//	TestUpdate(w)	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
+	TestUpdate(w)	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
 //	TestDelete(w)	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
 //	TestFind(w)		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
 
@@ -189,9 +189,11 @@ func TestUpdate(w http.ResponseWriter) {
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	
+	updateFieldCTX := make( map[string]interface{} )
+	updateFieldCTX["username"] = "Re@llyTom" 
 	updateCTX := make( map[string]interface{} )
-	updateCTX["$username"] = "Re@llyTom"
-//	updateCTX["first_name"] = "Tom"
+	updateCTX["$set"] = updateFieldCTX
+	//	updateCTX["first_name"] = "Tom"
 	
 	err := db.UpdateOne(w, "brypt_users", testCTX, updateCTX)
 	print("\nUpdate One response: ")
