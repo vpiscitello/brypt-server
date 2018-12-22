@@ -129,129 +129,84 @@ func Setup() {
 
 }
 
-/* **************************************************************************
-** Function: ReqHandler
-** URI:
-** Description:
-** *************************************************************************/
-func ReqHandler(w http.ResponseWriter, r *http.Request, action string, collection string, dataCTX map[string]interface{}) {
+func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) objectid.ObjectID {
 	
-	print("In request handler!\n")
+	print("In write request handler!\n")
 
-	switch action {
-		case "PUT":
-			sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
+	sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
 		
-			var id objectid.ObjectID
+	var id objectid.ObjectID
 
-			switch collection {
-				case "brypt_users":
-						print("Handling request to add new user\n")
-						id = WriteUser(w, dataCTX)
-						print("New user id: ")
-						fmt.Print(id)
-						print("\n")
-					break
-				case "brypt_nodes":
-						print("Handling request to add new node\n")
-						id = WriteNode(w, dataCTX)
-					break
-				case "brypt_networks":
-						print("Handling request to add new network\n")
-						id = WriteNetwork(w, dataCTX)
-					break
-				case "brypt_clusters":
-						print("Handling request to add new cluster\n")
-						id = WriteCluster(w, dataCTX)
-					break
-				case "brypt_managers":
-						print("Handling request to add new manager\n")
-						id = WriteManager(w, dataCTX)
-					break
-				default:
-						print("ERROR: Invalid POST request\n")
-					break
-			}
+	switch collection {
+		case "brypt_users":
+				print("Handling request to add new user\n")
+				id = WriteUser(w, dataCTX)
+				print("New user id: ")
+				fmt.Print(id)
+				print("\n")
 			break
-		case "DELETE":
-				DeleteMany(w, collection, dataCTX)
+		case "brypt_nodes":
+				print("Handling request to add new node\n")
+				id = WriteNode(w, dataCTX)
+			break
+		case "brypt_networks":
+				print("Handling request to add new network\n")
+				id = WriteNetwork(w, dataCTX)
+			break
+		case "brypt_clusters":
+				print("Handling request to add new cluster\n")
+				id = WriteCluster(w, dataCTX)
+			break
+		case "brypt_managers":
+				print("Handling request to add new manager\n")
+				id = WriteManager(w, dataCTX)
 			break
 		default:
-				print("\nAction not recognized\n")
+				print("ERROR: Invalid POST request\n")
+				id = objectid.NilObjectID
 			break
 	}
-	/*switch r.Method {
-	case "GET":
-		users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+	return id
+}
 
-		var sort *options.FindOptions
-		var err error
+func DeleteAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := deleteMany(w, collection, dataCTX)
+	return err
+}
 
-		//sort, err := users_collection.find({}, {"username":1, _id:0}).sort({"username":1})
-		// TODO: implement SetSort
-		// sort, err := mongo.Opt.Sort(bsonx.NewDocument(bsonx.EC.Int32("username", 1)))   // Sort by username?
+func DeleteOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := deleteOne(w, collection, dataCTX)
+	return err
+}
 
-		if err != nil { // Error handler for sort
-			log.Fatal("Error in usersHandler() sorting: ", err)
-		}
+func FindAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (mongo.Cursor, error) {
+	sterilizeCTXData(dataCTX)
+	cursor, err := getAll(w, collection, dataCTX)
+	return cursor, err
+}
 
-		cursor, err := users_collection.Find(nil, nil, sort)  // Get a cursor to the start of the collection?
-		if err != nil{
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			log.Fatal("Internal server error")
-			return
-		}
+func FindOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (interface{}, error) {
+	sterilizeCTXData(dataCTX)
+	res, err := getOne(w, collection, dataCTX)
+	return res, err
+}
 
-		defer cursor.Close(context.Background())
-
-		var users []User  // Create an array to store data from users table
-
-		for cursor.Next(nil) {  // Iterate through users_collection
-			user := User{}
-			err := cursor.Decode(&user) // Catch any errors while decoding the user object
-			if err != nil { // Log the error caught
-				log.Fatal("Users collection decode error: ", err)
-			}
-			users = append(users, user) // Append the stored object to our users array
-		}
-
-		if err := cursor.Err(); err != nil {  // Check for a cursor error
-			log.Fatal("Cursor error: ", err)
-		}
-
-		jsonstr, err := json.Marshal(users)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			log.Fatal("Internal server error")
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jsonstr)  // Returns the entire json users collection
-		return
-
-	case "PUT":
-		r.ParseForm()
-		//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-
-		// TODO: Perform error checking
-		newUser := bsonx.NewDocument(bsonx.EC.String("username", r.Form.Get("username")),
-		bsonx.EC.String("first_name", r.Form.Get("first_name")),
-		bsonx.EC.String("last_name", r.Form.Get("last_name")))
-		WriteUsers(newUser, w)
-		return
-	}*/
-	return
+func UpdateOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := updateOne(w, collection, dataCTX, updateCTX)
+	return err
 }
 
 /* **************************************************************************
-** Function: sterlizeCTXData
+** Function: sterilizeCTXData
 ** URI:
 ** Description:
 ** *************************************************************************/
-func sterlizeCTXData(ctx map[string]interface{}) {
+func sterilizeCTXData(ctx map[string]interface{}) {
 	// TODO: Loop through ctx and check that values don't contain invalid characters
-	print("\nIn sterlizeCTXData\n")
+	print("\nIn sterilizeCTXData\n")
 }
 
 /* **************************************************************************
@@ -339,8 +294,6 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 			}
 		}
 	}
-
-	print("\nappended!\n")
 }
 
 /* **************************************************************************
@@ -350,7 +303,6 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 ** Returns: Object ID and BSON Document
 ** *************************************************************************/
 func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.ObjectID, *bsonx.Document) {
-//	firstPass := true	// Used to know when to start appending to the new document
 	var NewDoc *bsonx.Document
 	objID := objectid.New()	// Create and store new object id
 
@@ -359,12 +311,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 	for k := range ctx {
 		for j := range keys {
 			if k == keys[j] {	// Store value if k matches a key in the users collection
-			//	if firstPass {
-			//		NewDoc = insertValue(ctx, keys[j])	// Initializes a new BSON document
-			//		firstPass = false
-			//	} else {
-					appendValue(NewDoc, ctx, keys[j])
-			//	}
+				appendValue(NewDoc, ctx, keys[j])
 			}
 		}
 	}
@@ -377,6 +324,9 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 ** URI:
 ** Description:
 ** *************************************************************************/
+
+//Combine (w, ctx, keys, collectionName)
+//Return an error if an error
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.ObjectID {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
@@ -499,21 +449,118 @@ func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) obje
 ** URI:
 ** Description:
 ** *************************************************************************/
-func DeleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) {
+func deleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
 		
-	sterlizeCTXData(filterCTX)
-
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteMany(nil, filterCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	w.WriteHeader(http.StatusAccepted)
-	return
+	return err
+}
+
+/* **************************************************************************
+** Function: DeleteOne 
+** URI:
+** Description:
+** *************************************************************************/
+func deleteOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	_, err := collection.DeleteOne(nil, filterCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return err
+}
+
+/* **************************************************************************
+** Function: getAll
+** URI:
+** Description:
+** *************************************************************************/
+func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (mongo.Cursor, error) {
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	cursor, err := collection.Find(nil, filterCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return cursor, err
+	}
+
+	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
+	return cursor, err
+}
+
+/* **************************************************************************
+** Function: getOne
+** URI:
+** Description:
+** *************************************************************************/
+func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (interface{}, error) {
+
+	//var err error
+	var ret *User
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	res := collection.FindOne(nil, filterCTX)
+	/*if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}*/
+/*	switch col {
+		case "brypt_users":
+			err := res.Decode(retCTX)
+			break
+		case "brypt_nodes":
+			break
+		case "brypt_networks":
+			break
+		case "brypt_managers":
+			break
+		case "brypt_clusters":
+			break
+		default
+			break
+	}*/
+	print("\nFIND ONE RES: \n")
+	fmt.Print(res)
+	err := res.Decode(ret)
+	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
+
+	return ret, err// TODO: Figure out SingleResult type and return a ctx...
+}
+
+/* **************************************************************************
+** Function: updateOne
+** URI:
+** Description:
+** *************************************************************************/
+func updateOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	_, err := collection.UpdateOne(nil, filterCTX, updateCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return err	// TODO: Fix what's broken >:(
 }
 
 /* **************************************************************************
