@@ -180,7 +180,7 @@ func baseRouter() chi.Router {
 
     router.Get( "/contact", base.RenderContact )
 
-    //router.Get( "/policy", base.RenderPolicy )
+    router.Get( "/policy", base.RenderPolicy )
 
     router.Get( "/", renderIndex )
 
