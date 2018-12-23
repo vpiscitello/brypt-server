@@ -30,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -38,7 +38,7 @@ type Manager struct {
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -49,16 +49,16 @@ type Cluster struct {
 ** Networks
 ** *************************************************************************/
 type Network struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
+//	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
 	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
 	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
 	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
+//	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
 }
@@ -67,13 +67,13 @@ type Network struct {
 ** Users
 ** *************************************************************************/
 type User struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
-	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
+//	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
@@ -86,7 +86,7 @@ type User struct {
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -181,16 +181,17 @@ func DeleteOne(w http.ResponseWriter, collection string, dataCTX map[string]inte
 	return err
 }
 
-func FindAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (mongo.Cursor, error) {
+func FindAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
 	sterilizeCTXData(dataCTX)
-	cursor, err := getAll(w, collection, dataCTX)
-	return cursor, err
+	retCTX, err := getAll(w, collection, dataCTX)
+	return retCTX, err
 }
 
-func FindOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (interface{}, error) {
+func FindOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
 	sterilizeCTXData(dataCTX)
-	res, err := getOne(w, collection, dataCTX)
-	return res, err
+//	res, err := getOne(w, collection, dataCTX)
+	retCTX, err := getOne(w, collection, dataCTX)
+	return retCTX, err
 }
 
 func UpdateOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}, updateCTX map[string]interface{}) error {
@@ -214,7 +215,7 @@ func sterilizeCTXData(ctx map[string]interface{}) {
 ** URI:
 ** Description:
 ** *************************************************************************/
-/*func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
+func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
 	if okStr {	
@@ -244,7 +245,7 @@ func sterilizeCTXData(ctx map[string]interface{}) {
 						fmt.Print("\nFailed to insert value: ")
 						print(key)
 						print("\n")
-						fmt.Println(reflect.TypeOf(ctx[key]))
+						//fmt.Println(reflect.TypeOf(ctx[key]))
 						print("\n")
 					}
 				}
@@ -255,7 +256,7 @@ func sterilizeCTXData(ctx map[string]interface{}) {
 
 	print("\ninserted!\n")
 	return doc
-}*/
+}
 
 /* **************************************************************************
 ** Function: appendValue
@@ -489,19 +490,35 @@ func deleteOne(w http.ResponseWriter, col string, filterCTX map[string]interface
 ** URI:
 ** Description:
 ** *************************************************************************/
-func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (mongo.Cursor, error) {
+func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
 
+ 	retCTX := make( map[string]interface{} )
+	
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	cursor, err := collection.Find(nil, filterCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return cursor, err
+		return nil, err
 	}
 
+	var users []User
+	for cursor.Next(nil) {
+		user := User{}
+		e := cursor.Decode(&user)
+		if e != nil {
+			print("Decode err...")
+			fmt.Println(e)
+		}
+		users = append(users, user)
+	//	fmt.Println(user)
+	}
+
+	retCTX["ret"] = users
+
 	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
-	return cursor, err
+	return retCTX, err
 }
 
 /* **************************************************************************
@@ -509,38 +526,57 @@ func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 ** URI:
 ** Description:
 ** *************************************************************************/
-func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (interface{}, error) {
-
-	//var err error
-	var ret *User
+func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
+ 	retCTX := make( map[string]interface{} )
+	var err error
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	res := collection.FindOne(nil, filterCTX)
-	/*if err != nil {
-		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}*/
-/*	switch col {
+
+	switch col {
 		case "brypt_users":
-			err := res.Decode(retCTX)
+				var user User
+				err = res.Decode(&user)
+				retCTX["ret"] = user
 			break
 		case "brypt_nodes":
+				var node Node
+				err = res.Decode(&node)
+				retCTX["ret"] = node
 			break
 		case "brypt_networks":
+				var network Network
+				err = res.Decode(&network)
+				retCTX["ret"] = network
 			break
 		case "brypt_managers":
+				var mngr Manager
+				err = res.Decode(&mngr)
+				retCTX["ret"] = mngr
 			break
 		case "brypt_clusters":
+				var cluster Cluster
+				err = res.Decode(&cluster)
+				retCTX["ret"] = cluster
 			break
-		default
+		default:
+				err = nil	// TODO: Change to "Unknown collection"
+				retCTX["ret"] = nil
 			break
-	}*/
-	print("\nFIND ONE RES: \n")
-	fmt.Print(res)
-	err := res.Decode(ret)
+	}
+
+/*	fmt.Printf("%+v\n", res)
+	
+	err := res.Decode(&usr)
+*/
+	if err != nil {
+		fmt.Println(err)
+	}
+	
+//	fmt.Printf("%+v\n", usr)
+//	retCTX["ret"] = usr
 	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
 
-	return ret, err// TODO: Figure out SingleResult type and return a ctx...
+	return retCTX, err// TODO: Figure out SingleResult type and return a ctx...
 }
 
 /* **************************************************************************
