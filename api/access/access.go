@@ -41,7 +41,7 @@ func (rs Resources) Routes() chi.Router {
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
-//		TestInsert(w)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	TestInsert(w)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
 //	TestUpdate(w)	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
 //	TestDelete(w)	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
 	TestFind(w)		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
@@ -119,7 +119,7 @@ func TestInsert(w http.ResponseWriter) {
 //	objID3 := objectid.New()
 //	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "b0b"
+	testCTX["username"] = "m@llory4"
 /*	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
@@ -166,9 +166,10 @@ func TestDelete(w http.ResponseWriter) {
 func TestFind(w http.ResponseWriter) {
 
 	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "TotallyTom"
-	testCTX["first_name"] = "Alice"
-	testCTX["last_name"] = "Allen"
+	testCTX["username"] = "m@llory4"
+//	testCTX["username"] = "TotallyTom"
+//	testCTX["first_name"] = "Alice"
+//	testCTX["last_name"] = "Allen"
 
 	/**********FIND ALL TEST**************/
 	retCTX, err := db.FindAll(w, "brypt_users", testCTX)

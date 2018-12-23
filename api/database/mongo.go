@@ -30,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+	Uid                string						`bson:"uid" json:"uid"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -39,6 +39,7 @@ type Manager struct {
 ** *************************************************************************/
 type Cluster struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+	Uid                string						`bson:"uid" json:"uid"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -50,6 +51,7 @@ type Cluster struct {
 ** *************************************************************************/
 type Network struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+	Uid                string						`bson:"uid" json:"uid"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
 //	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
@@ -68,6 +70,7 @@ type Network struct {
 ** *************************************************************************/
 type User struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+	Uid               string						`bson:"uid" json:"uid"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
@@ -87,6 +90,7 @@ type User struct {
 ** *************************************************************************/
 type Node struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+	Uid                string						`bson:"uid" json:"uid"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -129,13 +133,13 @@ func Setup() {
 
 }
 
-func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) objectid.ObjectID {
+func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) string {
 	
 	print("In write request handler!\n")
 
 	sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
 		
-	var id objectid.ObjectID
+	var id string
 
 	switch collection {
 		case "brypt_users":
@@ -163,7 +167,7 @@ func Write(w http.ResponseWriter, collection string, dataCTX map[string]interfac
 			break
 		default:
 				print("ERROR: Invalid POST request\n")
-				id = objectid.NilObjectID
+				id = ""
 			break
 	}
 	return id
@@ -234,11 +238,11 @@ func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 				if okTime {
 					doc = bsonx.NewDocument(bsonx.EC.Time(key, valTime))
 				}	else {
-					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					valObjID, okObjID := ctx[key].([]string)
 					if okObjID {
 						arr := bsonx.NewArray()
 						for i := range valObjID {
-							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+							arr.Append(bsonx.VC.String(valObjID[i]))
 						}
 						doc = bsonx.NewDocument(bsonx.EC.Array(key, arr))
 					}	else {	// Value is not a string, int, int32, or time
@@ -281,11 +285,11 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 				if okTime {
 					doc.Append(bsonx.EC.Time(key, valTime))
 				} else {	// Check if array of object ids
-					valObjID, okObjID := ctx[key].([]objectid.ObjectID)
+					valObjID, okObjID := ctx[key].([]string)
 					if okObjID {
 						arr := bsonx.NewArray()
 						for i := range valObjID {	// Build array type *Array of object ids
-							arr.Append(bsonx.VC.ObjectID(valObjID[i]))
+							arr.Append(bsonx.VC.String(valObjID[i]))
 						}
 						doc.Append(bsonx.EC.Array(key, arr))	// Append the object id array to the BSON document
 					} else {
@@ -303,11 +307,11 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 ** Description:
 ** Returns: Object ID and BSON Document
 ** *************************************************************************/
-func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.ObjectID, *bsonx.Document) {
+func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bsonx.Document) {
 	var NewDoc *bsonx.Document
-	objID := objectid.New()	// Create and store new object id
+	objID := objectid.New().Hex()	// Create and store new object id
 
-	NewDoc = bsonx.NewDocument(bsonx.EC.ObjectID("ID", objID))
+	NewDoc = bsonx.NewDocument(bsonx.EC.String("uid", objID))
 	
 	for k := range ctx {
 		for j := range keys {
@@ -328,7 +332,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 
 //Combine (w, ctx, keys, collectionName)
 //Return an error if an error
-func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.ObjectID {
+func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
 
@@ -354,7 +358,7 @@ func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.O
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) objectid.ObjectID {
+func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) string {
 	var keys = []string {"network_name", "owner_name", "managers", "direct_peers", "total_peers", "ip_address", "port", "connection_token", "clusters", "created_on", "last_accessed"}
 	objID, newNetwork := createBSONDocument(networkCTX, keys)
 	print("\n\n In Write Network...\n\n")
@@ -378,7 +382,7 @@ func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) obje
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) objectid.ObjectID {
+func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) string {
 	var keys = []string {"serial_number", "type", "created_on", "registered_on", "registered_to", "connected_network"}
 	objID, newNode := createBSONDocument(nodeCTX, keys)
 	print("\n\n In Write Node...\n\n")
@@ -402,7 +406,7 @@ func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) objectid.O
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) objectid.ObjectID {
+func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) string {
 	var keys = []string {"connection_token", "coord_ip", "coord_port", "comm_tech"}
 	objID, newCluster := createBSONDocument(clusterCTX, keys)
 	print("\n\n In Write Cluster...\n\n")
@@ -426,7 +430,7 @@ func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) obje
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) objectid.ObjectID {
+func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) string {
 	var keys = []string {"manager_name"}
 	objID, newManager := createBSONDocument(managerCTX, keys)
 	print("\n\n In Write Manager...\n\n")
@@ -576,7 +580,7 @@ func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 //	retCTX["ret"] = usr
 	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
 
-	return retCTX, err// TODO: Figure out SingleResult type and return a ctx...
+	return retCTX, err
 }
 
 /* **************************************************************************
