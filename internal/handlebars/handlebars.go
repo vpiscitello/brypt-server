@@ -20,6 +20,7 @@ var headerPath = filepath.Join( workingDir, "/web/views/partials/header.hbs" )
 var footerPath = filepath.Join( workingDir, "/web/views/partials/footer.hbs" )
 var qlCardPath = filepath.Join( workingDir, "/web/views/partials/link-card.hbs" )
 var tmCardPath = filepath.Join( workingDir, "/web/views/partials/team-card.hbs" )
+var tmCardDetailPath = filepath.Join( workingDir, "/web/views/partials/team-card-detail.hbs" )
 
 /* **************************************************************************
 ** Function: Setup
@@ -51,6 +52,12 @@ func Setup() {
     }
     raymond.RegisterPartial( "tmCard", string(dat) )
 
+    dat, err = ioutil.ReadFile( tmCardDetailPath )
+    if err != nil {
+        panic( "Something went wrong reading the tmCard partial!" )
+    }
+    raymond.RegisterPartial( "tmCardDetail", string(dat) )
+
 }
 
 /* **************************************************************************
@@ -60,13 +67,7 @@ func Setup() {
 ** *************************************************************************/
 func RenderPage(page string, bodyCTX map[string]string) http.HandlerFunc {
 
-    bodyPath := ""
-    switch page {
-        case "index":
-            bodyPath = filepath.Join( workingDir, "/web/views/pages/index.hbs" )
-        case "access":
-            bodyPath = filepath.Join( workingDir, "/web/views/pages/access.hbs" )
-    }
+    bodyPath := filepath.Join( workingDir, "web/views/pages/" + page + ".hbs" )
 
     return http.HandlerFunc( func(w http.ResponseWriter, r *http.Request) {
 

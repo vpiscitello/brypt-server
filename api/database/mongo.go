@@ -30,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -38,7 +38,7 @@ type Manager struct {
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -49,16 +49,16 @@ type Cluster struct {
 ** Networks
 ** *************************************************************************/
 type Network struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
+//	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
 	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
 	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
 	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
+//	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
 }
@@ -67,13 +67,13 @@ type Network struct {
 ** Users
 ** *************************************************************************/
 type User struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
-	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
+//	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
@@ -86,7 +86,7 @@ type User struct {
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
+//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -129,129 +129,85 @@ func Setup() {
 
 }
 
-/* **************************************************************************
-** Function: ReqHandler
-** URI:
-** Description:
-** *************************************************************************/
-func ReqHandler(w http.ResponseWriter, r *http.Request, action string, collection string, dataCTX map[string]interface{}) {
+func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) objectid.ObjectID {
 	
-	print("In request handler!\n")
+	print("In write request handler!\n")
 
-	switch action {
-		case "PUT":
-			sterlizeCTXData(dataCTX)	// TODO: Need to implement this function
+	sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
 		
-			var id objectid.ObjectID
+	var id objectid.ObjectID
 
-			switch collection {
-				case "brypt_users":
-						print("Handling request to add new user\n")
-						id = WriteUser(w, dataCTX)
-						print("New user id: ")
-						fmt.Print(id)
-						print("\n")
-					break
-				case "brypt_nodes":
-						print("Handling request to add new node\n")
-						id = WriteNode(w, dataCTX)
-					break
-				case "brypt_networks":
-						print("Handling request to add new network\n")
-						id = WriteNetwork(w, dataCTX)
-					break
-				case "brypt_clusters":
-						print("Handling request to add new cluster\n")
-						id = WriteCluster(w, dataCTX)
-					break
-				case "brypt_managers":
-						print("Handling request to add new manager\n")
-						id = WriteManager(w, dataCTX)
-					break
-				default:
-						print("ERROR: Invalid POST request\n")
-					break
-			}
+	switch collection {
+		case "brypt_users":
+				print("Handling request to add new user\n")
+				id = WriteUser(w, dataCTX)
+				print("New user id: ")
+				fmt.Print(id)
+				print("\n")
 			break
-		case "DELETE":
-				DeleteMany(w, collection, dataCTX)
+		case "brypt_nodes":
+				print("Handling request to add new node\n")
+				id = WriteNode(w, dataCTX)
+			break
+		case "brypt_networks":
+				print("Handling request to add new network\n")
+				id = WriteNetwork(w, dataCTX)
+			break
+		case "brypt_clusters":
+				print("Handling request to add new cluster\n")
+				id = WriteCluster(w, dataCTX)
+			break
+		case "brypt_managers":
+				print("Handling request to add new manager\n")
+				id = WriteManager(w, dataCTX)
 			break
 		default:
-				print("\nAction not recognized\n")
+				print("ERROR: Invalid POST request\n")
+				id = objectid.NilObjectID
 			break
 	}
-	/*switch r.Method {
-	case "GET":
-		users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+	return id
+}
 
-		var sort *options.FindOptions
-		var err error
+func DeleteAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := deleteMany(w, collection, dataCTX)
+	return err
+}
 
-		//sort, err := users_collection.find({}, {"username":1, _id:0}).sort({"username":1})
-		// TODO: implement SetSort
-		// sort, err := mongo.Opt.Sort(bsonx.NewDocument(bsonx.EC.Int32("username", 1)))   // Sort by username?
+func DeleteOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := deleteOne(w, collection, dataCTX)
+	return err
+}
 
-		if err != nil { // Error handler for sort
-			log.Fatal("Error in usersHandler() sorting: ", err)
-		}
+func FindAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
+	sterilizeCTXData(dataCTX)
+	retCTX, err := getAll(w, collection, dataCTX)
+	return retCTX, err
+}
 
-		cursor, err := users_collection.Find(nil, nil, sort)  // Get a cursor to the start of the collection?
-		if err != nil{
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			log.Fatal("Internal server error")
-			return
-		}
+func FindOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
+	sterilizeCTXData(dataCTX)
+//	res, err := getOne(w, collection, dataCTX)
+	retCTX, err := getOne(w, collection, dataCTX)
+	return retCTX, err
+}
 
-		defer cursor.Close(context.Background())
-
-		var users []User  // Create an array to store data from users table
-
-		for cursor.Next(nil) {  // Iterate through users_collection
-			user := User{}
-			err := cursor.Decode(&user) // Catch any errors while decoding the user object
-			if err != nil { // Log the error caught
-				log.Fatal("Users collection decode error: ", err)
-			}
-			users = append(users, user) // Append the stored object to our users array
-		}
-
-		if err := cursor.Err(); err != nil {  // Check for a cursor error
-			log.Fatal("Cursor error: ", err)
-		}
-
-		jsonstr, err := json.Marshal(users)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			log.Fatal("Internal server error")
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(jsonstr)  // Returns the entire json users collection
-		return
-
-	case "PUT":
-		r.ParseForm()
-		//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-
-		// TODO: Perform error checking
-		newUser := bsonx.NewDocument(bsonx.EC.String("username", r.Form.Get("username")),
-		bsonx.EC.String("first_name", r.Form.Get("first_name")),
-		bsonx.EC.String("last_name", r.Form.Get("last_name")))
-		WriteUsers(newUser, w)
-		return
-	}*/
-	return
+func UpdateOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+	sterilizeCTXData(dataCTX)
+	err := updateOne(w, collection, dataCTX, updateCTX)
+	return err
 }
 
 /* **************************************************************************
-** Function: sterlizeCTXData
+** Function: sterilizeCTXData
 ** URI:
 ** Description:
 ** *************************************************************************/
-func sterlizeCTXData(ctx map[string]interface{}) {
+func sterilizeCTXData(ctx map[string]interface{}) {
 	// TODO: Loop through ctx and check that values don't contain invalid characters
-	print("\nIn sterlizeCTXData\n")
+	print("\nIn sterilizeCTXData\n")
 }
 
 /* **************************************************************************
@@ -259,7 +215,7 @@ func sterlizeCTXData(ctx map[string]interface{}) {
 ** URI:
 ** Description:
 ** *************************************************************************/
-/*func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
+func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
 	if okStr {	
@@ -289,7 +245,7 @@ func sterlizeCTXData(ctx map[string]interface{}) {
 						fmt.Print("\nFailed to insert value: ")
 						print(key)
 						print("\n")
-						fmt.Println(reflect.TypeOf(ctx[key]))
+						//fmt.Println(reflect.TypeOf(ctx[key]))
 						print("\n")
 					}
 				}
@@ -300,7 +256,7 @@ func sterlizeCTXData(ctx map[string]interface{}) {
 
 	print("\ninserted!\n")
 	return doc
-}*/
+}
 
 /* **************************************************************************
 ** Function: appendValue
@@ -339,8 +295,6 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 			}
 		}
 	}
-
-	print("\nappended!\n")
 }
 
 /* **************************************************************************
@@ -350,7 +304,6 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 ** Returns: Object ID and BSON Document
 ** *************************************************************************/
 func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.ObjectID, *bsonx.Document) {
-//	firstPass := true	// Used to know when to start appending to the new document
 	var NewDoc *bsonx.Document
 	objID := objectid.New()	// Create and store new object id
 
@@ -359,12 +312,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 	for k := range ctx {
 		for j := range keys {
 			if k == keys[j] {	// Store value if k matches a key in the users collection
-			//	if firstPass {
-			//		NewDoc = insertValue(ctx, keys[j])	// Initializes a new BSON document
-			//		firstPass = false
-			//	} else {
-					appendValue(NewDoc, ctx, keys[j])
-			//	}
+				appendValue(NewDoc, ctx, keys[j])
 			}
 		}
 	}
@@ -377,6 +325,9 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (objectid.Obj
 ** URI:
 ** Description:
 ** *************************************************************************/
+
+//Combine (w, ctx, keys, collectionName)
+//Return an error if an error
 func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) objectid.ObjectID {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
@@ -499,21 +450,153 @@ func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) obje
 ** URI:
 ** Description:
 ** *************************************************************************/
-func DeleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) {
+func deleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
 		
-	sterlizeCTXData(filterCTX)
-
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteMany(nil, filterCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return err
 	}
 
 	w.WriteHeader(http.StatusAccepted)
-	return
+	return err
+}
+
+/* **************************************************************************
+** Function: DeleteOne 
+** URI:
+** Description:
+** *************************************************************************/
+func deleteOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	_, err := collection.DeleteOne(nil, filterCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return err
+}
+
+/* **************************************************************************
+** Function: getAll
+** URI:
+** Description:
+** *************************************************************************/
+func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
+
+ 	retCTX := make( map[string]interface{} )
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	cursor, err := collection.Find(nil, filterCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return nil, err
+	}
+
+	var users []User
+	for cursor.Next(nil) {
+		user := User{}
+		e := cursor.Decode(&user)
+		if e != nil {
+			print("Decode err...")
+			fmt.Println(e)
+		}
+		users = append(users, user)
+	//	fmt.Println(user)
+	}
+
+	retCTX["ret"] = users
+
+	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
+	return retCTX, err
+}
+
+/* **************************************************************************
+** Function: getOne
+** URI:
+** Description:
+** *************************************************************************/
+func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
+ 	retCTX := make( map[string]interface{} )
+	var err error
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	res := collection.FindOne(nil, filterCTX)
+
+	switch col {
+		case "brypt_users":
+				var user User
+				err = res.Decode(&user)
+				retCTX["ret"] = user
+			break
+		case "brypt_nodes":
+				var node Node
+				err = res.Decode(&node)
+				retCTX["ret"] = node
+			break
+		case "brypt_networks":
+				var network Network
+				err = res.Decode(&network)
+				retCTX["ret"] = network
+			break
+		case "brypt_managers":
+				var mngr Manager
+				err = res.Decode(&mngr)
+				retCTX["ret"] = mngr
+			break
+		case "brypt_clusters":
+				var cluster Cluster
+				err = res.Decode(&cluster)
+				retCTX["ret"] = cluster
+			break
+		default:
+				err = nil	// TODO: Change to "Unknown collection"
+				retCTX["ret"] = nil
+			break
+	}
+
+/*	fmt.Printf("%+v\n", res)
+	
+	err := res.Decode(&usr)
+*/
+	if err != nil {
+		fmt.Println(err)
+	}
+	
+//	fmt.Printf("%+v\n", usr)
+//	retCTX["ret"] = usr
+	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
+
+	return retCTX, err// TODO: Figure out SingleResult type and return a ctx...
+}
+
+/* **************************************************************************
+** Function: updateOne
+** URI:
+** Description:
+** *************************************************************************/
+func updateOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+
+	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
+	_, err := collection.UpdateOne(nil, filterCTX, updateCTX)
+
+	if err != nil {
+		log.Println("Error inserting new manager: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return err
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return err	// TODO: Fix what's broken >:(
 }
 
 /* **************************************************************************

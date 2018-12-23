@@ -17,7 +17,7 @@ import (
    db "brypt-server/api/database"
 
    "brypt-server/api/access"
-   // "brypt-server/api/base"
+   "brypt-server/api/base"
    // "brypt-server/api/bridge"
    // "brypt-server/api/dashboard"
    // "brypt-server/api/users"
@@ -175,6 +175,12 @@ func baseRouter() chi.Router {
         redirectURI := buildWildRedirectURI( "dashboard", r.RequestURI )
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
     })
+
+    router.Get( "/about", base.RenderAbout )
+
+    router.Get( "/contact", base.RenderContact )
+
+    router.Get( "/policy", base.RenderPolicy )
 
     router.Get( "/", renderIndex )
 
