@@ -62,39 +62,7 @@
                         </div>
                     </section>
                     <section id="clusters">
-                        <script type="text/x-template" id="node-template">
-                            <div class="nd-item">
-                                <div class="header">
-                                    <div class="icon"><i class="fas fa-atom"></i></div>
-                                </div>
-                                <div class="content">
-                                    <h4>{{ id }}</h4>
-                                </div>
-                                <div class="footer">
-                                    <div class="wrapper btn">
-                                        <a class="sw" href="."><i class="fas fa-arrow-right"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </script>
-                        <script type="text/x-template" id="ng-template">
-                            <div class="nd-group">
-                                <node-item v-for="node in nodes"
-                                     v-bind:key="node.id"
-                                     v-bind:node="node"
-                                     @click="openDetail()">
-                                </node-item>
-                            </div>
-                        </script>
-                        <script type="text/x-template" id="cluster-template">
-                            <div class="context">
-                                <node-group id="coordinator" v-bind:nodes="coordinators"></node-group>
-                                <node-group id="neighbors" v-bind:nodes="neighbors"></node-group>
-                            </div>
-                        </script>
-                        <cluster-context v-bind:coordinators="coordinators"
-                                         v-bind:neighbors="neighbors">
-                        </cluster-context>
+                        <cluster-context></cluster-context>
                     </section>
                 </article>
                 <article id="data">
@@ -134,6 +102,111 @@
         <div class="overlay nd nv"></div>
 
         <!-- Scripts -->
+        <script type="text/x-template" id="node-template">
+            <div class="nd-item" v-bind:class="{ warning: irregular }" @click.prevent.stop="handleClick($event, node)">
+                <div class="header">
+                    <div class="icon"><i class="fas fa-atom"></i></div>
+                    <h4><span class="dim">{{ zeroPad }}</span>{{ node.id }}</h4>
+                </div>
+                <div class="content">
+                    <div class="col">
+                        <p class="label">Designation</p>
+                        <p class="data">{{ node.designation }}</p>
+                    </div>
+                    <div class="col">
+                        <p class="label">Communication Technologies</p>
+                        <p class="data">{{ node.comm_techs | ArrayToString }}</p>
+                    </div>
+                    <div class="col">
+                        <p class="label">Irregularity Rate</p>
+                        <p class="data">{{ node.ireg_rate }}</p>
+                    </div>
+                    <div class="col">
+                        <p class="label">Date Added</p>
+                        <p class="data">{{ node.add_timestamp | toTimeString }}</p>
+                    </div>
+                </div>
+                <div class="footer">
+                    <button class="sc" type="button" name="expand">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                </div>
+            </div>
+        </script>
+        <script type="text/x-template" id="ng-template">
+                <div class="nd-container" v-bind:style="{ minHeight: containerHeight + 'px' }">
+                    <h4>{{ title }}</h4>
+                    <transition name="fade" appear mode="out-in">
+                        <spinner v-if="ui.loading" v-bind:color="'#2D383C'"></spinner>
+                        <div v-else class="nd-group" v-bind:style="{ minHeight: groupHeight + 'px' }">
+                            <node-item
+                                 v-for="(node, index) in nodes"
+                                 v-bind:key="node.id"
+                                 v-bind:node="node"
+                                 v-bind:class="{last: index == nodes.length - 1}">
+                            </node-item>
+                        </div>
+                    </transition>
+                </div>
+        </script>
+        <script type="text/x-template" id="cluster-template">
+            <div class="context" >
+                <div class="header">
+                    <i class="fas fa-cubes"></i>
+                    <h3>Clusters</h3>
+                </div>
+                <node-container id="coordinators"
+                    title="Coordinators"
+                    v-bind:nodes="coordinators"
+                    v-bind:needSpinner="false"
+                    v-bind:ref="'coordinators'">
+                </node-container>
+                <node-container id="neighbors"
+                    title="Neighbors"
+                    v-bind:nodes="neighbors"
+                    v-bind:needSpinner="true"
+                    v-bind:ref="'neighbors'">
+                </node-container>
+                <item-context-menu
+                    v-bind:id="'item-action-menu'"
+                    v-bind:options="actionMenuOptions"
+                    v-bind:ref="'itemActionMenu'"
+                    v-on:expand-cluster="expandCluster"
+                    v-on:open-detail="openDetail">
+               </item-context-menu>
+            </div>
+        </script>
+        <script type="text/x-template" id="ctx-menu-template">
+            <div class="item-ctx-menu" v-bind:id="id" v-click-outside="onClickOutside">
+                <ul v-if="itemIsBranching">
+                    <li class="option" v-for="option in branchOptions" @click="optionClicked(option)">
+                        {{ option.name }}
+                    </li>
+                </ul>
+                <ul v-else>
+                    <li class="option" v-for="option in leafOptions" @click="optionClicked(option)">
+                        {{ option.name }}
+                    </li>
+                </ul>
+            </div>
+        </script>
+        <script type="text/x-template" id="spinner-template">
+            <div class="loader">
+                <div class="context">
+                    <div class="spinner">
+                        <svg width="10px" height="10px" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+                            <circle fill="color" cx="5" cy="5" r="5"></circle>
+                        </svg>
+                        <svg width="10px" height="10px" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+                            <circle fill="color" cx="5" cy="5" r="5"></circle></svg>
+                        <svg width="10px" height="10px" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+                            <circle fill="color" cx="5" cy="5" r="5"></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </script>
+
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="index.js"></script>
         <script src="components.js"></script>

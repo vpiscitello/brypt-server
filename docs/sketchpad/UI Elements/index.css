@@ -1716,36 +1716,46 @@ button:focus {
  */
 
 .loader {
-    position: relative;
-    width: 250px;
-    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     margin: 0 auto;
     border-radius: 100%;
-    transition: .2s ease all;
+    transition: 0.2s ease all;
+}
+
+.loader > .context {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 80px;
+    height: 80px;
 }
 
 .spinner {
     display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
 }
 
-.spinner-wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 80px;
-    height: 80px;
-    transform: translateX(-50%) translateY(-50%);
+.loader .context .spinner {
+    display: flex;
 }
 
-.submitted .spinner-wrapper .spinner {
-    display: block;
-}
-
-.submitted .spinner-wrapper .spinner svg {
+.spinner svg {
     display: block;
     position: absolute;
     -moz-animation-duration: 3s;
@@ -2057,62 +2067,62 @@ button:focus {
 
 @keyframes first-ball {
     0% {
-        top: 60px;
-        left: 70px;
-        opacity: 1;
+        top: 0;
+        left: 35px;
+        opacity: 0.8;
         border: none;
     }
 
     25% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     50% {
-        top: 0;
-        left: 35px;
-        opacity: 1;
+        top: 60px;
+        left: 70px;
+        opacity: 0.8;
         border: none;
     }
 
     75% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     100% {
         top: 60px;
         left: 0;
-        opacity: 1;
+        opacity: 0.8;
         border: none;
     }
 }
 
 @keyframes second-ball {
     0% {
-        top: 0;
-        left: 35px;
-        opacity: 1;
+        top: 60px;
+        left: 0;
+        opacity: 0.8;
         border: none;
     }
 
     25% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     50% {
-        top: 60px;
-        left: 0;
-        opacity: 1;
+        top: 0;
+        left: 35px;
+        opacity: 0.8;
         border: none;
     }
 
     75% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     100% {
         top: 60px;
         left: 70px;
-        opacity: 1;
+        opacity: 0.8;
         border: none;
     }
 }
@@ -2120,30 +2130,30 @@ button:focus {
 @keyframes third-ball {
     0% {
         top: 60px;
-        left: 0;
-        opacity: 1;
+        left: 70px;
+        opacity: 0.8;
         border: none;
     }
 
     25% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     50% {
         top: 60px;
-        left: 70px;
-        opacity: 1;
+        left: 0;
+        opacity: 0.8;
         border: none;
     }
 
     75% {
-        opacity: .5;
+        opacity: 0.3;
     }
 
     100% {
         top: 0;
         left: 35px;
-        opacity: 1;
+        opacity: 0.8;
         border: none;
     }
 }
