@@ -30,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	Uid                string						`bson:"uid" json:"uid"`
+	Uid               string						`bson:"uid" json:"uid"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -39,7 +39,7 @@ type Manager struct {
 ** *************************************************************************/
 type Cluster struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid                string						`bson:"uid" json:"uid"`
+	Uid               string						`bson:"uid" json:"uid"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -51,16 +51,16 @@ type Cluster struct {
 ** *************************************************************************/
 type Network struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid                string						`bson:"uid" json:"uid"`
+	Uid               string						`bson:"uid" json:"uid"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-//	Managers          []objectid.ObjectID         `bson:"managers" json:"managers"`
+	Managers          []string          `bson:"managers" json:"managers"`
 	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
-	Total_peers       int32            `bson:"total_peers" json:"total_peers"`
+	Total_peers       int32             `bson:"total_peers" json:"total_peers"`
 	Ip_address        string            `bson:"ip_address" json:"ip_address"`
 	Port              int32             `bson:"port" json:"port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-//	Clusters          []objectid.ObjectID         `bson:"clusters" json:"clusters"`
+	Clusters          []string          `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
 }
@@ -76,7 +76,7 @@ type User struct {
 	Last_name         string            `bson:"last_name" json:"last_name"`
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
-//	Networks          []objectid.ObjectID         `bson:"networks" json:"networks"`
+	Networks          []string          `bson:"networks" json:"networks"`
 	Age               time.Time         `bson:"age" json:"age"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
@@ -90,7 +90,7 @@ type User struct {
 ** *************************************************************************/
 type Node struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid                string						`bson:"uid" json:"uid"`
+	Uid               string						`bson:"uid" json:"uid"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -284,7 +284,7 @@ func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 				valTime, okTime := ctx[key].(time.Time)
 				if okTime {
 					doc.Append(bsonx.EC.Time(key, valTime))
-				} else {	// Check if array of object ids
+				} else {	// Check if array of object ids (strings)
 					valObjID, okObjID := ctx[key].([]string)
 					if okObjID {
 						arr := bsonx.NewArray()
