@@ -4,11 +4,11 @@ import (
 	"fmt"
 	db "brypt-server/api/database"
 	"net/http"
-//	"time"
+	"time"
     "brypt-server/internal/handlebars"
 
 	"github.com/go-chi/chi"
-//	"github.com/mongodb/ftdc/bsonx/objectid"
+	"github.com/mongodb/ftdc/bsonx/objectid"
 	// "github.com/aymerick/raymond"
 
 	// "brypt-server/api/users"
@@ -114,19 +114,19 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 func TestInsert(w http.ResponseWriter) {
 	// db.Connect()	
 
-//	objID1 := objectid.New()
-//	objID2 := objectid.New()
-//	objID3 := objectid.New()
+	objID1 := objectid.New().Hex()
+	objID2 := objectid.New().Hex()
+	objID3 := objectid.New().Hex()
 //	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = "m@llory4"
-/*	testCTX["first_name"] = "Alice"
+	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
 	testCTX["age"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
-	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
-*/	id := db.Write(w, "brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
+	testCTX["networks"] = []string{objID1, objID2, objID3}
+	id := db.Write(w, "brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
 	print("\nnil id: ")
 	fmt.Print(id)
 	id = db.Write(w, "brypt_users", testCTX)
