@@ -571,7 +571,6 @@ main .wrapper {
     letter-spacing: 0em;
 }
 
-
 #data {
     flex: 1 0 40vw;
     display: flex;
@@ -581,49 +580,12 @@ main .wrapper {
     position: relative;
     height: 100%;
     width: 40vw;
-    padding: 115px 24px 24px 24px;
-    color: #FBFBFB !important;
+    /* background: linear-gradient(to top, rgb(26, 204, 148) 0%, rgb(126, 238, 203) 100%); */
     background: linear-gradient(to top right, #2D383C 0%, #3c4a4f 100%);
+    /* box-shadow: -20px 0px 32px -5px rgba(26, 204, 148, 0.15); */
     box-shadow: -20px 0px 32px -5px rgba(45, 56, 60, 0.15);
-    z-index: 0;
+    z-index: -999;
 }
-
-#data > .context {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    position: relative;
-    height: 100%;
-    width: 100%;
-}
-
-#data > .context .header {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-#data > .context .header h3 {
-    font-size: 1.4em;
-    border-bottom: none;
-}
-
-#data > .context .header i {
-    margin-right: 12px;
-    font-size: 1.4em;
-}
-
-#chart {
-    position: relative;
-    height: 300px;
-    width: 100%;
-}
-
-
-
-
 
 #flg-msg {
     display: flex;

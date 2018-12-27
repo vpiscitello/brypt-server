@@ -1,4 +1,4 @@
-let rootCluster = {
+var rootCluster = {
     coordinators: [{
         "id": 1,
         "cluster": 1,
@@ -62,7 +62,7 @@ let rootCluster = {
         "ireg_rate": 0.55
     }]
 };
-let subCluster = {
+var subCluster = {
     coordinators: [{
         "id": 1,
         "cluster": 1,
@@ -117,36 +117,8 @@ let subCluster = {
     }]
 };
 
-let readingsList = {
-    data: [{
-        timestamp: "0",
-        aggReading: "70"
-    }, {
-        timestamp: "5",
-        aggReading: "72"
-    }, {
-        timestamp: "10",
-        aggReading: "76"
-    }, {
-        timestamp: "15",
-        aggReading: "74"
-    }, {
-        timestamp: "20",
-        aggReading: "72"
-    }, {
-        timestamp: "25",
-        aggReading: "72"
-    }, {
-        timestamp: "30",
-        aggReading: "73"
-    }, {
-        timestamp: "35",
-        aggReading: "74"
-    }]
-};
-
 function indexOfObject(obj, arr) {
-    for (let idx = 0; idx < arr.length; idx++) {
+    for (var idx = 0; idx < arr.length; idx++) {
         if (obj.id == arr[idx].id) {
             return idx;
         }
@@ -172,7 +144,7 @@ Vue.directive('click-outside', {
 // TODO: Get Network connection from Central Server
 // TODO: Set up Control and Data websockets to network
 
-let Spinner = {
+var Spinner = {
     template: '#spinner-template',
     props: {
         // The color of the spinner elements
@@ -184,7 +156,7 @@ let Spinner = {
 };
 
 // Based on https://github.com/johndatserakis/vue-simple-context-menu
-let ItemContextMenu = {
+var ItemContextMenu = {
     template: '#ctx-menu-template',
     props: {
         // The element id of the context menu
@@ -231,7 +203,7 @@ let ItemContextMenu = {
             // After the DOM has been updated display the context menu
             this.$nextTick(() => {
                 // Select the context menu and return if it does not exist
-                let menu = document.getElementById(this.id);
+                var menu = document.getElementById(this.id);
                 if (!menu) {
                     return;
                 }
@@ -245,7 +217,7 @@ let ItemContextMenu = {
                     menu.removeAttribute("style");
                 }
 
-                let parentRect = this.$parent.$el.getBoundingClientRect();
+                var parentRect = this.$parent.$el.getBoundingClientRect();
 
                 // Set the X postion of the menu based on the item and page position
                 if ((this.menuWidth + event.pageX) >= parentRect.width) {
@@ -266,7 +238,7 @@ let ItemContextMenu = {
         },
         hideMenu: function() {
             // console.log("Hide Menu");
-            let element = document.getElementById(this.id); // Get the menu
+            var element = document.getElementById(this.id); // Get the menu
             if (element) {
                 element.classList.remove('active'); // Hide the menu
             }
@@ -281,7 +253,7 @@ let ItemContextMenu = {
     }
 };
 
-let NodeDetail = {
+var NodeDetail = {
     template: '#detail-template',
     props: {
         id: {
@@ -299,11 +271,17 @@ let NodeDetail = {
         // Defines whether or not the node exhibits abnormal behavior on the network
         irregular: function() {
             return this.node.ireg_rate > 0.25;
+        },
+        // The left zero pading for the node ID
+        zeroPad: function() {
+            zeros = "0000";
+            // Make a subtring the ensure all IDs are aligned on four characters
+            return zeros.substring(0, zeros.length - ("" + this.node.id).length);
         }
     },
     filters: {
         toTimeString: function(timestamp) {
-            let date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
+            var date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
             // Return a Locale Date string in the format Month Day, Year, Hour:Minute
             return date.toLocaleString(window.navigator.language, {
                 day: "numeric",
@@ -352,7 +330,7 @@ let NodeDetail = {
     }
 };
 
-let NodeItem = {
+var NodeItem = {
     template: '#node-template',
     props: {
         node: {
@@ -392,7 +370,7 @@ let NodeItem = {
     },
     filters: {
         toTimeString: function(timestamp) {
-            let date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
+            var date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
             // Return a Locale Date string in the format Month Day, Year, Hour:Minute
             return date.toLocaleString(window.navigator.language, {
                 day: "numeric",
@@ -421,7 +399,7 @@ let NodeItem = {
     }
 };
 
-let NodeContainer = {
+var NodeContainer = {
     template: '#ng-template',
     components: {
         'spinner': Spinner,
@@ -471,7 +449,7 @@ let NodeContainer = {
     }
 };
 
-let ClusterContext = {
+var ClusterContext = {
     template: '#cluster-template',
     components: {
         'spinner': Spinner,
@@ -491,7 +469,7 @@ let ClusterContext = {
     computed: {
         // Possible action menu options for the clusters
         actionMenuOptions: function() {
-            let options = [];
+            var options = [];
             // option: {
             //     name: String,    // The name of the option for the user
             //     call: String,    // The function to be called upon selecting the option
@@ -523,8 +501,8 @@ let ClusterContext = {
                 return;
             }
 
-            let coordinators = []; // Intialize an empty array to store the coordinators
-            let coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
+            var coordinators = []; // Intialize an empty array to store the coordinators
+            var coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
 
             // If there is comething in the Store parse the contents
             if (typeof coordinatorStore === "string") {
@@ -556,7 +534,7 @@ let ClusterContext = {
                 return;
             }
 
-            let neighbors = Object;
+            var neighbors = Object;
 
             // Temp for the hardcoded cluster
             switch (node.id) {
@@ -597,7 +575,7 @@ let ClusterContext = {
                 this.pushClusterCoordinator(node);
             } else {
                 // Pop each node until the request coordinator
-                for (let idx = this.coordinators.length - 1; idx > cordIndex; idx--) {
+                for (var idx = this.coordinators.length - 1; idx > cordIndex; idx--) {
                     this.popClusterCoordinator();
                 }
             }
@@ -645,7 +623,7 @@ let ClusterContext = {
         // TODO: Pass Root Cluster query
 
         // TEMP hardcoded root
-        let root = {
+        var root = {
             "id": 1,
             "cluster": 1,
             "coordinator": 0,
@@ -657,7 +635,7 @@ let ClusterContext = {
             "ireg_rate": 0.05
         };
 
-        let coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
+        var coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
         // If the coordinatorStore is empty push the root node
         // Otherwise load the stored information. This handles the case of page reload
         if (coordinatorStore === null) {
@@ -666,7 +644,7 @@ let ClusterContext = {
             this.coordinators = JSON.parse(coordinatorStore);
         }
 
-        let neighborStore = sessionStorage.getItem("neighbors"); // Read SessionStorage for stored neighbors
+        var neighborStore = sessionStorage.getItem("neighbors"); // Read SessionStorage for stored neighbors
         // If the neighborStore is empty query the network for the root cluster table
         // Otherwise load the stored information. This handles the case of page reload
         if (neighborStore === null) {
@@ -693,120 +671,17 @@ let ClusterContext = {
     }
 };
 
-let ChartContainer = {
-    template: '#chart-template',
-    extends: VueChartJs.Line,
-    mixins: [VueChartJs.mixins],
-    components: {
-        'spinner': Spinner,
-    },
-    props: {
-        readings: {
-            type: Object,
-            default: null
-        }
-    },
-    data: function() {
-        return {
-            options: {
-                reactive: true,
-                responsive: true,
-                maintainAspectRatio: false,
-                color: '#FBFBFB',
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            fontColor: '#FBFBFB'
-                        },
-                        gridLines: {
-                            display: true
-                        }
-                    }],
-                    xAxes: [{
-                        ticks: {
-                            fontColor: '#FBFBFB'
-                        },
-                        gridLines: {
-                            display: true
-                        }
-                    }]
-                },
-                legend: {
-                    display: true,
-                    labels: {
-                        boxWidth: 0,
-                        fontColor: '#FBFBFB'
-                    }
-                }
-            }
-        };
-    },
-    mounted: function() {
-        this.gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450);
+var DataContext = {
 
-        this.gradient.addColorStop(0, 'rgba(26, 204, 148, 1)');
-        this.gradient.addColorStop(1, 'rgba(126, 238, 203, 0)');
-
-
-        this.renderChart({
-            labels: readingsList.data.map(d => d.timestamp),
-            datasets: [{
-                label: 'Readings',
-                borderColor: 'rgb(126, 238, 203)',
-                pointBackgroundColor: 'white',
-                borderWidth: 1,
-                pointBorderColor: 'white',
-                backgroundColor: this.gradient,
-                data: readingsList.data.map(r => r.aggReading)
-            }]
-        }, this.options);
-    },
-    updated: function() {
-
-    }
-};
-
-let DataContext = {
-    template: '#data-template',
-    components: {
-        'spinner': Spinner,
-        'chart-container': ChartContainer,
-    },
-    props: {
-
-    },
-    data: function() {
-        return {
-            readings: null, // The array of coordinators for the cluster
-        };
-    },
-    computed: {
-
-    },
-    methods: {
-        fetchNetworkData: function() {
-
-        }
-    },
-    created: function() {
-
-    },
-    beforeMount: function() {
-
-    },
-    mounted: function() {
-
-    },
-    updated: function() {
-
-    }
 };
 
 // Bootstrap the Clusters
-let clustersVue = new Vue({
+var clustersVue = new Vue({
     el: '#clusters',
     components: {
-        'cluster-context': ClusterContext
+        'cluster-context': ClusterContext,
+        'node-container': NodeContainer,
+        'node-item': NodeItem
     },
     data: {
 
@@ -814,10 +689,10 @@ let clustersVue = new Vue({
 });
 
 // Bootstrap the Data
-let dataVue = new Vue({
+var dataVue = new Vue({
     el: '#data',
     components: {
-        'data-context': DataContext,
+
     },
     data: {
 
