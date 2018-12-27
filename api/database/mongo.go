@@ -2,10 +2,11 @@ package database
 
 import (
 
-//	"reflect"	// For printing types
+	"reflect"
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 //	"context"
 //	"encoding/json"
 	"time"
@@ -144,26 +145,36 @@ func Write(w http.ResponseWriter, collection string, dataCTX map[string]interfac
 	switch collection {
 		case "brypt_users":
 				print("Handling request to add new user\n")
-				id = WriteUser(w, dataCTX)
+				//id = WriteUser(w, dataCTX)
+				user := User{}
+				id = writeObject(w, dataCTX, user, collection)
 				print("New user id: ")
 				fmt.Print(id)
 				print("\n")
 			break
 		case "brypt_nodes":
 				print("Handling request to add new node\n")
-				id = WriteNode(w, dataCTX)
+				//id = WriteNode(w, dataCTX)
+				node := Node{}
+				id = writeObject(w, dataCTX, node, collection)
 			break
 		case "brypt_networks":
 				print("Handling request to add new network\n")
-				id = WriteNetwork(w, dataCTX)
+			//	id = WriteNetwork(w, dataCTX)
+				network := Network{}
+				id = writeObject(w, dataCTX, network, collection)
 			break
 		case "brypt_clusters":
 				print("Handling request to add new cluster\n")
-				id = WriteCluster(w, dataCTX)
+			//	id = WriteCluster(w, dataCTX)
+			cluster := Cluster{}
+				id = writeObject(w, dataCTX, cluster, collection)
 			break
 		case "brypt_managers":
 				print("Handling request to add new manager\n")
-				id = WriteManager(w, dataCTX)
+				//id = WriteManager(w, dataCTX)
+				mngr := Manager{}
+				id = writeObject(w, dataCTX, mngr, collection)
 			break
 		default:
 				print("ERROR: Invalid POST request\n")
@@ -325,6 +336,46 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 }
 
 /* **************************************************************************
+** Function: WriteObject
+** URI:
+** Description:
+** *************************************************************************/
+func writeObject(w http.ResponseWriter, objCTX map[string]interface{}, obj interface{}, collectionName string) string {
+//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
+//	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
+	var keys []string
+	var k string
+	user := User{}
+	fmt.Printf("%v\n", obj)
+	elem := reflect.ValueOf(&user).Elem()
+
+	for i := 0; i < elem.NumField(); i++ {
+		//keys[i] = elem.Type().Field(i).Name
+		k = elem.Type().Field(i).Name
+		k = strings.ToLower(k)
+		if k != "uid" {
+			keys = append(keys, k)
+			fmt.Printf("%v\n", k)
+		}
+	}
+
+	objID, newObj := createBSONDocument(objCTX, keys)
+	print("\n\n In WriteObject...\n\n")
+	fmt.Print(newObj)
+	
+	collection := Client.Database("heroku_ckmt3tbl").Collection(collectionName)
+
+	_, err := collection.InsertOne(nil, newObj)
+	if err != nil {
+		log.Println("Error inserting new object: ", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return objID
+	}
+
+	w.WriteHeader(http.StatusAccepted)
+	return objID
+}
+/* **************************************************************************
 ** Function: WriteUser
 ** URI:
 ** Description:
@@ -332,7 +383,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 
 //Combine (w, ctx, keys, collectionName)
 //Return an error if an error
-func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
+/*func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
 
@@ -352,13 +403,13 @@ func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
 	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
-
+*/
 /* **************************************************************************
 ** Function: WriteNetwork
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) string {
+/*func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) string {
 	var keys = []string {"network_name", "owner_name", "managers", "direct_peers", "total_peers", "ip_address", "port", "connection_token", "clusters", "created_on", "last_accessed"}
 	objID, newNetwork := createBSONDocument(networkCTX, keys)
 	print("\n\n In Write Network...\n\n")
@@ -376,13 +427,13 @@ func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) stri
 	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
-
+*/
 /* **************************************************************************
 ** Function: WriteNode
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) string {
+/*func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) string {
 	var keys = []string {"serial_number", "type", "created_on", "registered_on", "registered_to", "connected_network"}
 	objID, newNode := createBSONDocument(nodeCTX, keys)
 	print("\n\n In Write Node...\n\n")
@@ -400,13 +451,13 @@ func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) string {
 	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
-
+*/
 /* **************************************************************************
 ** Function: WriteCluster
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) string {
+/*func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) string {
 	var keys = []string {"connection_token", "coord_ip", "coord_port", "comm_tech"}
 	objID, newCluster := createBSONDocument(clusterCTX, keys)
 	print("\n\n In Write Cluster...\n\n")
@@ -424,13 +475,13 @@ func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) stri
 	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
-
+*/
 /* **************************************************************************
 ** Function: WriteManager 
 ** URI:
 ** Description:
 ** *************************************************************************/
-func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) string {
+/*func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) string {
 	var keys = []string {"manager_name"}
 	objID, newManager := createBSONDocument(managerCTX, keys)
 	print("\n\n In Write Manager...\n\n")
@@ -448,7 +499,7 @@ func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) stri
 	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
-
+*/
 /* **************************************************************************
 ** Function: DeleteMany 
 ** URI:
