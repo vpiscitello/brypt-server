@@ -245,11 +245,9 @@
         </script>
 
 
-        <script type="text/x-template" id="chart-template">
-            <div class="context">
-
-            </div>
-        </script>
+        <!-- <script type="text/x-template" id="chart-template">
+            <div class="context"></div>
+        </script> -->
         <script type="text/x-template" id="overview-template">
             <section id="overview">
                 <div id="avg-read" class="ov-badge">
@@ -281,15 +279,18 @@
                 </div>
                 <chart-container
                     v-bind:id="'chart'"
-                    v-bind:ref="'chart'">
+                    v-bind:ref="'chart'"
+                    :chart-data="chartData">
                 </chart-container>
             </div>
         </script>
 
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-        <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
+        <script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>
+    	<script src="https://github.com/nagix/chartjs-plugin-streaming/releases/download/v1.7.1/chartjs-plugin-streaming.min.js"></script>
+        <script src="https://unpkg.com/vue-chartjs@3.4.0/dist/vue-chartjs.min.js"></script>
         <script src="index.js"></script>
         <script src="components.js"></script>
 

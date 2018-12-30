@@ -117,33 +117,6 @@ let subCluster = {
     }]
 };
 
-let readingsList = {
-    data: [{
-        timestamp: "0",
-        aggReading: "70"
-    }, {
-        timestamp: "5",
-        aggReading: "72"
-    }, {
-        timestamp: "10",
-        aggReading: "76"
-    }, {
-        timestamp: "15",
-        aggReading: "74"
-    }, {
-        timestamp: "20",
-        aggReading: "72"
-    }, {
-        timestamp: "25",
-        aggReading: "72"
-    }, {
-        timestamp: "30",
-        aggReading: "73"
-    }, {
-        timestamp: "35",
-        aggReading: "74"
-    }]
-};
 
 function indexOfObject(obj, arr) {
     for (let idx = 0; idx < arr.length; idx++) {
@@ -693,41 +666,154 @@ let ClusterContext = {
     }
 };
 
+function CustomTooltip(tooltipModel) {
+    var tooltipEl = document.getElementById('chartjs-tooltip');
+
+    if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl.innerHTML = "<table></table>";
+        document.body.appendChild(tooltipEl);
+    }
+
+    if (tooltipModel.opacity === 0) {
+        tooltipEl.style.opacity = 0;
+        return;
+    }
+
+    tooltipEl.classList.remove('above', 'below', 'no-transform');
+    if (tooltipModel.yAlign) {
+        tooltipEl.classList.add(tooltipModel.yAlign);
+    } else {
+        tooltipEl.classList.add('no-transform');
+    }
+
+    function getBody(bodyItem) {
+        return bodyItem.lines;
+    }
+
+    if (tooltipModel.body) {
+        var titleLines = tooltipModel.title || [];
+        var bodyLines = tooltipModel.body.map(getBody);
+
+        var innerHtml = '<tbody>';
+        titleLines.forEach(function(title) {
+            innerHtml += '<tr><th>' + title + '</th></tr>';
+        });
+        innerHtml += '</tbody>';
+
+        var tableRoot = tooltipEl.querySelector('table');
+        tableRoot.innerHTML = innerHtml;
+    }
+
+    var position = this._chart.canvas.getBoundingClientRect();
+
+
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.position = 'absolute';
+    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - (tooltipEl.offsetWidth /
+            2) +
+        'px';
+    tooltipEl.style.top = position.bottom + window.pageYOffset - 50 + 'px';
+    tooltipEl.style.color = '#FBFBFB';
+    tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily;
+    tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px';
+    tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle;
+    tooltipEl.style.padding = 4 + 'px ' + 4 + 'px';
+    tooltipEl.style.pointerEvents = 'none';
+    tooltipEl.style.backgroundColor = '#1E1E1E';
+    tooltipEl.style.borderRadius = 5 + 'px';
+}
+
+Chart.defaults.LineWithLine = Chart.defaults.line;
+
+Chart.controllers.LineWithLine = Chart.controllers.line.extend({
+    draw: function(ease) {
+        Chart.controllers.line.prototype.draw.call(this, ease);
+
+        if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
+            let activePoint = this.chart.tooltip._active[0],
+                ctx = this.chart.ctx,
+                x = activePoint.tooltipPosition().x,
+                topY = this.chart.scales['y-axis-0'].top,
+                bottomY = this.chart.scales['y-axis-0'].bottom;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x, topY);
+            ctx.lineTo(x, bottomY);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = 'rgba(251, 251, 251, 0.2)';
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+});
+
+const LineWithLine = VueChartJs.generateChart('custom-line', 'LineWithLine');
+
 let ChartContainer = {
-    template: '#chart-template',
-    extends: VueChartJs.Line,
-    mixins: [VueChartJs.mixins],
+    // template: '#chart-template',
+    extends: LineWithLine,
+    mixins: [VueChartJs.mixins.reactiveProp],
     components: {
         'spinner': Spinner,
     },
-    props: {
-        readings: {
-            type: Object,
-            default: null
-        }
-    },
     data: function() {
         return {
+            gradients: null,
             options: {
                 reactive: true,
                 responsive: true,
                 maintainAspectRatio: false,
-                color: '#FBFBFB',
+                defaultFontFamily: Chart.defaults.global.defaultFontFamily = 'Source Sans Pro',
                 scales: {
                     yAxes: [{
                         ticks: {
-                            fontColor: '#FBFBFB'
+                            display: true,
+                            fontColor: '#60777F',
+                            fontSize: 12,
                         },
                         gridLines: {
-                            display: true
+                            display: true,
+                            color: 'rgba(96, 119, 128, 0.1)'
+                        },
+                        scaleLabel: {
+                            display: false,
+                            labelString: 'Reading',
+                            fontColor: '#60777F',
+                            fontSize: 14
                         }
                     }],
                     xAxes: [{
+                        type: 'realtime',
+                        time: {
+                            displayFormats: {
+                                second: 'h:mm:ss A',
+                            }
+                        },
+                        realtime: {
+                            duration: 150000, // Show 10 30 second datapoints
+                            // refresh: 30000, // refresh every 30 seconds
+                            delay: 30000, // Delay of the show
+                            onRefresh: function(chart) {
+
+                            }
+
+                        },
                         ticks: {
-                            fontColor: '#FBFBFB'
+                            display: true,
+                            fontColor: '#60777F',
+                            fontSize: 12
                         },
                         gridLines: {
-                            display: true
+                            display: false
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Timestamp',
+                            fontColor: 'rgba(251, 251, 251, 0.6)',
+                            fontSize: 13
                         }
                     }]
                 },
@@ -735,31 +821,68 @@ let ChartContainer = {
                     display: true,
                     labels: {
                         boxWidth: 0,
-                        fontColor: '#FBFBFB'
+                        fontColor: 'rgba(251, 251, 251, 0.6)',
+                        // fontStyle: 'bold',
+                        fontSize: 14
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0.2
+                    }
+                },
+                hover: {
+                    intersect: false
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    position: 'nearest',
+                    titleFontSize: 0,
+                    titleSpacing: 0,
+                    titleMarginBottom: 0,
+                    displayColors: false,
+                    callbacks: {
+                        title: function(tooltipItems, data) {
+                            return tooltipItems[0].xLabel.toLocaleString(window.navigator.language, {
+                                hour: "numeric",
+                                minute: "2-digit",
+                                second: "2-digit",
+                                hour12: true
+                            });
+                        },
+                        label: function(tooltipItem, data) {
+                            return 'Reading: ' + tooltipItem.yLabel + '°';
+                        }
+                    },
+                    custom: CustomTooltip
+                },
+                plugins: {
+                    streaming: {
+                        frameRate: 30
                     }
                 }
             }
         };
     },
+    methods: {
+        getBackgroundGradient: function(idx) {
+            return this.gradients[idx];
+        }
+    },
+    watch: {
+        chartData: function() {
+            this.$data._chart.update();
+        }
+    },
     mounted: function() {
-        this.gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450);
+        this.gradients = [];
+        let gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450);
+        gradient.addColorStop(0, 'rgba(26, 204, 148, 0.6)');
+        gradient.addColorStop(0.55, 'rgba(126, 238, 203, 0)');
+        this.gradients.push(gradient);
 
-        this.gradient.addColorStop(0, 'rgba(26, 204, 148, 1)');
-        this.gradient.addColorStop(1, 'rgba(126, 238, 203, 0)');
-
-
-        this.renderChart({
-            labels: readingsList.data.map(d => d.timestamp),
-            datasets: [{
-                label: 'Readings',
-                borderColor: 'rgb(126, 238, 203)',
-                pointBackgroundColor: 'white',
-                borderWidth: 1,
-                pointBorderColor: 'white',
-                backgroundColor: this.gradient,
-                data: readingsList.data.map(r => r.aggReading)
-            }]
-        }, this.options);
+        this.renderChart(this.chartData, this.options);
     },
     updated: function() {
 
@@ -777,7 +900,30 @@ let DataContext = {
     },
     data: function() {
         return {
-            readings: null, // The array of coordinators for the cluster
+            readings: null, // The array of coordinators for the cluster,
+            chartData: {
+                labels: [],
+                datasets: [{
+                    label: 'Aggregate Readings',
+                    pointColor: 'transparent',
+                    pointStrokeColor: 'transparent',
+                    pointHighlightFill: 'rgba(26, 204, 148, 1)',
+                    pointHighlightStroke: 'rgba(126, 238, 203, 0.3)',
+                    bezierCurve: true,
+                    cubicInterpolationMode: 'monotone',
+                    borderColor: 'rgb(126, 238, 203)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointBackgroundColor: 'rgba(251, 251, 251, 0)',
+                    pointBorderColor: 'rgba(251, 251, 251, 0)',
+                    pointHoverRadius: 5,
+                    pointBorderWidth: 9,
+                    pointHoverBackgroundColor: 'rgba(251, 251, 251, 1)',
+                    pointHoverBorderColor: 'rgba(251, 251, 251, 0.2)',
+                    backgroundColor: 'rgba(126, 238, 203, 0.2)',
+                    data: []
+                }]
+            }
         };
     },
     computed: {
@@ -786,10 +932,53 @@ let DataContext = {
     methods: {
         fetchNetworkData: function() {
 
+        },
+        pushAggReadingToChart: function() {
+            let chartData = {
+                labels: this.chartData.labels,
+                datasets: [{
+                    label: 'Aggregate Readings',
+                    pointColor: 'transparent',
+                    pointStrokeColor: 'transparent',
+                    pointHighlightFill: 'rgba(26, 204, 148, 1)',
+                    pointHighlightStroke: 'rgba(126, 238, 203, 0.3)',
+                    bezierCurve: true,
+                    cubicInterpolationMode: 'monotone',
+                    borderColor: 'rgb(126, 238, 203)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointBackgroundColor: 'rgba(251, 251, 251, 0)',
+                    pointBorderColor: 'rgba(251, 251, 251, 0)',
+                    pointHoverRadius: 5,
+                    pointBorderWidth: 9,
+                    pointHoverBackgroundColor: 'rgba(251, 251, 251, 1)',
+                    pointHoverBorderColor: 'rgba(251, 251, 251, 0.2)',
+                    backgroundColor: this.$refs.chart.getBackgroundGradient(0),
+                    data: this.chartData.datasets[0].data
+                }]
+            };
+
+            chartData.labels.push(new Date());
+            // if (chartData.labels.length > 10) {
+            //     chartData.labels.shift();
+            // }
+
+            chartData.datasets[0].data.push((Math.random() * (72 - 68) + 68).toFixed(2));
+            // if (chartData.datasets[0].data.length > 10) {
+            //     chartData.datasets[0].data.shift();
+            // }
+
+            this.chartData = chartData;
+
         }
     },
+    beforeCreate: function() {
+        this.chartUpdateInterval = setInterval(() => this.pushAggReadingToChart(), 30000);
+    },
     created: function() {
-
+        this.$nextTick(() => {
+            this.pushAggReadingToChart();
+        });
     },
     beforeMount: function() {
 
