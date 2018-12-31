@@ -19,7 +19,7 @@ import (
    "brypt-server/api/access"
    "brypt-server/api/base"
    // "brypt-server/api/bridge"
-   // "brypt-server/api/dashboard"
+   "brypt-server/api/dashboard"
    // "brypt-server/api/users"
 
    "brypt-server/internal/handlebars"
@@ -84,7 +84,7 @@ func main()  {
 
     hr.Map( configuration.Server.BridgeDomain, bridgeRouter() ) // Handle bridge.host routing requests
 
-    hr.Map( configuration.Server.DashboardDomain, dashboardRouter() )   // Handle dashboard.host routing requests
+    hr.Map( configuration.Server.DashboardDomain, dashboard.Resources{}.Routes() )   // Handle dashboard.host routing requests
 
     hr.Map( "*", baseRouter() ) // Handle everything else
 
@@ -141,7 +141,7 @@ func baseRouter() chi.Router {
     router := chi.NewRouter()
 
     // TODO: Append parameters
-    
+
     // Redirect requests to host/access to access.host
     router.Get( "/access", func ( w http.ResponseWriter, r *http.Request ) {
         http.Redirect( w, r, "https://" + configuration.Server.AccessDomain, http.StatusMovedPermanently )

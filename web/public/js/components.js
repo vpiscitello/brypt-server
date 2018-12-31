@@ -1,4 +1,4 @@
-let rootCluster = {
+var rootCluster = {
     coordinators: [{
         "id": 1,
         "cluster": 1,
@@ -62,7 +62,7 @@ let rootCluster = {
         "ireg_rate": 0.55
     }]
 };
-let subCluster = {
+var subCluster = {
     coordinators: [{
         "id": 1,
         "cluster": 1,
@@ -117,9 +117,8 @@ let subCluster = {
     }]
 };
 
-
 function indexOfObject(obj, arr) {
-    for (let idx = 0; idx < arr.length; idx++) {
+    for (var idx = 0; idx < arr.length; idx++) {
         if (obj.id == arr[idx].id) {
             return idx;
         }
@@ -145,7 +144,7 @@ Vue.directive('click-outside', {
 // TODO: Get Network connection from Central Server
 // TODO: Set up Control and Data websockets to network
 
-let Spinner = {
+var Spinner = {
     template: '#spinner-template',
     props: {
         // The color of the spinner elements
@@ -157,7 +156,7 @@ let Spinner = {
 };
 
 // Based on https://github.com/johndatserakis/vue-simple-context-menu
-let ItemContextMenu = {
+var ItemContextMenu = {
     template: '#ctx-menu-template',
     props: {
         // The element id of the context menu
@@ -204,7 +203,7 @@ let ItemContextMenu = {
             // After the DOM has been updated display the context menu
             this.$nextTick(() => {
                 // Select the context menu and return if it does not exist
-                let menu = document.getElementById(this.id);
+                var menu = document.getElementById(this.id);
                 if (!menu) {
                     return;
                 }
@@ -218,7 +217,7 @@ let ItemContextMenu = {
                     menu.removeAttribute("style");
                 }
 
-                let parentRect = this.$parent.$el.getBoundingClientRect();
+                var parentRect = this.$parent.$el.getBoundingClientRect();
 
                 // Set the X postion of the menu based on the item and page position
                 if ((this.menuWidth + event.pageX) >= parentRect.width) {
@@ -239,7 +238,7 @@ let ItemContextMenu = {
         },
         hideMenu: function() {
             // console.log("Hide Menu");
-            let element = document.getElementById(this.id); // Get the menu
+            var element = document.getElementById(this.id); // Get the menu
             if (element) {
                 element.classList.remove('active'); // Hide the menu
             }
@@ -254,7 +253,7 @@ let ItemContextMenu = {
     }
 };
 
-let NodeDetail = {
+var NodeDetail = {
     template: '#detail-template',
     props: {
         id: {
@@ -272,11 +271,17 @@ let NodeDetail = {
         // Defines whether or not the node exhibits abnormal behavior on the network
         irregular: function() {
             return this.node.ireg_rate > 0.25;
+        },
+        // The left zero pading for the node ID
+        zeroPad: function() {
+            zeros = "0000";
+            // Make a subtring the ensure all IDs are aligned on four characters
+            return zeros.substring(0, zeros.length - ("" + this.node.id).length);
         }
     },
     filters: {
         toTimeString: function(timestamp) {
-            let date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
+            var date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
             // Return a Locale Date string in the format Month Day, Year, Hour:Minute
             return date.toLocaleString(window.navigator.language, {
                 day: "numeric",
@@ -325,7 +330,7 @@ let NodeDetail = {
     }
 };
 
-let NodeItem = {
+var NodeItem = {
     template: '#node-template',
     props: {
         node: {
@@ -365,7 +370,7 @@ let NodeItem = {
     },
     filters: {
         toTimeString: function(timestamp) {
-            let date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
+            var date = new Date(timestamp * 1000); // Convert the provided timestamp to a Date object
             // Return a Locale Date string in the format Month Day, Year, Hour:Minute
             return date.toLocaleString(window.navigator.language, {
                 day: "numeric",
@@ -394,7 +399,7 @@ let NodeItem = {
     }
 };
 
-let NodeContainer = {
+var NodeContainer = {
     template: '#ng-template',
     components: {
         'spinner': Spinner,
@@ -444,7 +449,7 @@ let NodeContainer = {
     }
 };
 
-let ClusterContext = {
+var ClusterContext = {
     template: '#cluster-template',
     components: {
         'spinner': Spinner,
@@ -464,7 +469,7 @@ let ClusterContext = {
     computed: {
         // Possible action menu options for the clusters
         actionMenuOptions: function() {
-            let options = [];
+            var options = [];
             // option: {
             //     name: String,    // The name of the option for the user
             //     call: String,    // The function to be called upon selecting the option
@@ -496,8 +501,8 @@ let ClusterContext = {
                 return;
             }
 
-            let coordinators = []; // Intialize an empty array to store the coordinators
-            let coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
+            var coordinators = []; // Intialize an empty array to store the coordinators
+            var coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
 
             // If there is comething in the Store parse the contents
             if (typeof coordinatorStore === "string") {
@@ -529,7 +534,7 @@ let ClusterContext = {
                 return;
             }
 
-            let neighbors = Object;
+            var neighbors = Object;
 
             // Temp for the hardcoded cluster
             switch (node.id) {
@@ -570,7 +575,7 @@ let ClusterContext = {
                 this.pushClusterCoordinator(node);
             } else {
                 // Pop each node until the request coordinator
-                for (let idx = this.coordinators.length - 1; idx > cordIndex; idx--) {
+                for (var idx = this.coordinators.length - 1; idx > cordIndex; idx--) {
                     this.popClusterCoordinator();
                 }
             }
@@ -618,7 +623,7 @@ let ClusterContext = {
         // TODO: Pass Root Cluster query
 
         // TEMP hardcoded root
-        let root = {
+        var root = {
             "id": 1,
             "cluster": 1,
             "coordinator": 0,
@@ -630,7 +635,7 @@ let ClusterContext = {
             "ireg_rate": 0.05
         };
 
-        let coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
+        var coordinatorStore = sessionStorage.getItem("coordinators"); // Read SessionStorage for stored coordinators
         // If the coordinatorStore is empty push the root node
         // Otherwise load the stored information. This handles the case of page reload
         if (coordinatorStore === null) {
@@ -639,7 +644,7 @@ let ClusterContext = {
             this.coordinators = JSON.parse(coordinatorStore);
         }
 
-        let neighborStore = sessionStorage.getItem("neighbors"); // Read SessionStorage for stored neighbors
+        var neighborStore = sessionStorage.getItem("neighbors"); // Read SessionStorage for stored neighbors
         // If the neighborStore is empty query the network for the root cluster table
         // Otherwise load the stored information. This handles the case of page reload
         if (neighborStore === null) {
@@ -666,336 +671,17 @@ let ClusterContext = {
     }
 };
 
-function CustomTooltip(tooltipModel) {
-    var tooltipEl = document.getElementById('chartjs-tooltip');
+var DataContext = {
 
-    if (!tooltipEl) {
-        tooltipEl = document.createElement('div');
-        tooltipEl.id = 'chartjs-tooltip';
-        tooltipEl.innerHTML = "<table></table>";
-        document.body.appendChild(tooltipEl);
-    }
-
-    if (tooltipModel.opacity === 0) {
-        tooltipEl.style.opacity = 0;
-        return;
-    }
-
-    tooltipEl.classList.remove('above', 'below', 'no-transform');
-    if (tooltipModel.yAlign) {
-        tooltipEl.classList.add(tooltipModel.yAlign);
-    } else {
-        tooltipEl.classList.add('no-transform');
-    }
-
-    function getBody(bodyItem) {
-        return bodyItem.lines;
-    }
-
-    if (tooltipModel.body) {
-        var titleLines = tooltipModel.title || [];
-        var bodyLines = tooltipModel.body.map(getBody);
-
-        var innerHtml = '<tbody>';
-        titleLines.forEach(function(title) {
-            innerHtml += '<tr><th>' + title + '</th></tr>';
-        });
-        innerHtml += '</tbody>';
-
-        var tableRoot = tooltipEl.querySelector('table');
-        tableRoot.innerHTML = innerHtml;
-    }
-
-    var position = this._chart.canvas.getBoundingClientRect();
-
-
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.position = 'absolute';
-    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX - (tooltipEl.offsetWidth /
-            2) +
-        'px';
-    tooltipEl.style.top = position.bottom + window.pageYOffset - 50 + 'px';
-    tooltipEl.style.color = '#FBFBFB';
-    tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily;
-    tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px';
-    tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle;
-    tooltipEl.style.padding = 4 + 'px ' + 4 + 'px';
-    tooltipEl.style.pointerEvents = 'none';
-    tooltipEl.style.backgroundColor = '#1E1E1E';
-    tooltipEl.style.borderRadius = 5 + 'px';
-}
-
-Chart.defaults.LineWithLine = Chart.defaults.line;
-
-Chart.controllers.LineWithLine = Chart.controllers.line.extend({
-    draw: function(ease) {
-        Chart.controllers.line.prototype.draw.call(this, ease);
-
-        if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
-            let activePoint = this.chart.tooltip._active[0],
-                ctx = this.chart.ctx,
-                x = activePoint.tooltipPosition().x,
-                topY = this.chart.scales['y-axis-0'].top,
-                bottomY = this.chart.scales['y-axis-0'].bottom;
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x, topY);
-            ctx.lineTo(x, bottomY);
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = 'rgba(251, 251, 251, 0.2)';
-            ctx.stroke();
-            ctx.restore();
-        }
-    }
-});
-
-const LineWithLine = VueChartJs.generateChart('custom-line', 'LineWithLine');
-
-let ChartContainer = {
-    // template: '#chart-template',
-    extends: LineWithLine,
-    mixins: [VueChartJs.mixins.reactiveProp],
-    components: {
-        'spinner': Spinner,
-    },
-    data: function() {
-        return {
-            gradients: null,
-            options: {
-                reactive: true,
-                responsive: true,
-                maintainAspectRatio: false,
-                defaultFontFamily: Chart.defaults.global.defaultFontFamily = 'Source Sans Pro',
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            display: true,
-                            fontColor: '#60777F',
-                            fontSize: 12,
-                        },
-                        gridLines: {
-                            display: true,
-                            color: 'rgba(96, 119, 128, 0.1)'
-                        },
-                        scaleLabel: {
-                            display: false,
-                            labelString: 'Reading',
-                            fontColor: '#60777F',
-                            fontSize: 14
-                        }
-                    }],
-                    xAxes: [{
-                        type: 'realtime',
-                        time: {
-                            displayFormats: {
-                                second: 'h:mm:ss A',
-                            }
-                        },
-                        realtime: {
-                            duration: 150000, // Show 10 30 second datapoints
-                            // refresh: 30000, // refresh every 30 seconds
-                            delay: 30000, // Delay of the show
-                            onRefresh: function(chart) {
-
-                            }
-
-                        },
-                        ticks: {
-                            display: true,
-                            fontColor: '#60777F',
-                            fontSize: 12
-                        },
-                        gridLines: {
-                            display: false
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Timestamp',
-                            fontColor: 'rgba(251, 251, 251, 0.6)',
-                            fontSize: 13
-                        }
-                    }]
-                },
-                legend: {
-                    display: true,
-                    labels: {
-                        boxWidth: 0,
-                        fontColor: 'rgba(251, 251, 251, 0.6)',
-                        // fontStyle: 'bold',
-                        fontSize: 14
-                    }
-                },
-                elements: {
-                    line: {
-                        tension: 0.2
-                    }
-                },
-                hover: {
-                    intersect: false
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                    position: 'nearest',
-                    titleFontSize: 0,
-                    titleSpacing: 0,
-                    titleMarginBottom: 0,
-                    displayColors: false,
-                    callbacks: {
-                        title: function(tooltipItems, data) {
-                            return tooltipItems[0].xLabel.toLocaleString(window.navigator.language, {
-                                hour: "numeric",
-                                minute: "2-digit",
-                                second: "2-digit",
-                                hour12: true
-                            });
-                        },
-                        label: function(tooltipItem, data) {
-                            return 'Reading: ' + tooltipItem.yLabel + '°';
-                        }
-                    },
-                    custom: CustomTooltip
-                },
-                plugins: {
-                    streaming: {
-                        frameRate: 30
-                    }
-                }
-            }
-        };
-    },
-    methods: {
-        getBackgroundGradient: function(idx) {
-            return this.gradients[idx];
-        }
-    },
-    watch: {
-        chartData: function() {
-            this.$data._chart.update();
-        }
-    },
-    mounted: function() {
-        this.gradients = [];
-        let gradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450);
-        gradient.addColorStop(0, 'rgba(26, 204, 148, 0.6)');
-        gradient.addColorStop(0.55, 'rgba(126, 238, 203, 0)');
-        this.gradients.push(gradient);
-
-        this.renderChart(this.chartData, this.options);
-    },
-    updated: function() {
-
-    }
-};
-
-let DataContext = {
-    template: '#data-template',
-    components: {
-        'spinner': Spinner,
-        'chart-container': ChartContainer,
-    },
-    props: {
-
-    },
-    data: function() {
-        return {
-            readings: null, // The array of coordinators for the cluster,
-            chartData: {
-                labels: [],
-                datasets: [{
-                    label: 'Aggregate Readings',
-                    pointColor: 'transparent',
-                    pointStrokeColor: 'transparent',
-                    pointHighlightFill: 'rgba(26, 204, 148, 1)',
-                    pointHighlightStroke: 'rgba(126, 238, 203, 0.3)',
-                    bezierCurve: true,
-                    cubicInterpolationMode: 'monotone',
-                    borderColor: 'rgb(126, 238, 203)',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    pointBackgroundColor: 'rgba(251, 251, 251, 0)',
-                    pointBorderColor: 'rgba(251, 251, 251, 0)',
-                    pointHoverRadius: 5,
-                    pointBorderWidth: 9,
-                    pointHoverBackgroundColor: 'rgba(251, 251, 251, 1)',
-                    pointHoverBorderColor: 'rgba(251, 251, 251, 0.2)',
-                    backgroundColor: 'rgba(126, 238, 203, 0.2)',
-                    data: []
-                }]
-            }
-        };
-    },
-    computed: {
-
-    },
-    methods: {
-        fetchNetworkData: function() {
-
-        },
-        pushAggReadingToChart: function() {
-            let chartData = {
-                labels: this.chartData.labels,
-                datasets: [{
-                    label: 'Aggregate Readings',
-                    pointColor: 'transparent',
-                    pointStrokeColor: 'transparent',
-                    pointHighlightFill: 'rgba(26, 204, 148, 1)',
-                    pointHighlightStroke: 'rgba(126, 238, 203, 0.3)',
-                    bezierCurve: true,
-                    cubicInterpolationMode: 'monotone',
-                    borderColor: 'rgb(126, 238, 203)',
-                    borderWidth: 2,
-                    pointRadius: 0,
-                    pointBackgroundColor: 'rgba(251, 251, 251, 0)',
-                    pointBorderColor: 'rgba(251, 251, 251, 0)',
-                    pointHoverRadius: 5,
-                    pointBorderWidth: 9,
-                    pointHoverBackgroundColor: 'rgba(251, 251, 251, 1)',
-                    pointHoverBorderColor: 'rgba(251, 251, 251, 0.2)',
-                    backgroundColor: this.$refs.chart.getBackgroundGradient(0),
-                    data: this.chartData.datasets[0].data
-                }]
-            };
-
-            chartData.labels.push(new Date());
-            // if (chartData.labels.length > 10) {
-            //     chartData.labels.shift();
-            // }
-
-            chartData.datasets[0].data.push((Math.random() * (72 - 68) + 68).toFixed(2));
-            // if (chartData.datasets[0].data.length > 10) {
-            //     chartData.datasets[0].data.shift();
-            // }
-
-            this.chartData = chartData;
-
-        }
-    },
-    beforeCreate: function() {
-        this.chartUpdateInterval = setInterval(() => this.pushAggReadingToChart(), 30000);
-    },
-    created: function() {
-        this.$nextTick(() => {
-            this.pushAggReadingToChart();
-        });
-    },
-    beforeMount: function() {
-
-    },
-    mounted: function() {
-
-    },
-    updated: function() {
-
-    }
 };
 
 // Bootstrap the Clusters
-let clustersVue = new Vue({
+var clustersVue = new Vue({
     el: '#clusters',
     components: {
-        'cluster-context': ClusterContext
+        'cluster-context': ClusterContext,
+        'node-container': NodeContainer,
+        'node-item': NodeItem
     },
     data: {
 
@@ -1003,10 +689,10 @@ let clustersVue = new Vue({
 });
 
 // Bootstrap the Data
-let dataVue = new Vue({
+var dataVue = new Vue({
     el: '#data',
     components: {
-        'data-context': DataContext,
+
     },
     data: {
 

@@ -8,5 +8,8 @@
 /bin
 /test
 /vendor/*/
+/vendor/vendor.json
+
+.jshintrc
 
 .DS_Store
