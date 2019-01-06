@@ -127,6 +127,39 @@ function indexOfObject(obj, arr) {
     return -1;
 }
 
+Vue.use(Vuex);
+
+let store = new Vuex.Store({
+    state: {
+        connected: false,
+        error: '',
+        message: '',
+        data: {
+            aggReading: null,
+            avgReading: null,
+            nodeCount: null,
+            clusterCount: null,
+            attackCount: null,
+            uptime: null
+        }
+    },
+    mutations: {
+        SOCKET_CONNECT(state) {
+                state.connected = true;
+            },
+            SOCKET_DISCONNECT(state) {
+                state.connected = false;
+            },
+            SOCKET_MESSAGE(state, message) {
+                state.message = message;
+            },
+            SOCKET_ERROR(state, message) {
+                state.error = message.error;
+            }
+    }
+});
+
+
 // // https://stackoverflow.com/questions/36170425/detect-click-outside-element
 Vue.directive('click-outside', {
     bind: function(el, binding, vnode) {
@@ -155,6 +188,58 @@ let Spinner = {
         }
     }
 };
+
+
+let FlagMessage = {
+    template: '#flag-template',
+    props: {
+        message: {
+            type: String,
+            required: true
+        },
+        urgency: {
+            type: Number,
+            default: 0
+        }
+    },
+    data: function() {
+        return {
+            show: true
+        };
+    },
+    computed: {
+        alertClass: function() {
+            let alertClass = "";
+            switch (this.urgency) {
+                case 2:
+                    alertClass = "danger";
+                    // color = "#E74C3C";
+                    break;
+                case 1:
+                    alertClass = "warning";
+                    // color = "#FFB75E";
+                    break;
+                default:
+                    alertClass = "basic";
+                    // color = "#19CC95";
+                    break;
+            }
+            return alertClass;
+        }
+    },
+    methods: {
+        showFlash: function() {
+            this.show = true;
+        },
+        closeFlash: function() {
+            this.show = false;
+        }
+    },
+    created: function() {
+
+    }
+};
+
 
 // Based on https://github.com/johndatserakis/vue-simple-context-menu
 let ItemContextMenu = {
@@ -889,18 +974,56 @@ let ChartContainer = {
     }
 };
 
+let NetworkOverview = {
+    template: '#overview-template',
+    components: {
+        'spinner': Spinner,
+    },
+    props: {
+        statistics: {
+            type: Object,
+            required: true
+        }
+    },
+    data: function() {
+        return {
+
+        };
+    },
+    filters: {
+        getTimePassString: function(timestamp) {
+            let str = "";
+            if (timestamp > 60 && timestamp < 3600) {
+                str = parseFloat(timestamp / 60).toFixed(2) + " minutes";
+            } else if (timestamp > 3600 && timestamp < 86400) {
+                str = parseFloat(timestamp / 3600).toFixed(2) + " hours";
+            } else if (timestamp > 86400 && timestamp < 604800) {
+                str = parseFloat(timestamp / 86400).toFixed(2) + " days";
+            } else if (timestamp > 604800) {
+                str = parseFloat(timestamp / 604800).toFixed(2) + " weeks";
+            } else {
+                str = timestamp + "seconds";
+            }
+            return str;
+        }
+    }
+};
+
+
 let DataContext = {
     template: '#data-template',
     components: {
         'spinner': Spinner,
         'chart-container': ChartContainer,
+        'network-overview': NetworkOverview,
     },
     props: {
 
     },
     data: function() {
         return {
-            readings: null, // The array of coordinators for the cluster,
+            networkData: null,
+            statistics: null,
             chartData: {
                 labels: [],
                 datasets: [{
@@ -931,9 +1054,40 @@ let DataContext = {
     },
     methods: {
         fetchNetworkData: function() {
+            let networkData = {
+                aggReading: null,
+                avgReading: null,
+                nodeCount: null,
+                clusterCount: null,
+                attackCount: null,
+                uptime: null
+            };
 
+            // TODO: Fetch network data from the websocket
+
+            // Create a new reading
+            let reading = {
+                timestamp: new Date(),
+                data: (Math.random() * (72 - 68) + 68).toFixed(2)
+            };
+
+            networkData.aggReading = reading;
+            networkData.avgReading = 68.34;
+            networkData.nodeCount = 9;
+            networkData.clusterCount = 2;
+            networkData.attackCount = 15;
+            networkData.uptime = (14 * 60 * 60) + (25 * 60);
+
+            this.networkData = networkData;
+
+            // Update the chart with the new network data
+            this.$nextTick(() => {
+                this.pushAggReadingToChart();
+            });
         },
         pushAggReadingToChart: function() {
+            // Create a new chartData object to update the chart
+            // Needs a new object otherwise vue-chartjs will not register the change correctly
             let chartData = {
                 labels: this.chartData.labels,
                 datasets: [{
@@ -958,55 +1112,34 @@ let DataContext = {
                 }]
             };
 
-            chartData.labels.push(new Date());
-            // if (chartData.labels.length > 10) {
-            //     chartData.labels.shift();
-            // }
+            // Push the new label and data, chartjs-plugin-streaming will remove the items as they leave the chart
+            chartData.labels.push(this.networkData.aggReading.timestamp);
+            chartData.datasets[0].data.push(this.networkData.aggReading.data);
 
-            chartData.datasets[0].data.push((Math.random() * (72 - 68) + 68).toFixed(2));
-            // if (chartData.datasets[0].data.length > 10) {
-            //     chartData.datasets[0].data.shift();
-            // }
-
-            this.chartData = chartData;
+            this.chartData = chartData; // Update the bound chartData
+        },
+        updateStatistics: function() {
 
         }
     },
-    beforeCreate: function() {
-        this.chartUpdateInterval = setInterval(() => this.pushAggReadingToChart(), 30000);
-    },
     created: function() {
+        this.fetchNetworkData(); // Get initial data about the network
         this.$nextTick(() => {
-            this.pushAggReadingToChart();
+            // Initiate an interval to fetch new network data every thirty seconds
+            this.dataUpdateInterval = setInterval(() => this.fetchNetworkData(), 30 * 1000);
         });
-    },
-    beforeMount: function() {
-
-    },
-    mounted: function() {
-
-    },
-    updated: function() {
-
     }
 };
 
-// Bootstrap the Clusters
-let clustersVue = new Vue({
-    el: '#clusters',
-    components: {
-        'cluster-context': ClusterContext
-    },
-    data: {
 
-    }
-});
-
-// Bootstrap the Data
-let dataVue = new Vue({
-    el: '#data',
+// Bootstrap the App
+let app = new Vue({
+    el: '#app',
+    store,
     components: {
-        'data-context': DataContext,
+        'flag-message': FlagMessage,
+        'cluster-context': ClusterContext,
+        'data-context': DataContext
     },
     data: {
 

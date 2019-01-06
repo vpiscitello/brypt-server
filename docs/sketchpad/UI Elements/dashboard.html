@@ -42,11 +42,26 @@
             </nav>
         </header>
 
-        <main class="">
+        <main id="app" class="">
             <div class="wrapper">
-                <div id="flg-mesg" class="flash">
-
-                </div>
+                <flag-message
+                    v-bind:id="'flag-message'"
+                    v-bind:ref="'flag'"
+                    v-bind:message="'This is a basic message'"
+                    v-bind:urgency="0">
+                </flag-message>
+                <!-- <flag-message
+                    v-bind:id="'flag-message'"
+                    v-bind:ref="'flag'"
+                    v-bind:message="'This is a warning message'"
+                    v-bind:urgency="1">
+                </flag-message> -->
+                <!-- <flag-message
+                    v-bind:id="'flag-message'"
+                    v-bind:ref="'flag'"
+                    v-bind:message="'This is a danger message'"
+                    v-bind:urgency="2">
+                </flag-message> -->
                 <article id="network">
                     <section id="user">
                         <div class="context">
@@ -107,8 +122,29 @@
                 </ul>
             </div>
         </script>
+
+        <script type="text/x-template" id="flag-template">
+            <transition name="slide-down" appear>
+                <div v-if="show" v-bind:class="alertClass">
+                    <div class="context">
+                        <div class="header" v>
+                            <i v-if="urgency > 0" class="fas fa-exclamation"></i>
+                            <i v-else class="far fa-envelope"></i>
+                        </div>
+                        <div class="content">
+                            <p class="data">{{ message }}</p>
+                        </div>
+                        <div class="footer">
+                            <button class="sc" type="button" name="close" v-on:click="closeFlash">
+                                <i class="far fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </script>
+
         <script type="text/x-template" id="node-template">
-            <!-- <div class="nd-item" v-bind:class="{ warning: irregular }" @click.prevent.stop="handleClick($event, node)"> -->
             <div class="nd-item" v-bind:class="{ warning: irregular }" @click.prevent.stop="handleClick($event, node)">
                 <div class="header">
                     <div class="icon"><i class="fas fa-atom"></i></div>
@@ -244,32 +280,33 @@
             </div>
         </script>
 
-
-        <!-- <script type="text/x-template" id="chart-template">
-            <div class="context"></div>
-        </script> -->
         <script type="text/x-template" id="overview-template">
-            <section id="overview">
-                <div id="avg-read" class="ov-badge">
-
-                </div>
-                <div id="at-rate" class="ov-badge">
-
-                </div>
-            </section>
-        </script>
-        <script type="text/x-template" id="stats-template">
-            <section id="stats">
-                <div id="cl-count" class="st-badge">
-
-                </div>
-                <div id="tc-count" class="st-badge">
-
-                </div>
-                <div id="up-time" class="st-badge">
-
-                </div>
-            </section>
+            <div id="overview">
+                <section class="highlights">
+                    <div id="avg-reading" class="badge">
+                        <p class="data">{{ statistics.avgReading }}°</p>
+                        <p class="label">Average Reading</p>
+                    </div>
+                    <div id="attack-count" class="badge">
+                        <p class="data">{{ statistics.attackCount }}</p>
+                        <p class="label">Attempted Attacks</p>
+                    </div>
+                </section>
+                <section class="secondary">
+                    <div id="node-count" class="badge">
+                        <p class="data">{{ statistics.nodeCount }}</p>
+                        <p class="label">Connected Nodes</p>
+                    </div>
+                    <div id="cluster-count" class="badge">
+                        <p class="data">{{ statistics.clusterCount }}</p>
+                        <p class="label">Connected Clusters</p>
+                    </div>
+                    <div id="uptime" class="badge">
+                        <p class="data">{{ statistics.uptime | getTimePassString }}</p>
+                        <p class="label">Network Uptime</p>
+                    </div>
+                </section>
+            </div>
         </script>
         <script type="text/x-template" id="data-template">
             <div class="context" >
@@ -280,13 +317,20 @@
                 <chart-container
                     v-bind:id="'chart'"
                     v-bind:ref="'chart'"
-                    :chart-data="chartData">
+                    v-bind:chart-data="chartData">
                 </chart-container>
+                <network-overview
+                    v-bind:id="'overview'"
+                    v-bind:ref="'overview'"
+                    v-bind:statistics="networkData">
+                </network-overview>
             </div>
         </script>
 
         <!-- Scripts -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vuex/3.0.1/vuex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>
         <script src="https://npmcdn.com/chart.js@latest/dist/Chart.bundle.min.js"></script>
     	<script src="https://github.com/nagix/chartjs-plugin-streaming/releases/download/v1.7.1/chartjs-plugin-streaming.min.js"></script>
