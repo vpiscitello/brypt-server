@@ -41,10 +41,10 @@ func (rs Resources) Routes() chi.Router {
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
-//	TestInsert(w)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-	TestUpdate(w)	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
-	TestDelete(w)	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
-	TestFind(w)		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
+//	TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
+	TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
+	TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
 
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
@@ -111,7 +111,7 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 ** Description: Just a test function to demonstrate db insert functionality
 **	TODO: Remove when finished testing db insert
 ** *************************************************************************/
-func TestInsert(w http.ResponseWriter) {
+func TestInsert() {
 	// db.Connect()	
 
 	objID1 := objectid.New().Hex()
@@ -126,13 +126,13 @@ func TestInsert(w http.ResponseWriter) {
 	testCTX["age"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 1 
 	testCTX["networks"] = []string{objID1, objID2, objID3}
-	id := db.Write(w, "brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
+	id := db.Write("brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
 	print("\nnil id: ")
 	fmt.Print(id)
-	id = db.Write(w, "brypt_users", testCTX)
+	id = db.Write("brypt_users", testCTX)
 	print("\nid: ")
 	fmt.Print(id)
-	id = db.Write(w, "brypt_users", testCTX)
+	id = db.Write("brypt_users", testCTX)
 	print("\nid: ")
 	fmt.Print(id)
 
@@ -149,21 +149,21 @@ func TestInsert(w http.ResponseWriter) {
 //	defer db.Disconnect()	// Causes an internal server error for some reason...
 }
 
-func TestDelete(w http.ResponseWriter) {
+func TestDelete() {
 
 	testCTX := make( map[string]interface{} )
 //	testCTX["username"] = "AwesomeAlice"
 //	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
-	err := db.DeleteOne(w, "brypt_users", testCTX)
+	err := db.DeleteOne("brypt_users", testCTX)
 	print("\nDelete One error response: ")
 	fmt.Print(err)
-//	err = db.DeleteAll(w, "brypt_users", testCTX)
+//	err = db.DeleteAll("brypt_users", testCTX)
 //	print("\nDelete All error response: ")
 //	fmt.Print(err)
 }
 
-func TestFind(w http.ResponseWriter) {
+func TestFind() {
 
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = "m@llory5"
@@ -172,7 +172,7 @@ func TestFind(w http.ResponseWriter) {
 //	testCTX["last_name"] = "Allen"
 
 	/**********FIND ALL TEST**************/
-	retCTX, err := db.FindAll(w, "brypt_users", testCTX)
+	retCTX, err := db.FindAll("brypt_users", testCTX)
 	
 	print("\nFind All results: \n")
 	fmt.Printf("%+v\n", retCTX)
@@ -182,7 +182,7 @@ func TestFind(w http.ResponseWriter) {
 
 	/**********FIND ONE TEST**************/
 	testCTX["username"] = "notInDB"
-	retCTX, err = db.FindOne(w, "brypt_users", testCTX)
+	retCTX, err = db.FindOne("brypt_users", testCTX)
 	
 	print("\nFind One result:\n ")
 	fmt.Printf("%+v\n", retCTX["ret"])
@@ -192,7 +192,7 @@ func TestFind(w http.ResponseWriter) {
 
 }
 
-func TestUpdate(w http.ResponseWriter) {
+func TestUpdate() {
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = "TotallyTom"
 	testCTX["first_name"] = "Alice"
@@ -205,7 +205,7 @@ func TestUpdate(w http.ResponseWriter) {
 	updateCTX["$set"] = updateFieldCTX
 	//	updateCTX["first_name"] = "Tom"
 	
-	err := db.UpdateOne(w, "brypt_users", testCTX, updateCTX)
+	err := db.UpdateOne("brypt_users", testCTX, updateCTX)
 	print("\nUpdate One response: ")
 	fmt.Print(err)
 }
