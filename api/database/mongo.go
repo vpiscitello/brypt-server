@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"fmt"
 	"log"
-	"net/http"
 	"strings"
 //	"context"
 //	"encoding/json"
@@ -134,7 +133,7 @@ func Setup() {
 
 }
 
-func Write(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) string {
+func Write(collection string, dataCTX map[string]interface{}) string {
 	
 	print("In write request handler!\n")
 
@@ -147,7 +146,7 @@ func Write(w http.ResponseWriter, collection string, dataCTX map[string]interfac
 				print("Handling request to add new user\n")
 				//id = WriteUser(w, dataCTX)
 				user := User{}
-				id = writeObject(w, dataCTX, user, collection)
+				id = writeObject(dataCTX, user, collection)
 				print("New user id: ")
 				fmt.Print(id)
 				print("\n")
@@ -156,25 +155,25 @@ func Write(w http.ResponseWriter, collection string, dataCTX map[string]interfac
 				print("Handling request to add new node\n")
 				//id = WriteNode(w, dataCTX)
 				node := Node{}
-				id = writeObject(w, dataCTX, node, collection)
+				id = writeObject(dataCTX, node, collection)
 			break
 		case "brypt_networks":
 				print("Handling request to add new network\n")
 			//	id = WriteNetwork(w, dataCTX)
 				network := Network{}
-				id = writeObject(w, dataCTX, network, collection)
+				id = writeObject(dataCTX, network, collection)
 			break
 		case "brypt_clusters":
 				print("Handling request to add new cluster\n")
 			//	id = WriteCluster(w, dataCTX)
 			cluster := Cluster{}
-				id = writeObject(w, dataCTX, cluster, collection)
+				id = writeObject(dataCTX, cluster, collection)
 			break
 		case "brypt_managers":
 				print("Handling request to add new manager\n")
 				//id = WriteManager(w, dataCTX)
 				mngr := Manager{}
-				id = writeObject(w, dataCTX, mngr, collection)
+				id = writeObject(dataCTX, mngr, collection)
 			break
 		default:
 				print("ERROR: Invalid POST request\n")
@@ -184,34 +183,34 @@ func Write(w http.ResponseWriter, collection string, dataCTX map[string]interfac
 	return id
 }
 
-func DeleteAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+func DeleteAll(collection string, dataCTX map[string]interface{}) error {
 	sterilizeCTXData(dataCTX)
-	err := deleteMany(w, collection, dataCTX)
+	err := deleteMany(collection, dataCTX)
 	return err
 }
 
-func DeleteOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) error {
+func DeleteOne(collection string, dataCTX map[string]interface{}) error {
 	sterilizeCTXData(dataCTX)
-	err := deleteOne(w, collection, dataCTX)
+	err := deleteOne(collection, dataCTX)
 	return err
 }
 
-func FindAll(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
+func FindAll(collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
 	sterilizeCTXData(dataCTX)
-	retCTX, err := getAll(w, collection, dataCTX)
+	retCTX, err := getAll(collection, dataCTX)
 	return retCTX, err
 }
 
-func FindOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
+func FindOne(collection string, dataCTX map[string]interface{}) (map[string]interface{}, error) {
 	sterilizeCTXData(dataCTX)
 //	res, err := getOne(w, collection, dataCTX)
-	retCTX, err := getOne(w, collection, dataCTX)
+	retCTX, err := getOne(collection, dataCTX)
 	return retCTX, err
 }
 
-func UpdateOne(w http.ResponseWriter, collection string, dataCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+func UpdateOne(collection string, dataCTX map[string]interface{}, updateCTX map[string]interface{}) error {
 	sterilizeCTXData(dataCTX)
-	err := updateOne(w, collection, dataCTX, updateCTX)
+	err := updateOne(collection, dataCTX, updateCTX)
 	return err
 }
 
@@ -340,7 +339,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 ** URI:
 ** Description:
 ** *************************************************************************/
-func writeObject(w http.ResponseWriter, objCTX map[string]interface{}, obj interface{}, collectionName string) string {
+func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName string) string {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 //	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
 	var keys []string
@@ -368,11 +367,9 @@ func writeObject(w http.ResponseWriter, objCTX map[string]interface{}, obj inter
 	_, err := collection.InsertOne(nil, newObj)
 	if err != nil {
 		log.Println("Error inserting new object: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return objID
 	}
 
-	w.WriteHeader(http.StatusAccepted)
 	return objID
 }
 /* **************************************************************************
@@ -505,18 +502,16 @@ func writeObject(w http.ResponseWriter, objCTX map[string]interface{}, obj inter
 ** URI:
 ** Description:
 ** *************************************************************************/
-func deleteMany(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
+func deleteMany(col string, filterCTX map[string]interface{}) error {
 		
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteMany(nil, filterCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return err
 	}
 
-	w.WriteHeader(http.StatusAccepted)
 	return err
 }
 
@@ -525,18 +520,16 @@ func deleteMany(w http.ResponseWriter, col string, filterCTX map[string]interfac
 ** URI:
 ** Description:
 ** *************************************************************************/
-func deleteOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) error {
+func deleteOne(col string, filterCTX map[string]interface{}) error {
 
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteOne(nil, filterCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return err
 	}
 
-	w.WriteHeader(http.StatusAccepted)
 	return err
 }
 
@@ -545,7 +538,7 @@ func deleteOne(w http.ResponseWriter, col string, filterCTX map[string]interface
 ** URI:
 ** Description:
 ** *************************************************************************/
-func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
+func getAll(col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
 
  	retCTX := make( map[string]interface{} )
 	
@@ -554,7 +547,6 @@ func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return nil, err
 	}
 
@@ -572,7 +564,6 @@ func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 
 	retCTX["ret"] = users
 
-	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
 	return retCTX, err
 }
 
@@ -581,7 +572,7 @@ func getAll(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 ** URI:
 ** Description:
 ** *************************************************************************/
-func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
+func getOne(col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
  	retCTX := make( map[string]interface{} )
 	var err error
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
@@ -629,7 +620,6 @@ func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 	
 //	fmt.Printf("%+v\n", usr)
 //	retCTX["ret"] = usr
-	w.WriteHeader(http.StatusAccepted)	// TODO: Remove??
 
 	return retCTX, err
 }
@@ -639,18 +629,16 @@ func getOne(w http.ResponseWriter, col string, filterCTX map[string]interface{})
 ** URI:
 ** Description:
 ** *************************************************************************/
-func updateOne(w http.ResponseWriter, col string, filterCTX map[string]interface{}, updateCTX map[string]interface{}) error {
+func updateOne(col string, filterCTX map[string]interface{}, updateCTX map[string]interface{}) error {
 
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.UpdateOne(nil, filterCTX, updateCTX)
 
 	if err != nil {
 		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return err
 	}
 
-	w.WriteHeader(http.StatusAccepted)
 	return err	// TODO: Fix what's broken >:(
 }
 
