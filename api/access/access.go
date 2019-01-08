@@ -77,13 +77,7 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, id string) {
 			Secure: true,
 		}
 		http.SetCookie(w, cookie)
-		//w.Header().Set( "Set-Cookie", "testcookie=temp" )
-		fmt.Fprint(w, cookie)
-		fmt.Printf("Set the cookie\n")
 		fmt.Printf("Cookie: %#s\n", cookie)
-		//if err != nil {
-		//	panic("Cookie error")
-		//}
 	}
 }
 
@@ -91,7 +85,7 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = username
 
-	retCTX, err := db.FindOne(w, "brypt_users", testCTX)
+	retCTX, err := db.FindOne("brypt_users", testCTX)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -155,7 +149,6 @@ func (rs Resources) Routes() chi.Router {
 }
 
 func (rs Resources) Index2(w http.ResponseWriter, r *http.Request) {
-
 	w.Write( []byte( "Hi" ) )
 }
 
@@ -206,30 +199,18 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-	//username := "m@llory5"
-	//password := "pswd"
+	username := "m@llory5"
+	password := "pswd"
 
-	//Commenting this out fixes it
-	//du, err := identifyUser(w, username, password)
-	//fmt.Printf("Uid: %s\n", du.Uid)
-	//if err != nil {
-	//	//w.Write( []byte( "Could not login...\n" ) )
-	//	return
-	//}
+	du, err := identifyUser(w, username, password)
+	fmt.Printf("Uid: %s\n", du.Uid)
+	if err != nil {
+		w.Write( []byte( "Could not login...\n" ) )
+		return
+	}
 
 	// On success, add a cookie
-	//SetCookieHandler(w, r, du.Uid)
-	cookie := &http.Cookie{
-		Name:  cookieName,
-		Value: "temp",
-		Path:  "/",
-		Secure: true,
-	}
-	//http.SetCookie(w, cookie)
-	fmt.Printf("Cookie: %#s\n", cookie)
-	w.Header().Set( "Content-Type", "text/html" )
-	w.Header().Set( "Set-Cookie", "testcookie=temp; Path=/; Secure" )
-	fmt.Println(w.Header())
+	SetCookieHandler(w, r, du.Uid)
     w.Write( []byte( "Login...\n" ) )
 }
 
@@ -274,13 +255,10 @@ func TestInsert2(w http.ResponseWriter) string {
 	testCTX["age"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 1 
 	testCTX["networks"] = []string{objID1, objID2, objID3}
-	id := db.Write(w, "brypt_users", testCTX)
+	id := db.Write("brypt_users", testCTX)
 	print("\nid: ")
 	fmt.Print(id)
 	return id
-	//id = db.Write(w, "brypt_users", testCTX)
-	//print("\nid: ")
-	//fmt.Print(id)
 }
 
 
