@@ -20,98 +20,87 @@ import (
 
 type Resources struct{}
 
-var cookieName = "testcookie"
+var cookieName = "user_authentication"
 
 var hashKey = []byte( securecookie.GenerateRandomKey( 32 ) )
 var blockKey = []byte( securecookie.GenerateRandomKey( 32 ) )
 
 var sc = securecookie.New( hashKey, blockKey )
 
-func checkAuth(h http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if ReadCookieHandler(r) {
-			fmt.Printf("Success\n")
-			h.ServeHTTP(w, r)
-			return
-		} else {
-			fmt.Printf("Not authorized %s\n", 401)
-		}
-
-		h.ServeHTTP(w, r)
-	}
-}
-
+/* **************************************************************************
+** Function: ReadCookieHandler
+** Description: Reads the cookie from a http request and validates that cookie.
+** *************************************************************************/
 func ReadCookieHandler(r *http.Request) bool {
-	for _, cookie := range r.Cookies() {
-		fmt.Print(cookie.Name)
-	}
-	fmt.Printf("\n\nCookie name: %#s\n", cookieName)
 	cookie, err := r.Cookie(cookieName)
 	if err == nil {
-		fmt.Printf("Inside if statement\n")
 		value := make(map[string]string)
 		if err = sc.Decode(cookieName, cookie.Value, &value); err == nil {
-			fmt.Printf("Cookie good %#s\n", cookie)
+			fmt.Printf("Decoded Cookie: %#s\n", cookie)
 			return true
 		}
-		fmt.Printf("Bad:\n")
-		fmt.Printf("Cookie: %#s\n", cookie)
 		return false
 	}
-	fmt.Printf("No Cookie %s\n", err)
+	fmt.Printf("No matching cookie: %s\n", err)
 	return false
 }
 
+/* **************************************************************************
+** Function: SetCookieHandler
+** Description: Generates an encoded value for the cookie, and sets the cookie
+in the http response header.
+** *************************************************************************/
 func SetCookieHandler(w http.ResponseWriter, r *http.Request, id string) {
-	value := make(map[string]string)
-	//value := map[string]string{
-	//	"id": id,
-	//}
+	value := map[string]string{
+		"id": id,
+	}
 
 	if encoded, err := sc.Encode(cookieName, value); err == nil {
-		fmt.Printf("encoded: %s\n", string(encoded))
+		expiration := time.Now().AddDate(0, 0, 1)
 		cookie := &http.Cookie{
 			Name:  cookieName,
-			Value: "temp",
+			Value: encoded,
 			Path:  "/",
 			Secure: true,
+			Expires: expiration,
 		}
 		http.SetCookie(w, cookie)
-		fmt.Printf("Cookie: %#s\n", cookie)
+		fmt.Printf("Set Cookie: %#s\n", cookie)
 	}
 }
 
+/* **************************************************************************
+** Function: identifyUser
+** Description: Finds a user in the database and validates the password provided
+against the hashed value stored in the database
+** *************************************************************************/
 func identifyUser(w http.ResponseWriter, username string, password string) (db.User, error) {
 	testCTX := make( map[string]interface{} )
 	testCTX["username"] = username
 
+	du := db.User{}
+
 	retCTX, err := db.FindOne("brypt_users", testCTX)
 	if err != nil {
 		fmt.Println(err)
+		return du, err
 	}
 
-	du := retCTX["ret"].(db.User)
-	fmt.Println(du)
+	du = retCTX["ret"].(db.User)
 
-	fmt.Printf("%+v\n", du.Uid)
 	if err != nil {
-		print("\nError finding user:")
 		fmt.Println(err)
 		return du, err
 	} else {
-		print("\nDoing plainTextPW\n")
-		plainTextPW := []byte(fmt.Sprintf("%s%s", "salt", password))
+		plainTextPW := []byte(fmt.Sprintf("%s%s", "salt", password)) //TODO Use a salt
 		//plainTextPW := []byte(fmt.Sprintf("%s%s", du.Password_salt, password))
 
-		print("Doing GenerateFromPassword\n")
+		// TODO Actually get their hashed password from the database to compare, rather than generating it
 		hash, err := bcrypt.GenerateFromPassword([]byte(plainTextPW), 0)
 		if err != nil {
-			print("Error doing GenerateFromPassword\n")
 			fmt.Println(err)
 			return du, err
 		}
-		fmt.Println("Hash is: ")
-		println(hash)
 
 		err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(plainTextPW))
 		if err == nil {
@@ -119,7 +108,6 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 			//fmt.Printf("User %s authorized\n", du.Username)
 			return du, err
 		} else {
-			print("Error doing CompareHashAndPassword: ")
 			fmt.Println(err)
 			return du, err
 		}
@@ -138,7 +126,7 @@ func (rs Resources) Routes() chi.Router {
 	r.Get( "/", rs.Index )
 	r.Get( "/login", rs.Login )
 	r.Get( "/register", rs.Register )
-	r.Get( "/link", checkAuth(rs.Link) )
+	r.Get( "/link", CheckAuth(rs.Link) )
 
 	//r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
 	//r.Post( "/login", rs.Login )		// Post request for user login
@@ -146,10 +134,6 @@ func (rs Resources) Routes() chi.Router {
 	//r.Post( "/link", rs.Link )	// Post request for linking a device to a user account
 
 	return r
-}
-
-func (rs Resources) Index2(w http.ResponseWriter, r *http.Request) {
-	w.Write( []byte( "Hi" ) )
 }
 
 /* **************************************************************************
@@ -199,11 +183,10 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-	username := "m@llory5"
-	password := "pswd"
+	username := "m@llory5" //Hard-coded for temporary use, replace with parameters
+	password := "pswd" //Hard-coded for temporary use, replace with parameters
 
 	du, err := identifyUser(w, username, password)
-	fmt.Printf("Uid: %s\n", du.Uid)
 	if err != nil {
 		w.Write( []byte( "Could not login...\n" ) )
 		return
@@ -223,8 +206,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 ** Client: Displays registration statsus message.
 ** *************************************************************************/
 func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
-	TestInsert2(w)	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-	fmt.Println("")
+	TestInsert2(w)	// TODO: REMOVE WHEN FINISHED COOKIE INSERTION
 	w.Write( []byte( "Register...\n" ) )
 }
 
