@@ -20,7 +20,7 @@ import (
 
 type Resources struct{}
 
-const cookieName = "testcookie"
+var cookieName = "testcookie"
 
 var hashKey = []byte( securecookie.GenerateRandomKey( 32 ) )
 var blockKey = []byte( securecookie.GenerateRandomKey( 32 ) )
@@ -42,31 +42,48 @@ func checkAuth(h http.HandlerFunc) http.HandlerFunc {
 }
 
 func ReadCookieHandler(r *http.Request) bool {
-	fmt.Printf("Cookie name: %#s\n", cookieName)
-	if cookie, err := r.Cookie(cookieName); err == nil {
+	for _, cookie := range r.Cookies() {
+		fmt.Print(cookie.Name)
+	}
+	fmt.Printf("\n\nCookie name: %#s\n", cookieName)
+	cookie, err := r.Cookie(cookieName)
+	if err == nil {
+		fmt.Printf("Inside if statement\n")
 		value := make(map[string]string)
 		if err = sc.Decode(cookieName, cookie.Value, &value); err == nil {
 			fmt.Printf("Cookie good %#s\n", cookie)
 			return true
 		}
-		fmt.Printf("Cookie bad: %#s\n", cookie)
+		fmt.Printf("Bad:\n")
+		fmt.Printf("Cookie: %#s\n", cookie)
+		return false
 	}
+	fmt.Printf("No Cookie %s\n", err)
 	return false
 }
 
 func SetCookieHandler(w http.ResponseWriter, r *http.Request, id string) {
-	value := map[string]string{
-		"id": id,
-	}
+	value := make(map[string]string)
+	//value := map[string]string{
+	//	"id": id,
+	//}
 
-	fmt.Printf("set cookie: %s\n", id)
 	if encoded, err := sc.Encode(cookieName, value); err == nil {
+		fmt.Printf("encoded: %s\n", string(encoded))
 		cookie := &http.Cookie{
 			Name:  cookieName,
-			Value: encoded,
+			Value: "temp",
 			Path:  "/",
+			Secure: true,
 		}
 		http.SetCookie(w, cookie)
+		//w.Header().Set( "Set-Cookie", "testcookie=temp" )
+		fmt.Fprint(w, cookie)
+		fmt.Printf("Set the cookie\n")
+		fmt.Printf("Cookie: %#s\n", cookie)
+		//if err != nil {
+		//	panic("Cookie error")
+		//}
 	}
 }
 
@@ -189,17 +206,30 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-	username := "m@llory5"
-	password := "pswd"
+	//username := "m@llory5"
+	//password := "pswd"
 
-	du, err := identifyUser(w, username, password)
-	if err != nil {
-		w.Write( []byte( "Could not login...\n" ) )
-		return
-	}
+	//Commenting this out fixes it
+	//du, err := identifyUser(w, username, password)
+	//fmt.Printf("Uid: %s\n", du.Uid)
+	//if err != nil {
+	//	//w.Write( []byte( "Could not login...\n" ) )
+	//	return
+	//}
 
 	// On success, add a cookie
-	SetCookieHandler(w, r, du.Uid)
+	//SetCookieHandler(w, r, du.Uid)
+	cookie := &http.Cookie{
+		Name:  cookieName,
+		Value: "temp",
+		Path:  "/",
+		Secure: true,
+	}
+	//http.SetCookie(w, cookie)
+	fmt.Printf("Cookie: %#s\n", cookie)
+	w.Header().Set( "Content-Type", "text/html" )
+	w.Header().Set( "Set-Cookie", "testcookie=temp; Path=/; Secure" )
+	fmt.Println(w.Header())
     w.Write( []byte( "Login...\n" ) )
 }
 
