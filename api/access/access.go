@@ -79,7 +79,10 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-    w.Write( []byte( "Login...\n" ) )
+    r.ParseForm()
+	fmt.Print(r.Form)
+	fmt.Println(r.FormValue("username"))
+    w.Write( []byte( r.FormValue("username") ) )
 }
 
 /* **************************************************************************
@@ -91,6 +94,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 ** Client: Displays registration statsus message.
 ** *************************************************************************/
 func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
+    fmt.Print(r.Body)
 	w.Write( []byte( "Register...\n" ) )
 }
 

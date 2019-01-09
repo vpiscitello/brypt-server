@@ -15,6 +15,8 @@ window.state = {
     }
 };
 
+var xhr;
+
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.matchesSelector ||
@@ -41,10 +43,17 @@ Initialize page actions
 (function initEventListeners() {
     var chgToggle = document.getElementsByName('chg')[0],
         overlay = document.getElementsByClassName('overlay')[0];
+		//login = document.getElementById('login');
+		//register = document.getElementById('register');
+		//butt = document.getElementById('butt');
 
     chgToggle.addEventListener('click', cardToggleClickHandler, false);
 
-    overlay.addEventListener('click', overlayClickHandler, false);
+    //overlay.addEventListener('click', overlayClickHandler, false);
+
+	//login.addEventListener('click', buttonTest, false);
+	//register.addEventListener('click', buttonTest, false);
+	//butt.addEventListener('click', buttonTest, false);
 
     document.addEventListener('click', function(event) {
         if (window.state.modules.active) {
@@ -254,3 +263,35 @@ function getGroupContainerElement( child, group ) {
     return null;
 
 };
+
+function buttonTest() {
+	xhr = new XMLHttpRequest();
+	var urlEncodedData = "";
+	var urlEncodedDataPairs = [];
+	console.log(document.querySelector("form[name=login]"));
+	//if(button == 'login'){
+	//	console.log("Hello world");
+
+	urlEncodedDataPairs.push(encodeURIComponent("username") + '=' + encodeURIComponent(document.getElementsByName("username")[0].value));
+	urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+    if( !xhr ) {
+		alert( "Cannot creat http request." );
+		return false;
+	}
+	xhr.onreadystatechange = logContents;
+	xhr.open( 'POST', 'https://access.localhost:3006/login' );
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+	xhr.send(urlEncodedData);
+	}
+
+function logContents() {
+	if( xhr.readyState === 4 && xhr.status === 200 ) {
+		console.log( xhr.responseText );
+	}
+	else {
+		console.log( 'There was an issue logging the response.' );
+		console.log( xhr.readyState );
+		console.log( xhr.status );
+	}
+}
