@@ -83,6 +83,7 @@ type User struct {
 	Login_attempts    int32             `bson:"login_attempts" json:"login_attempts"`
 	Login_token       string            `bson:"login_token" json:"login_token"`
 	Region            string            `bson:"region" json:"region"`
+	Password          string            `bson:"password" json:"password"`
 }
 
 /* **************************************************************************
