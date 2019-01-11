@@ -123,8 +123,8 @@ func TestInsert() {
 	testCTX["first_name"] = "Mal"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 1 
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 1
 	testCTX["networks"] = []string{objID1, objID2, objID3}
 	testCTX["password"] = "qwerty"
 	id := db.Write("brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
@@ -141,7 +141,7 @@ func TestInsert() {
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
 	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
 	id2 := db.Write(w, "brypt_users", testCTX)

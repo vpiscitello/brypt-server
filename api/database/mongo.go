@@ -77,7 +77,7 @@ type User struct {
 	Email             string            `bson:"email" json:"email"`
 	Organization      string            `bson:"organization" json:"organization"`
 	Networks          []string          `bson:"networks" json:"networks"`
-	Age               time.Time         `bson:"age" json:"age"`
+	Birthdate         time.Time         `bson:"birthdate" json:"birthdate"`
 	Join_date         time.Time         `bson:"join_date" json:"join_date"`
 	Last_login        time.Time         `bson:"last_login" json:"last_login"`
 	Login_attempts    int32             `bson:"login_attempts" json:"login_attempts"`
@@ -342,7 +342,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 ** *************************************************************************/
 func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName string) string {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-//	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
+//	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "birthdate", "join_date", "last_login", "login_attempts", "login_token", "region"}
 	var keys []string
 	var k string
 	user := User{}
@@ -383,7 +383,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 //Return an error if an error
 /*func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
 //	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "age", "join_date", "last_login", "login_attempts", "login_token", "region"}
+	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "birthdate", "join_date", "last_login", "login_attempts", "login_token", "region"}
 
 	objID, newUser := createBSONDocument(userCTX, keys)
 	print("\n\n In Write User...\n\n")
