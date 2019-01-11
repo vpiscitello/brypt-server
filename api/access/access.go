@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
     "brypt-server/internal/handlebars"
+	"encoding/json"
+	"io/ioutil"
 
 	"github.com/go-chi/chi"
 	"github.com/mongodb/ftdc/bsonx/objectid"
@@ -79,10 +81,13 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
-    r.ParseForm()
-	fmt.Print(r.Form)
-	fmt.Println(r.FormValue("username"))
-    w.Write( []byte( r.FormValue("username") ) )
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Terrible errors in Login\n")
+		return
+	}
+	bodyString := string(bodyBytes)
+	w.Write([]byte(bodyString))
 }
 
 /* **************************************************************************
@@ -94,8 +99,23 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 ** Client: Displays registration statsus message.
 ** *************************************************************************/
 func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
-    fmt.Print(r.Body)
-	w.Write( []byte( "Register...\n" ) )
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Terrible errors in Register\n")
+		return
+	}
+	regCTX := make( map[string]interface{} )
+	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
+		fmt.Println("Sadness\n")
+	}
+	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
+	fmt.Println(regCTX)
+	//regCTX := make( map[string]interface{} )
+	//regCTX["username"] = dat["username"]
+	id := db.Write("brypt_users", regCTX)
+	print("\nnil id: ")
+	fmt.Println(id)
+	w.Write([]byte("Registered!"))
 }
 
 /* **************************************************************************

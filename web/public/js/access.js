@@ -264,26 +264,48 @@ function getGroupContainerElement( child, group ) {
 
 };
 
-function buttonTest() {
+function buttonTest(button) {
+	// AJAX request
 	xhr = new XMLHttpRequest();
+
+	// Variables to hold data to send to server
 	var urlEncodedData = "";
-	var urlEncodedDataPairs = [];
-	console.log(document.querySelector("form[name=login]"));
-	//if(button == 'login'){
-	//	console.log("Hello world");
-
-	urlEncodedDataPairs.push(encodeURIComponent("username") + '=' + encodeURIComponent(document.getElementsByName("username")[0].value));
-	urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
-
-    if( !xhr ) {
+	var urlEncodedDataPairs = {};
+	var field;
+	var inputList = document.querySelectorAll("input");
+    
+	// If the AJAX request failed to be created, exit immediately
+	if( !xhr ) {
 		alert( "Cannot creat http request." );
 		return false;
 	}
-	xhr.onreadystatechange = logContents;
-	xhr.open( 'POST', 'https://access.localhost:3006/login' );
-	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-	xhr.send(urlEncodedData);
+	
+	// Check which field is submitting a request, if login post to /login, if register post to /register
+	if(button == 'login'){
+		xhr.open( 'POST', 'https://access.localhost:3006/login' );
+		for(field = 0; field < 2; field++){
+			urlEncodedDataPairs[inputList[field].name] = inputList[field].value;
+			//urlEncodedDataPairs.push(encodeURIComponent(inputList[field].name) + '=' + encodeURIComponent(inputList[field].value));
+		}
 	}
+	else{
+		xhr.open( 'POST', 'https://access.localhost:3006/register' );
+		for(field = 2; field < inputList.length; field++){
+			urlEncodedDataPairs[inputList[field].name] = inputList[field].value;
+			//urlEncodedDataPairs.push(encodeURIComponent(inputList[2].name) + '=' + encodeURIComponent(inputList[2].value));
+		}
+	}
+
+	// Encode the data into string pairs
+	//urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+	// Set the ready state response, the header, and send the data to the server
+	xhr.onreadystatechange = logContents;
+	xhr.setRequestHeader('Content-Type', 'application/json')
+	//xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+	console.log(JSON.stringify(urlEncodedDataPairs));
+	xhr.send(JSON.stringify(urlEncodedDataPairs));
+}
 
 function logContents() {
 	if( xhr.readyState === 4 && xhr.status === 200 ) {
