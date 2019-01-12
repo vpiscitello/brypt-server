@@ -13,6 +13,8 @@ import (
 	"github.com/mongodb/ftdc/bsonx/objectid"
 	// "github.com/aymerick/raymond"
 
+	"golang.org/x/crypto/bcrypt"
+
 	// "brypt-server/api/users"
 )
 
@@ -109,6 +111,15 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Sadness\n")
 	}
 	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
+	fmt.Println("This is regCTX:")
+	fmt.Println(regCTX)
+
+	regCTX["password"], err = bcrypt.GenerateFromPassword([]byte(regCTX["password"].(string)), 10)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Error registering"))
+	}
+	fmt.Println("This is regCTX after:")
 	fmt.Println(regCTX)
 	//regCTX := make( map[string]interface{} )
 	//regCTX["username"] = dat["username"]
