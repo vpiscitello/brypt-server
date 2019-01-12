@@ -27,6 +27,7 @@ deps:
 	go get -u github.com/mongodb/mongo-go-driver/bson
 	go get -u github.com/mongodb/ftdc/bsonx
 	go get -u github.com/mongodb/ftdc/bsonx/objectid
+	go get -u golang.org/x/crypto/bcrypt
 
 add_deps:
 	govendor fetch github.com/tkanos/gonfig
@@ -35,9 +36,10 @@ add_deps:
 	govendor fetch github.com/go-chi/hostrouter
 	govendor fetch github.com/mongodb/mongo-go-driver/mongo@79e6c40817d03b8b514c92ef62e10ec18e31b220
 	govendor fetch github.com/aymerick/raymond
-	govendor fetch github.com/mongodb/mongo-go-driver/bson
+	govendor fetch github.com/mongodb/mongo-go-driver/bson@48f45a6ba693b8c53a22818a804b53bfb776a436
 	govendor fetch github.com/mongodb/ftdc/bsonx
 	govendor fetch github.com/mongodb/ftdc/bsonx/objectid
+	govendor fetch golang.org/x/crypto/bcrypt
 
 build:
 	@echo "Compiling Brypt Server"
