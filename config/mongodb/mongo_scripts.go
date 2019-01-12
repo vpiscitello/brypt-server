@@ -78,7 +78,7 @@ type user struct {
 	Email							string						`bson:"email" json:"email"`
 	Organization			string						`bson:"organization" json:"organization"`
 	Networks					[]network					`bson:"networks" json:"networks"`
-	Age								date							`bson:"age" json:"age"`							
+	Birthdate								date							`bson:"birthdate" json:"birthdate"`							
 	Join_date					date							`bson:"join_date" json:"join_date"`
 	Last_login				date							`bson:"last_login" json:"last_login"`
 	Login_attempts		int								`bson:"login_attempts" json:"login_attempts"`	

@@ -9,17 +9,15 @@
                         <h2>Sign In</h2>
                         <img class="icon" src="./assets/img/ufo-abduct-cow-simple-black.svg" alt="">
                     </div>
-                    <form action="signInUser.php" method="post">
+                    <form action="javascript:;" onsubmit="buttonTest('login')" method="post" name="login">
                         <fieldset class="username">
-                            <input type="text" name="username" required="">
-                            <label for="username">Username</label>
+                            <input type="text" name="username" required="" placeholder="Username">
                         </fieldset>
                         <fieldset class="password">
-                            <input type="password" name="Password" required="">
-                            <label for="Password">Password</label>
+                            <input type="password" name="password" required="" placeholder="Password">
                         </fieldset>
                         <fieldset class="submit">
-                            <button class="sc" type="submit" name="signin">
+                            <button id="login" type="submit" name="login">
                                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                             </button>
                         </fieldset>
@@ -38,29 +36,24 @@
                     <div class="header">
                         <h2>Register</h2>
                     </div>
-                    <form action="insert.php" method="post">
+                    <form action="javascript:;" onsubmit="buttonTest('register')" method="post" name="register">
                         <fieldset class="UserName">
-                            <input type="text" name="UserName" required="">
-                            <label for="UserName">Username</label>
+                            <input type="text" name="username" required="" placeholder="Username">
                         </fieldset>
                         <fieldset class="Email">
-                            <input type="text" name="Email" required="">
-                            <label for="Email">Email</label>
+                            <input type="text" name="email" required="" placeholder="Email">
                         </fieldset>
                         <fieldset class="UserPassword">
-                            <input type="password" name="UserPassword" required="">
-                            <label for="">Password</label>
+                            <input type="password" name="password" required="" placeholder="Password">
                         </fieldset>
                         <fieldset class="Region">
-                            <input type="text" name="Region" required="">
-                            <label for="Region">Region</label>
+                            <input type="text" name="Region" required="" placeholder="Region">
                         </fieldset>
                         <fieldset class="Birthday">
                             <input type="date" name="Birthday" required="">
-                            <label for="Birthday">Birthday</label>
                         </fieldset>
                         <fieldset class="submit">
-                            <button class="sc" type="submit" name="signin">
+                            <button id="register" type="submit" name="register">
                                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                             </button>
                         </fieldset>
@@ -79,5 +72,4 @@
     </article>
 
 </main>
-
 {{> footer}}

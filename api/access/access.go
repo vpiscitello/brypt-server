@@ -7,6 +7,8 @@ import (
 	"time"
 
     "brypt-server/internal/handlebars"
+	"encoding/json"
+	"io/ioutil"
 
 	"github.com/go-chi/chi"
 	"github.com/mongodb/ftdc/bsonx/objectid"
@@ -14,6 +16,8 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 	// "github.com/aymerick/raymond"
+
+	"golang.org/x/crypto/bcrypt"
 
 	// "brypt-server/api/users"
 )
@@ -123,15 +127,15 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get( "/", rs.Index )
-	r.Get( "/login", rs.Login )
-	r.Get( "/register", rs.Register )
-	r.Get( "/link", CheckAuth(rs.Link) )
+	//r.Get( "/", rs.Index )
+	//r.Get( "/login", rs.Login )
+	//r.Get( "/register", rs.Register )
+	//r.Get( "/link", CheckAuth(rs.Link) )
 
-	//r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
-	//r.Post( "/login", rs.Login )		// Post request for user login
-	//r.Post( "/register", rs.Register )	// Post request for registering an account
-	//r.Post( "/link", rs.Link )	// Post request for linking a device to a user account
+	r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
+	r.Post( "/login", rs.Login )		// Post request for user login
+	r.Post( "/register", rs.Register )	// Post request for registering an account
+	r.Post( "/link", rs.Link )	// Post request for linking a device to a user account
 
 	return r
 }
@@ -183,9 +187,17 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 ** an error message should be displayed.
 ** *************************************************************************/
 func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
+
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Terrible errors in Login\n")
+		return
+	}
+	bodyString := string(bodyBytes)
+	//finish parsing this
+
 	username := "m@llory5" //Hard-coded for temporary use, replace with parameters
 	password := "pswd" //Hard-coded for temporary use, replace with parameters
-
 	du, err := identifyUser(w, username, password)
 	if err != nil {
 		w.Write( []byte( "Could not login...\n" ) )
@@ -194,7 +206,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 
 	// On success, add a cookie
 	SetCookieHandler(w, r, du.Uid)
-    w.Write( []byte( "Login...\n" ) )
+	w.Write([]byte(bodyString))
 }
 
 /* **************************************************************************
@@ -206,8 +218,32 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 ** Client: Displays registration statsus message.
 ** *************************************************************************/
 func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
-	TestInsert2(w)	// TODO: REMOVE WHEN FINISHED COOKIE INSERTION
-	w.Write( []byte( "Register...\n" ) )
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("Terrible errors in Register\n")
+		return
+	}
+	regCTX := make( map[string]interface{} )
+	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
+		fmt.Println("Sadness\n")
+	}
+	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
+	fmt.Println("This is regCTX:")
+	fmt.Println(regCTX)
+
+	regCTX["password"], err = bcrypt.GenerateFromPassword([]byte(regCTX["password"].(string)), 10)
+	if err != nil {
+		fmt.Println(err)
+		w.Write([]byte("Error registering"))
+	}
+	fmt.Println("This is regCTX after:")
+	fmt.Println(regCTX)
+	//regCTX := make( map[string]interface{} )
+	//regCTX["username"] = dat["username"]
+	id := db.Write("brypt_users", regCTX)
+	print("\nnil id: ")
+	fmt.Println(id)
+	w.Write([]byte("Registered!"))
 }
 
 /* **************************************************************************
@@ -257,13 +293,14 @@ func TestInsert() {
 	objID3 := objectid.New().Hex()
 //	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory5"
-	testCTX["first_name"] = "Mallory"
+	testCTX["username"] = "m@llory6"
+	testCTX["first_name"] = "Mal"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 1 
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 1
 	testCTX["networks"] = []string{objID1, objID2, objID3}
+	testCTX["password"] = "qwerty"
 	id := db.Write("brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
 	print("\nnil id: ")
 	fmt.Print(id)
@@ -278,7 +315,7 @@ func TestInsert() {
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
 	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
 	id2 := db.Write(w, "brypt_users", testCTX)
