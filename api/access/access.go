@@ -43,10 +43,10 @@ func (rs Resources) Routes() chi.Router {
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 	
-//	TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-	TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
-	TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
-	TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
+	TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+//	TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
+//	TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
+//	TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
 
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
@@ -143,13 +143,14 @@ func TestInsert() {
 	objID3 := objectid.New().Hex()
 //	var login_attempts int32 = 4
 	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory5"
-	testCTX["first_name"] = "Mallory"
+	testCTX["username"] = "m@llory6"
+	testCTX["first_name"] = "Mal"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 1 
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
+	testCTX["login_attempts"] = 1
 	testCTX["networks"] = []string{objID1, objID2, objID3}
+	testCTX["password"] = "qwerty"
 	id := db.Write("brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
 	print("\nnil id: ")
 	fmt.Print(id)
@@ -164,7 +165,7 @@ func TestInsert() {
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
 	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
+	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
 	testCTX["login_attempts"] = 4
 	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
 	id2 := db.Write(w, "brypt_users", testCTX)
