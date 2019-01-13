@@ -244,3 +244,15 @@ article.login {
     color: rgba(26, 204, 149, 1);
     text-shadow: 0px 6px 20px rgba(26, 204, 149, 0.3);
 }
+
+.box .name {
+	display: inline-flex;
+}
+
+.FirstName input, .LastName input {
+	align-self: flex-start;
+}
+
+.FirstName, .LastName {
+	align-self: flex-end;
+}

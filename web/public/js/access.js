@@ -276,7 +276,7 @@ function buttonTest(button) {
     
 	// If the AJAX request failed to be created, exit immediately
 	if( !xhr ) {
-		alert( "Cannot creat http request." );
+		alert( "Cannot create http request." );
 		return false;
 	}
 	

@@ -99,12 +99,6 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 	} else {
 		plainTextPW := []byte(password)
 
-		hash1, _ := bcrypt.GenerateFromPassword(plainTextPW, 0)
-		fmt.Print("PW1: ")
-		fmt.Println(password)
-		fmt.Println(string(hash1))
-		fmt.Print("PW2: ")
-		fmt.Println(du.Password)
 		err = bcrypt.CompareHashAndPassword([]byte(du.Password), []byte(plainTextPW))
 		if err == nil {
 			fmt.Printf("User %s authorized\n", username)
@@ -190,6 +184,8 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
 		fmt.Println("Sadness\n")
 	}
+	fmt.Print("Register: ")
+	fmt.Println(regCTX)
 
 	du, err := identifyUser(w, regCTX["username"].(string), regCTX["password"].(string))
 	if err != nil {
@@ -221,6 +217,8 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
 		fmt.Println("Sadness\n")
 	}
+	fmt.Print("Register: ")
+	fmt.Println(regCTX)
 	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
 
 	checkUsrCTX := make( map[string]interface{} )
@@ -244,6 +242,8 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	userCTX := make(map[string]interface{})
 	userCTX["username"] = regCTX["username"]
 	userCTX["region"] = regCTX["Region"]
+	userCTX["first_name"] = regCTX["first_name"]
+	userCTX["last_name"] = regCTX["last_name"]
 	//userCTX["birthdate"] = regCTX["Birthday"]
 	userCTX["email"] = regCTX["email"]
 	//userCTX["join_date"] = regCTX["time_registered"]
