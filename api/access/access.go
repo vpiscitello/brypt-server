@@ -17,8 +17,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	// "github.com/aymerick/raymond"
 
-	"golang.org/x/crypto/bcrypt"
-
 	// "brypt-server/api/users"
 )
 
@@ -90,26 +88,26 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 		return du, err
 	}
 
+	fmt.Print("RETCTX: ")
+	fmt.Println(retCTX)
+
 	du = retCTX["ret"].(db.User)
 
 	if err != nil {
 		fmt.Println(err)
 		return du, err
 	} else {
-		plainTextPW := []byte(fmt.Sprintf("%s%s", "salt", password)) //TODO Use a salt
-		//plainTextPW := []byte(fmt.Sprintf("%s%s", du.Password_salt, password))
+		plainTextPW := []byte(password)
 
-		// TODO Actually get their hashed password from the database to compare, rather than generating it
-		hash, err := bcrypt.GenerateFromPassword([]byte(plainTextPW), 0)
-		if err != nil {
-			fmt.Println(err)
-			return du, err
-		}
-
-		err = bcrypt.CompareHashAndPassword([]byte(hash), []byte(plainTextPW))
+		hash1, _ := bcrypt.GenerateFromPassword(plainTextPW, 0)
+		fmt.Print("PW1: ")
+		fmt.Println(password)
+		fmt.Println(string(hash1))
+		fmt.Print("PW2: ")
+		fmt.Println(du.Password)
+		err = bcrypt.CompareHashAndPassword([]byte(du.Password), []byte(plainTextPW))
 		if err == nil {
 			fmt.Printf("User %s authorized\n", username)
-			//fmt.Printf("User %s authorized\n", du.Username)
 			return du, err
 		} else {
 			fmt.Println(err)
@@ -126,11 +124,6 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 ** *************************************************************************/
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
-
-	//r.Get( "/", rs.Index )
-	//r.Get( "/login", rs.Login )
-	//r.Get( "/register", rs.Register )
-	//r.Get( "/link", CheckAuth(rs.Link) )
 
 	r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
 	r.Post( "/login", rs.Login )		// Post request for user login
@@ -149,10 +142,10 @@ func (rs Resources) Routes() chi.Router {
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 
-//	TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-	TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
-	TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
-	TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
+	//TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
+	//TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
+	//TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
+	//TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
 
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
@@ -193,12 +186,12 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Terrible errors in Login\n")
 		return
 	}
-	bodyString := string(bodyBytes)
-	//finish parsing this
+	regCTX := make( map[string]interface{} )
+	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
+		fmt.Println("Sadness\n")
+	}
 
-	username := "m@llory5" //Hard-coded for temporary use, replace with parameters
-	password := "pswd" //Hard-coded for temporary use, replace with parameters
-	du, err := identifyUser(w, username, password)
+	du, err := identifyUser(w, regCTX["username"].(string), regCTX["password"].(string))
 	if err != nil {
 		w.Write( []byte( "Could not login...\n" ) )
 		return
@@ -206,7 +199,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 
 	// On success, add a cookie
 	SetCookieHandler(w, r, du.Uid)
-	w.Write([]byte(bodyString))
+	w.Write([]byte("Logged in"))
 }
 
 /* **************************************************************************
@@ -223,26 +216,50 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Terrible errors in Register\n")
 		return
 	}
+
 	regCTX := make( map[string]interface{} )
 	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
 		fmt.Println("Sadness\n")
 	}
 	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
-	fmt.Println("This is regCTX:")
-	fmt.Println(regCTX)
 
-	regCTX["password"], err = bcrypt.GenerateFromPassword([]byte(regCTX["password"].(string)), 10)
+	checkUsrCTX := make( map[string]interface{} )
+	checkUsrCTX["username"] = "seekvengeance"
+	retCTX, err := db.FindAll("brypt_users", checkUsrCTX)
 	if err != nil {
+		fmt.Print("ERROR: ")
+		fmt.Println(err)
+	}
+	du := retCTX["ret"].([]db.User)
+	fmt.Print("User: ")
+	fmt.Println(du)
+	fmt.Print("Length: ")
+	fmt.Println(len(du))
+	if len(du) > 0 {
+		fmt.Println("USERNAME TAKEN")
+		w.Write([]byte("Username taken"))
+		return
+	}
+
+	userCTX := make(map[string]interface{})
+	userCTX["username"] = regCTX["username"]
+	userCTX["region"] = regCTX["Region"]
+	//userCTX["birthdate"] = regCTX["Birthday"]
+	userCTX["email"] = regCTX["email"]
+	//userCTX["join_date"] = regCTX["time_registered"]
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(regCTX["password"].(string)), 0)
+	if err != nil {
+		fmt.Print("Error hashing password: ")
 		fmt.Println(err)
 		w.Write([]byte("Error registering"))
 	}
-	fmt.Println("This is regCTX after:")
-	fmt.Println(regCTX)
-	//regCTX := make( map[string]interface{} )
-	//regCTX["username"] = dat["username"]
-	id := db.Write("brypt_users", regCTX)
-	print("\nnil id: ")
-	fmt.Println(id)
+	userCTX["password"] = string(hash)
+	fmt.Println("This is userCTX:")
+	fmt.Println(userCTX)
+
+	db.Write("brypt_users", userCTX)
+
 	w.Write([]byte("Registered!"))
 }
 
@@ -257,28 +274,6 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 	w.Write( []byte( "Linking...\n" ) )
 }
-
-func TestInsert2(w http.ResponseWriter) string {
-	// db.Connect()	
-
-	objID1 := objectid.New().Hex()
-	objID2 := objectid.New().Hex()
-	objID3 := objectid.New().Hex()
-//	var login_attempts int32 = 4
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory5"
-	testCTX["first_name"] = "Mallory"
-	testCTX["last_name"] = "Allen"
-	testCTX["region"] = "Wonderland"
-	testCTX["age"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 1 
-	testCTX["networks"] = []string{objID1, objID2, objID3}
-	id := db.Write("brypt_users", testCTX)
-	print("\nid: ")
-	fmt.Print(id)
-	return id
-}
-
 
 /* **************************************************************************
 ** Function: TestInsert
@@ -336,27 +331,6 @@ func TestDelete() {
 //	err = db.DeleteAll("brypt_users", testCTX)
 //	print("\nDelete All error response: ")
 //	fmt.Print(err)
-}
-
-func TestFind2() map[string]interface{} {
-
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory5"
-//	testCTX["username"] = "TotallyTom"
-//	testCTX["first_name"] = "Alice"
-//	testCTX["last_name"] = "Allen"
-
-	/**********FIND ALL TEST**************/
-	retCTX, err := db.FindOne("brypt_users", testCTX)
-	
-	print("\nFind All results: \n")
-	fmt.Printf("%+v\n\n\n", retCTX)
-	fmt.Printf("%+v\n", retCTX["ret"])
-	
-	print("\nFind All error response: ")
-	fmt.Println(err)
-	return retCTX
-
 }
 
 func TestFind() {
