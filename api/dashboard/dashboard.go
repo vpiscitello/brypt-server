@@ -2,7 +2,9 @@ package dashboard
 
 import (
 	"net/http"
+
     "brypt-server/internal/handlebars"
+    "brypt-server/api/access"
 
     "github.com/go-chi/chi"
 )
@@ -17,7 +19,7 @@ type Resources struct{}
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get( "/", rs.Index )	// Implemetation of base dashboard page
+	r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base dashboard page
 
 	return r
 }

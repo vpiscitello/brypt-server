@@ -22,6 +22,6 @@ func CheckAuth(h http.HandlerFunc) http.HandlerFunc {
 			fmt.Printf("Not authorized %d\n", 401)
 		}
 
-		h.ServeHTTP(w, r)
+		http.Redirect(w, r, "https://access.localhost:3006", http.StatusUnauthorized)
 	}
 }
