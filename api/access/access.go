@@ -196,6 +196,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 	// On success, add a cookie
 	SetCookieHandler(w, r, du.Uid)
 	w.Write([]byte("Logged in"))
+
 }
 
 /* **************************************************************************
@@ -221,21 +222,9 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(regCTX)
 	regCTX["time_registered"] = time.Now().Round(time.Millisecond)
 
-	checkUsrCTX := make( map[string]interface{} )
-	checkUsrCTX["username"] = "seekvengeance"
-	retCTX, err := db.FindAll("brypt_users", checkUsrCTX)
-	if err != nil {
-		fmt.Print("ERROR: ")
-		fmt.Println(err)
-	}
-	du := retCTX["ret"].([]db.User)
-	fmt.Print("User: ")
-	fmt.Println(du)
-	fmt.Print("Length: ")
-	fmt.Println(len(du))
-	if len(du) > 0 {
-		fmt.Println("USERNAME TAKEN")
-		w.Write([]byte("Username taken"))
+	if checkUserRegistration(regCTX["username"].(string)) {
+		fmt.Println("Username already registered")
+		w.Write([]byte("Cannot register"))
 		return
 	}
 
@@ -261,6 +250,32 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	db.Write("brypt_users", userCTX)
 
 	w.Write([]byte("Registered!"))
+}
+
+/* **************************************************************************
+** Function: checkUserRegistration
+** Description: Check if there is already a user registered with a certain username
+** Returns: True if there is already a user registered under a username
+** *************************************************************************/
+func checkUserRegistration(username string) bool {
+
+	checkUsrCTX := make( map[string]interface{} )
+	checkUsrCTX["username"] = username
+	retCTX, err := db.FindAll("brypt_users", checkUsrCTX)
+	if err != nil {
+		fmt.Print("ERROR: ")
+		fmt.Println(err)
+	}
+	du := retCTX["ret"].([]db.User)
+	fmt.Print("User: ")
+	fmt.Println(du)
+	fmt.Print("Length: ")
+	fmt.Println(len(du))
+	if len(du) > 0 {
+		return true
+	}
+	return false
+
 }
 
 /* **************************************************************************
