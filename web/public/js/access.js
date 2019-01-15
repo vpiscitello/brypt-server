@@ -15,6 +15,8 @@ window.state = {
     }
 };
 
+var xhr;
+
 // Element.matches() polyfill
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.matchesSelector ||
@@ -41,10 +43,17 @@ Initialize page actions
 (function initEventListeners() {
     var chgToggle = document.getElementsByName('chg')[0],
         overlay = document.getElementsByClassName('overlay')[0];
+		//login = document.getElementById('login');
+		//register = document.getElementById('register');
+		//butt = document.getElementById('butt');
 
     chgToggle.addEventListener('click', cardToggleClickHandler, false);
 
-    overlay.addEventListener('click', overlayClickHandler, false);
+    //overlay.addEventListener('click', overlayClickHandler, false);
+
+	//login.addEventListener('click', buttonTest, false);
+	//register.addEventListener('click', buttonTest, false);
+	//butt.addEventListener('click', buttonTest, false);
 
     document.addEventListener('click', function(event) {
         if (window.state.modules.active) {
@@ -254,3 +263,57 @@ function getGroupContainerElement( child, group ) {
     return null;
 
 };
+
+function buttonTest(button) {
+	// AJAX request
+	xhr = new XMLHttpRequest();
+
+	// Variables to hold data to send to server
+	var urlEncodedData = "";
+	var urlEncodedDataPairs = {};
+	var field;
+	var inputList = document.querySelectorAll("input");
+    
+	// If the AJAX request failed to be created, exit immediately
+	if( !xhr ) {
+		alert( "Cannot create http request." );
+		return false;
+	}
+	
+	// Check which field is submitting a request, if login post to /login, if register post to /register
+	if(button == 'login'){
+		xhr.open( 'POST', 'https://access.localhost:3006/login' );
+		for(field = 0; field < 2; field++){
+			urlEncodedDataPairs[inputList[field].name] = inputList[field].value;
+			//urlEncodedDataPairs.push(encodeURIComponent(inputList[field].name) + '=' + encodeURIComponent(inputList[field].value));
+		}
+	}
+	else{
+		xhr.open( 'POST', 'https://access.localhost:3006/register' );
+		for(field = 2; field < inputList.length; field++){
+			urlEncodedDataPairs[inputList[field].name] = inputList[field].value;
+			//urlEncodedDataPairs.push(encodeURIComponent(inputList[2].name) + '=' + encodeURIComponent(inputList[2].value));
+		}
+	}
+
+	// Encode the data into string pairs
+	//urlEncodedData = urlEncodedDataPairs.join('&').replace(/%20/g, '+');
+
+	// Set the ready state response, the header, and send the data to the server
+	xhr.onreadystatechange = logContents;
+	xhr.setRequestHeader('Content-Type', 'application/json')
+	//xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+	console.log(JSON.stringify(urlEncodedDataPairs));
+	xhr.send(JSON.stringify(urlEncodedDataPairs));
+}
+
+function logContents() {
+	if( xhr.readyState === 4 && xhr.status === 200 ) {
+		console.log( xhr.responseText );
+	}
+	else {
+		console.log( 'There was an issue logging the response.' );
+		console.log( xhr.readyState );
+		console.log( xhr.status );
+	}
+}
