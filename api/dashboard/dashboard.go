@@ -19,7 +19,8 @@ type Resources struct{}
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base dashboard page
+	//r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base dashboard page
+	r.Get( "/", rs.Index )	// Implemetation of base dashboard page
 
 	return r
 }
