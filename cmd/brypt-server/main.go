@@ -25,8 +25,8 @@ import (
 
    "github.com/go-chi/chi"
    "github.com/go-chi/chi/middleware"
-
    "github.com/go-chi/hostrouter"
+   "github.com/go-chi/cors"
 
    heroku "gopkg.in/jonahgeorge/force-ssl-heroku.v1"
 
@@ -58,10 +58,20 @@ func main()  {
 
     router := chi.NewRouter()
 
+    cors := cors.New(cors.Options{
+        AllowedOrigins: []string{"https://wwww.brypt.com"},
+        AllowedMethods: []string{"GET"},
+        AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+        ExposedHeaders: []string{"Link"},
+        AllowCredentials: true,
+    })
+
     router.Use( middleware.RequestID )
     router.Use( middleware.RealIP )
     router.Use( middleware.Logger )
     router.Use( middleware.Recoverer )
+    router.Use(cors.Handler)
+
 
     hr := hostrouter.New()
 

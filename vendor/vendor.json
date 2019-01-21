@@ -81,6 +81,12 @@
 			"revisionTime": "2019-01-17T22:35:40Z"
 		},
 		{
+			"checksumSHA1": "n9ry/OHiteTTjZOeJHTrEwRSnms=",
+			"path": "github.com/go-chi/cors",
+			"revision": "07727c846d14299758e54a275dd8c81353c01960",
+			"revisionTime": "2018-08-16T15:23:45Z"
+		},
+		{
 			"checksumSHA1": "HLibNtTZ8oW903Eq5Ir5qurTq+k=",
 			"path": "github.com/go-chi/hostrouter",
 			"revision": "7bff2694dfd99a31a89c62e5f8a2d9ec2d71da8e",
