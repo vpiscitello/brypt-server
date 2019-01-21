@@ -8,7 +8,6 @@
 /bin
 /test
 /vendor/*/
-/vendor/vendor.json
 
 .jshintrc
 
