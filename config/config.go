@@ -1,20 +1,10 @@
 package config
 
-// Setup Configuration
-// Setup MySql Connection
-// Setup MongoDB Connection
-
 import (
-    "fmt"
     "os"
     "path"
-    // "path/filepath"
-    // "runtime"
     "strings"
-
-   // "encoding/json"
-
-   "github.com/tkanos/gonfig"
+    "github.com/tkanos/gonfig"
 )
 
 type Configuration struct {
@@ -61,17 +51,13 @@ var configuration = Configuration{}
 ** *************************************************************************/
 
 func Setup() {
-    fmt.Println( "Configuration Setup\n" )
     err := gonfig.GetConf( getConfigFile(), &configuration )
-    fmt.Println( err )
     if err != nil {
         os.Exit( 500 )
     }
-    fmt.Println( configuration )
 }
 
 func GetConfig() Configuration {
-    fmt.Println( "Get Configuration File\n" )
     return configuration
 }
 
@@ -82,7 +68,6 @@ func GetConfig() Configuration {
 ** *************************************************************************/
 
 func getConfigFile() string {
-    fmt.Println( "Get Configuration FilePath\n" )
 	env := os.Getenv( "ENV" )
 
 	if len( env ) == 0 {
@@ -90,9 +75,7 @@ func getConfigFile() string {
 	}
 
 	filename := []string{ "config.", strings.TrimSpace(env), ".json" }
-	// _, dirname, _, _ := runtime.Caller( 0 )
     filePath := path.Join( "/app/config/", strings.Join( filename, "") )
-	// filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )
 
 	return filePath
 }
