@@ -61,6 +61,7 @@ var configuration = Configuration{}
 ** *************************************************************************/
 
 func Setup() {
+    fmt.Println( "Configuration Setup\n" )
     err := gonfig.GetConf( getConfigFile(), &configuration )
     if err != nil {
         os.Exit( 500 )
@@ -78,6 +79,7 @@ func GetConfig() Configuration {
 ** *************************************************************************/
 
 func getConfigFile() string {
+    fmt.Println( "Get Configuration File\n" )
 	env := os.Getenv( "ENV" )
 
 	if len( env ) == 0 {
