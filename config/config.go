@@ -9,7 +9,7 @@ import (
     "os"
     "path"
     // "path/filepath"
-    "runtime"
+    // "runtime"
     "strings"
 
    // "encoding/json"
@@ -90,7 +90,7 @@ func getConfigFile() string {
 	}
 
 	filename := []string{ "config.", strings.TrimSpace(env), ".json" }
-	_, dirname, _, _ := runtime.Caller( 0 )
+	// _, dirname, _, _ := runtime.Caller( 0 )
     filePath := path.Join( "/app/config/", strings.Join( filename, "") )
 	// filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )
 
