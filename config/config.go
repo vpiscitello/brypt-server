@@ -68,7 +68,7 @@ func GetConfig() Configuration {
 ** *************************************************************************/
 
 func getConfigFile() string {
-	env := os.Getenv( "ENV" )
+	env := os.Getenv( "GO_ENV" )
 
 	if len( env ) == 0 {
 		env = "development"

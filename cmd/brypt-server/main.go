@@ -37,7 +37,7 @@ var workingDir, _ = os.Getwd()
 var configuration = config.Configuration{}
 
 var corsWithOptions = cors.New(cors.Options{
-    AllowedOrigins: []string{"https://brypt.com"},
+    AllowedOrigins: []string{"*"},
     AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
     AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
     ExposedHeaders: []string{"Link"},
