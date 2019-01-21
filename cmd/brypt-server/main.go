@@ -37,8 +37,9 @@ var workingDir, _ = os.Getwd()
 var configuration = config.Configuration{}
 
 var corsWithOptions = cors.New(cors.Options{
-    AllowedOrigins: []string{"https://wwww.brypt.com", "http://wwww.brypt.com", "https://access.brypt.com", "http://access.brypt.com", "https://bridge.brypt.com", "http://bridge.brypt.com", "https://dashbaord.brypt.com", "http://dashbaord.brypt.com"},
-    AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    // AllowedOrigins: []string{"https://wwww.brypt.com", "http://wwww.brypt.com", "https://access.brypt.com", "http://access.brypt.com", "https://bridge.brypt.com", "http://bridge.brypt.com", "https://dashbaord.brypt.com", "http://dashbaord.brypt.com"},
+    AllowedOrigins: []string{"*"},
+    AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
     AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
     ExposedHeaders: []string{"Link"},
     AllowCredentials: true,
