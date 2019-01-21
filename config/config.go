@@ -78,7 +78,7 @@ func GetConfig() Configuration {
 /* **************************************************************************
 ** Function:
 ** URI:
-** Description:
+** Description:h
 ** *************************************************************************/
 
 func getConfigFile() string {
@@ -90,11 +90,9 @@ func getConfigFile() string {
 	}
 
 	filename := []string{ "config.", strings.TrimSpace(env), ".json" }
-    fmt.Println( filename )
 	_, dirname, _, _ := runtime.Caller( 0 )
-    fmt.Println( dirname )
-	filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )
-    fmt.Println( filePath )
+    filePath := path.Join( "/app/config/", strings.Join( filename, "") )
+	// filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )
 
 	return filePath
 }
