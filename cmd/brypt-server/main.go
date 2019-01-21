@@ -70,6 +70,8 @@ func main()  {
 
     hr.Map( "*", baseRouter() ) // Handle everything else
 
+    fmt.Println( "HostRouter Ready" )
+
     router.Mount( "/", hr )
 
     fmt.Println( "Router Mounted" )
