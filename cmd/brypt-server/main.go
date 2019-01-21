@@ -59,17 +59,25 @@ func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
 ** Client:
 ** *************************************************************************/
 func main()  {
+    fmt.Println( "Startup...\n" )
+
     config.Setup()  // Setup the Server Configuration
     configuration = config.GetConfig()  // Get the Configuration Settings
+
+    fmt.Println( "Got Configuration\n" )
 
     db.Setup()
 		db.Connect()
 		handlebars.Setup()
 
+    fmt.Println( "DB and Handlebars Ready\n" )
+
     HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
     HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )
 
     go http.ListenAndServe( ":" + HTTPPortString, http.HandlerFunc( redirectToHTTPS ) )  // Start the Server
+
+    fmt.Println( "Listening for HTTP\n" )
 
     router := chi.NewRouter()
 
@@ -87,6 +95,8 @@ func main()  {
     hr.Map( configuration.Server.DashboardDomain, dashboard.Resources{}.Routes() )   // Handle dashboard.host routing requests
 
     hr.Map( "*", baseRouter() ) // Handle everything else
+
+    fmt.Println( "Host Router Ready\n" )
 
     router.Mount( "/", hr )
 
