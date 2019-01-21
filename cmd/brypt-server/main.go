@@ -59,7 +59,7 @@ func main()  {
     router := chi.NewRouter()
 
     cors := cors.New(cors.Options{
-        AllowedOrigins: []string{"https://wwww.brypt.com"},
+        AllowedOrigins: []string{"https://wwww.brypt.com", "http://wwww.brypt.com", "https://access.brypt.com", "http://access.brypt.com", "https://bridge.brypt.com", "http://bridge.brypt.com", "https://dashbaord.brypt.com", "http://dashbaord.brypt.com"},
         AllowedMethods: []string{"GET"},
         AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
         ExposedHeaders: []string{"Link"},
@@ -68,10 +68,10 @@ func main()  {
 
     router.Use( middleware.RequestID )
     router.Use( middleware.RealIP )
+    router.Use( middleware.Compress(6, "gzip") )
     router.Use( middleware.Logger )
     router.Use( middleware.Recoverer )
-    router.Use(cors.Handler)
-
+    router.Use( cors.Handler )
 
     hr := hostrouter.New()
 
