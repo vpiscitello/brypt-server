@@ -69,6 +69,7 @@ func Setup() {
 }
 
 func GetConfig() Configuration {
+    fmt.Println( "Get Configuration File\n" )
     return configuration
 }
 
@@ -79,7 +80,7 @@ func GetConfig() Configuration {
 ** *************************************************************************/
 
 func getConfigFile() string {
-    fmt.Println( "Get Configuration File\n" )
+    fmt.Println( "Get Configuration FilePath\n" )
 	env := os.Getenv( "ENV" )
 
 	if len( env ) == 0 {
