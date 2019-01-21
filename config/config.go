@@ -87,7 +87,7 @@ func getConfigFile() string {
 		env = "development"
 	}
 
-	filename := []string{ "config.", env, ".json" }
+	filename := []string{ "config.", strings.TrimSpace(env), ".json" }
     fmt.Println( filename )
 	_, dirname, _, _ := runtime.Caller( 0 )
     fmt.Println( dirname )
