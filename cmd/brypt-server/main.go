@@ -51,7 +51,10 @@ func main()  {
 		db.Connect()
 		handlebars.Setup()
 
-    HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
+    port := os.Getenv( "PORT" )
+    if len( port ) == 0 {
+        port = strconv.Itoa( configuration.Server.HTTPPort )
+    }
 
     router := chi.NewRouter()
 
@@ -72,7 +75,7 @@ func main()  {
 
     router.Mount( "/", hr )
 
-    err := http.ListenAndServe( ":" + HTTPPortString, heroku.ForceSsl( router ) )  // Start the Server
+    err := http.ListenAndServe( ":" + strings.TrimSpace(port), heroku.ForceSsl( router ) )  // Start the Server
     fmt.Println( err )
 
 }
