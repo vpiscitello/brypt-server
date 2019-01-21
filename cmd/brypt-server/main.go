@@ -7,7 +7,6 @@ import (
    "fmt"
    "os"
    "net/http"
-   "net/url"
    "path/filepath"
    "strings"
    "strconv"
@@ -29,28 +28,14 @@ import (
 
    "github.com/go-chi/hostrouter"
 
+   heroku "gopkg.in/jonahgeorge/force-ssl-heroku.v1"
+
 )
 
 var workingDir, _ = os.Getwd()
 
 var configuration = config.Configuration{}
 
-/* **************************************************************************
-** Function:
-** URI:
-** Description:
-** Client:
-** *************************************************************************/
-func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
-    // Build the HTTPS target URL using URL builder
-    target := url.URL{
-        Scheme: "https",
-        Host: strings.Split(r.Host, ":")[0] + ":" + strconv.Itoa( configuration.Server.HTTPSPort ), // Pop off the HTTP port and add the proper HTTPS port
-        Path: r.URL.Path,
-        RawQuery: r.URL.RawQuery,
-    }
-    http.Redirect( w, r, target.String(), http.StatusTemporaryRedirect )    // Redirect requests to the HTTPS equiv.
-}
 
 /* **************************************************************************
 ** Function:
@@ -59,25 +44,14 @@ func redirectToHTTPS( w http.ResponseWriter, r *http.Request )  {
 ** Client:
 ** *************************************************************************/
 func main()  {
-    fmt.Println( "Startup...\n" )
-
     config.Setup()  // Setup the Server Configuration
     configuration = config.GetConfig()  // Get the Configuration Settings
-
-    fmt.Println( "Got Configuration\n" )
 
     db.Setup()
 		db.Connect()
 		handlebars.Setup()
 
-    fmt.Println( "DB and Handlebars Ready\n" )
-
     HTTPPortString := strconv.Itoa( configuration.Server.HTTPPort )
-    HTTPSPortString := strconv.Itoa( configuration.Server.HTTPSPort )
-
-    go http.ListenAndServe( ":" + HTTPPortString, http.HandlerFunc( redirectToHTTPS ) )  // Start the Server
-
-    fmt.Println( "Listening for HTTP\n" )
 
     router := chi.NewRouter()
 
@@ -96,14 +70,9 @@ func main()  {
 
     hr.Map( "*", baseRouter() ) // Handle everything else
 
-    fmt.Println( "Host Router Ready\n" )
-
     router.Mount( "/", hr )
 
-    fmt.Println( "Domain: " + configuration.Server.Domain + "\tPort: " + HTTPSPortString + "\n" )
-
-    http.ListenAndServe( ":" + HTTPSPortString, router )  // Start the Server
-    // http.ListenAndServeTLS( ":" + HTTPSPortString, "./config/ssl/cert.pem", "./config/ssl/key.pem", router )  // Start the Server
+    http.ListenAndServe( ":" + HTTPPortString, heroku.ForceSsl( router ) )  // Start the Server
 
 }
 

@@ -29,6 +29,7 @@ deps:
 	go get -u github.com/mongodb/ftdc/bsonx/objectid
 	go get -u github.com/gorilla/securecookie
 	go get -u golang.org/x/crypto/bcrypt
+	go get gopkg.in/jonahgeorge/force-ssl-heroku.v1
 
 add_deps:
 	govendor fetch github.com/tkanos/gonfig
@@ -42,6 +43,7 @@ add_deps:
 	govendor fetch github.com/mongodb/ftdc/bsonx/objectid
 	govendor fetch github.com/gorilla/securecookie
 	govendor fetch golang.org/x/crypto/bcrypt
+	govendor fetch gopkg.in/jonahgeorge/force-ssl-heroku.v1
 
 build:
 	@echo "Compiling Brypt Server"
