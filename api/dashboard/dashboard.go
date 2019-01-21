@@ -4,7 +4,7 @@ import (
 	"net/http"
 
     "brypt-server/internal/handlebars"
-    "brypt-server/api/access"
+    // "brypt-server/api/access"
 
     "github.com/go-chi/chi"
 )

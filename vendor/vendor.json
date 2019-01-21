@@ -69,16 +69,16 @@
 			"revisionTime": "2018-08-20T08:47:58Z"
 		},
 		{
-			"checksumSHA1": "2Ae4bfJqmW2ktRsSP+ARgkr1JEc=",
+			"checksumSHA1": "Pxx+8cipatmpykEo9DpKFqBIOkk=",
 			"path": "github.com/go-chi/chi",
-			"revision": "def7567e149e3f66f2a3d62c6114e8d1731720c4",
-			"revisionTime": "2018-12-10T20:01:25Z"
+			"revision": "1a6bb108ccf279c8dac6f9bad857d773b4f9b421",
+			"revisionTime": "2019-01-17T22:35:40Z"
 		},
 		{
-			"checksumSHA1": "5WYt5AuhGbQbJrkvcW8k5VVm9/o=",
+			"checksumSHA1": "WpJC99tqulCFbVV2kcVWTEAM9vo=",
 			"path": "github.com/go-chi/chi/middleware",
-			"revision": "def7567e149e3f66f2a3d62c6114e8d1731720c4",
-			"revisionTime": "2018-12-10T20:01:25Z"
+			"revision": "1a6bb108ccf279c8dac6f9bad857d773b4f9b421",
+			"revisionTime": "2019-01-17T22:35:40Z"
 		},
 		{
 			"checksumSHA1": "HLibNtTZ8oW903Eq5Ir5qurTq+k=",
@@ -121,6 +121,12 @@
 			"path": "github.com/google/shlex",
 			"revision": "6f45313302b9c56850fc17f99e40caebce98c716",
 			"revisionTime": "2015-01-27T13:39:51Z"
+		},
+		{
+			"checksumSHA1": "NScdwrIOpSH9hoP7i3a6JGmE5rw=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "e65cf8c5df817c89aeb47ecb46064e802e2de943",
+			"revisionTime": "2018-10-10T17:46:47Z"
 		},
 		{
 			"checksumSHA1": "r0pj5dMHCghpaQZ3f1BRGoKiSWw=",
@@ -227,8 +233,8 @@
 		{
 			"checksumSHA1": "kdh4Z/aGP1ERJNWw+dvmnQjopoI=",
 			"path": "github.com/mongodb/ftdc/bsonx",
-			"revision": "8d3dc89c54e0c12c43efaddfddf4e880fe94093b",
-			"revisionTime": "2018-12-14T21:46:40Z"
+			"revision": "01325f3a355c142f15a38cf73013d35a6f126fbd",
+			"revisionTime": "2019-01-09T16:28:54Z"
 		},
 		{
 			"checksumSHA1": "cXva2PPO1OVY7UKgfWFQXNYauUQ=",
@@ -251,14 +257,14 @@
 		{
 			"checksumSHA1": "0rpXrANTXY/EsKkMS5rKLtKmsU8=",
 			"path": "github.com/mongodb/ftdc/bsonx/objectid",
-			"revision": "3b56385b41006b9f11bb3c5bf2e33c9faf9d95f5",
-			"revisionTime": "2018-12-04T22:03:37Z"
+			"revision": "01325f3a355c142f15a38cf73013d35a6f126fbd",
+			"revisionTime": "2019-01-09T16:28:54Z"
 		},
 		{
-			"checksumSHA1": "OZ3tvm+4o3efQMvc8gXVRCPFRpc=",
+			"checksumSHA1": "ErGEXt2fHcVSpzgA17ilOoH2hIw=",
 			"path": "github.com/mongodb/mongo-go-driver/bson",
-			"revision": "bc25b34a523bda7bc5980c618bc362df9cb36ef9",
-			"revisionTime": "2018-12-14T21:41:30Z"
+			"revision": "48f45a6ba693b8c53a22818a804b53bfb776a436",
+			"revisionTime": "2019-01-04T20:42:05Z"
 		},
 		{
 			"checksumSHA1": "ZgY0iEmm9wTz4rW+NzVLuQw2Q4g=",
@@ -297,10 +303,10 @@
 			"revisionTime": "2018-12-05T20:43:56Z"
 		},
 		{
-			"checksumSHA1": "YGZjuxkSafEkEOjR4GZ+un5THLc=",
+			"checksumSHA1": "D6966z7xfx6pUfA04YyiSsSB1n4=",
 			"path": "github.com/mongodb/mongo-go-driver/mongo",
-			"revision": "bc25b34a523bda7bc5980c618bc362df9cb36ef9",
-			"revisionTime": "2018-12-14T21:41:30Z"
+			"revision": "79e6c40817d03b8b514c92ef62e10ec18e31b220",
+			"revisionTime": "2018-12-15T15:33:22Z"
 		},
 		{
 			"checksumSHA1": "FLDH89wOQhjpTf9ltvwlwsim4nA=",
@@ -469,6 +475,18 @@
 			"path": "github.com/xdg/stringprep",
 			"revision": "73f8eece6fdcd902c185bf651de50f3828bed5ed",
 			"revisionTime": "2018-07-14T16:05:09Z"
+		},
+		{
+			"checksumSHA1": "oCH3J96RWvO8W4xjix47PModpio=",
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "ff983b9c42bc9fbf91556e191cc8efb585c16908",
+			"revisionTime": "2018-07-25T11:53:45Z"
+		},
+		{
+			"checksumSHA1": "oVPHWesOmZ02vLq2fglGvf+AMgk=",
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "ff983b9c42bc9fbf91556e191cc8efb585c16908",
+			"revisionTime": "2018-07-25T11:53:45Z"
 		},
 		{
 			"checksumSHA1": "1MGpGDQqnUoRpv7VEcQrXOBydXE=",
