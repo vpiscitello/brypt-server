@@ -5,7 +5,7 @@ package config
 // Setup MongoDB Connection
 
 import (
-    // "fmt"
+    "fmt"
     "os"
     "path"
     "path/filepath"
