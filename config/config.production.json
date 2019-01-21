@@ -4,8 +4,8 @@
         "AccessDomain": "access.brypt.com",
         "BridgeDomain": "bridge.brypt.com",
         "DashboardDomain": "dashboard.brypt.com",
-        "HTTPPort": 80,
-        "HTTPSPort": 443
+        "HTTPPort": 3005,
+        "HTTPSPort": 3006
     },
     "Database": {
         "MongoURI": "mongodb://heroku_ckmt3tbl:h6ar518r1kkers5rfiulk42spt@ds161913.mlab.com:61913/heroku_ckmt3tbl"
