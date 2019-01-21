@@ -36,6 +36,14 @@ var workingDir, _ = os.Getwd()
 
 var configuration = config.Configuration{}
 
+var corsWithOptions = cors.New(cors.Options{
+    AllowedOrigins: []string{"https://wwww.brypt.com", "http://wwww.brypt.com", "https://access.brypt.com", "http://access.brypt.com", "https://bridge.brypt.com", "http://bridge.brypt.com", "https://dashbaord.brypt.com", "http://dashbaord.brypt.com"},
+    AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+    ExposedHeaders: []string{"Link"},
+    AllowCredentials: true,
+})
+
 
 /* **************************************************************************
 ** Function:
@@ -58,20 +66,12 @@ func main()  {
 
     router := chi.NewRouter()
 
-    cors := cors.New(cors.Options{
-        AllowedOrigins: []string{"https://wwww.brypt.com", "http://wwww.brypt.com", "https://access.brypt.com", "http://access.brypt.com", "https://bridge.brypt.com", "http://bridge.brypt.com", "https://dashbaord.brypt.com", "http://dashbaord.brypt.com"},
-        AllowedMethods: []string{"GET"},
-        AllowedHeaders: []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-        ExposedHeaders: []string{"Link"},
-        AllowCredentials: true,
-    })
-
     router.Use( middleware.RequestID )
     router.Use( middleware.RealIP )
     router.Use( middleware.Compress(6, "gzip") )
     router.Use( middleware.Logger )
     router.Use( middleware.Recoverer )
-    router.Use( cors.Handler )
+    router.Use( corsWithOptions.Handler )
 
     hr := hostrouter.New()
 
@@ -103,17 +103,6 @@ func renderBridge(w http.ResponseWriter, r *http.Request) {
     w.Write( []byte( "Bridge!\n" ) )
 }
 
-func dashboardRouter() chi.Router {
-    router := chi.NewRouter()
-
-    router.Get( "/", renderDashboard )
-
-    return router
-}
-
-func renderDashboard(w http.ResponseWriter, r *http.Request) {
-    w.Write( []byte( "Dashboard!\n" ) )
-}
 
 /* **************************************************************************
 ** Function:
@@ -135,6 +124,8 @@ func baseRouter() chi.Router {
     router := chi.NewRouter()
 
     // TODO: Append parameters
+
+    router.Use( corsWithOptions.Handler )
 
     // Redirect requests to host/access to access.host
     router.Get( "/access", func ( w http.ResponseWriter, r *http.Request ) {
