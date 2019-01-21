@@ -70,13 +70,10 @@ func main()  {
 
     hr.Map( "*", baseRouter() ) // Handle everything else
 
-    fmt.Println( "HostRouter Ready" )
-
     router.Mount( "/", hr )
 
-    fmt.Println( "Router Mounted" )
-
-    http.ListenAndServe( ":" + HTTPPortString, heroku.ForceSsl( router ) )  // Start the Server
+    err := http.ListenAndServe( ":" + HTTPPortString, heroku.ForceSsl( router ) )  // Start the Server
+    fmt.Println( err )
 
 }
 
