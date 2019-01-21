@@ -65,7 +65,7 @@ h3::after {
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: cover;
-    background-image: url( "../assets/light.jpg" );
+    background-image: url( "https://www.brypt.com/assets/light.jpg" );
     z-index: -999;
 }
 

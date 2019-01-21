@@ -1,4 +1,4 @@
-@font-face { font-family: 'Bebas Neue'; font-weight: 700; src: url('../assets/BebasNeueBold.otf');}
+@font-face { font-family: 'Bebas Neue'; font-weight: 700; src: url('https://www.brypt.com/assets/BebasNeueBold.otf');}
 
 *, :after, :before {
     -webkit-box-sizing: border-box;
