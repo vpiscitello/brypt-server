@@ -63,9 +63,11 @@ var configuration = Configuration{}
 func Setup() {
     fmt.Println( "Configuration Setup\n" )
     err := gonfig.GetConf( getConfigFile(), &configuration )
+    fmt.Println( err )
     if err != nil {
         os.Exit( 500 )
     }
+    fmt.Println( configuration )
 }
 
 func GetConfig() Configuration {
@@ -91,7 +93,8 @@ func getConfigFile() string {
     fmt.Println( filename )
 	_, dirname, _, _ := runtime.Caller( 0 )
     fmt.Println( dirname )
-	filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )
+	filePath := path.Join( filepath.Dir( dirname ), strings.Join( filename, "") )\
+    fmt.Println( filePath )
 
 	return filePath
 }
