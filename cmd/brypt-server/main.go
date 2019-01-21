@@ -72,6 +72,8 @@ func main()  {
 
     router.Mount( "/", hr )
 
+    fmt.Println( "Router Mounted" )
+
     http.ListenAndServe( ":" + HTTPPortString, heroku.ForceSsl( router ) )  // Start the Server
 
 }
