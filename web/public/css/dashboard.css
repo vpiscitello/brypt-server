@@ -236,7 +236,8 @@ main .wrapper {
     top: -8px;
     width: 32px;
     height: 32px;
-    font-family: 'FontAwesome';
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 400;
     font-size: 14px;
     text-align: center;
     line-height: 14px;

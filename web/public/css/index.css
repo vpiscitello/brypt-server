@@ -192,7 +192,8 @@ h3::after {
     left: 0px;
     height: 32px;
     width: 32px;
-    font-family: "Font Awesome 5 Free";
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 400;
     color: rgb(26, 204, 148);
     border-radius: 100%;
     transition: left 1s ease-in-out;
