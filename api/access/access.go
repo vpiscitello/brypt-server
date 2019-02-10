@@ -228,6 +228,7 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 
 	if checkUserRegistration(regCTX["username"].(string)) {
 		fmt.Println("Username already registered")
+		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte("Cannot register"))
 		return
 	}
@@ -245,6 +246,7 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Print("Error hashing password: ")
 		fmt.Println(err)
+		w.WriteHeader(http.StatusNotAcceptable)
 		w.Write([]byte("Error registering"))
 	}
 	userCTX["password"] = string(hash)
@@ -253,6 +255,7 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 
 	db.Write("brypt_users", userCTX)
 
+	w.WriteHeader(http.StatusAccepted)
 	w.Write([]byte("Registered!"))
 }
 
