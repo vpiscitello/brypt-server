@@ -181,10 +181,6 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print("\n\n")
-	fmt.Print(bodyBytes)
-	fmt.Print("\n\n")
-
 	loginCTX := make( map[string]interface{} )
 	if err := json.Unmarshal(bodyBytes, &loginCTX); err != nil {
 		fmt.Print("Sadness: ")
@@ -195,12 +191,14 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 
 	du, err := identifyUser(w, loginCTX["username"].(string), loginCTX["password"].(string))
 	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		w.Write( []byte( "Could not login...\n" ) )
 		return
 	}
 
 	// On success, add a cookie
 	SetCookieHandler(w, r, du.Uid)
+	w.WriteHeader(http.StatusAccepted)
 	w.Write([]byte("Logged in"))
 
 }
