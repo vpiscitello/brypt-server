@@ -180,6 +180,9 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Terrible errors in Login\n")
 		return
 	}
+
+	fmt.Print( bodyBytes )
+
 	regCTX := make( map[string]interface{} )
 	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
 		fmt.Println("Sadness\n")
@@ -296,7 +299,7 @@ func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 **	TODO: Remove when finished testing db insert
 ** *************************************************************************/
 func TestInsert() {
-	// db.Connect()	
+	// db.Connect()
 
 	objID1 := objectid.New().Hex()
 	objID2 := objectid.New().Hex()
@@ -358,20 +361,20 @@ func TestFind() {
 
 	/**********FIND ALL TEST**************/
 	retCTX, err := db.FindAll("brypt_users", testCTX)
-	
+
 	print("\nFind All results: \n")
 	fmt.Printf("%+v\n", retCTX)
-	
+
 	print("\nFind All error response: ")
 	fmt.Println(err)
 
 	/**********FIND ONE TEST**************/
 	testCTX["username"] = "notInDB"
 	retCTX, err = db.FindOne("brypt_users", testCTX)
-	
+
 	print("\nFind One result:\n ")
 	fmt.Printf("%+v\n", retCTX["ret"])
-	
+
 	print("\nFind One error response: ")
 	fmt.Println(err)
 
@@ -382,14 +385,14 @@ func TestUpdate() {
 	testCTX["username"] = "TotallyTom"
 	testCTX["first_name"] = "Alice"
 	testCTX["last_name"] = "Allen"
-	
+
 	updateFieldCTX := make( map[string]interface{} )
-	updateFieldCTX["username"] = "Re@llyTom" 
+	updateFieldCTX["username"] = "Re@llyTom"
 	updateFieldCTX["first_name"] = "Tom"
 	updateCTX := make( map[string]interface{} )
 	updateCTX["$set"] = updateFieldCTX
 	//	updateCTX["first_name"] = "Tom"
-	
+
 	err := db.UpdateOne("brypt_users", testCTX, updateCTX)
 	print("\nUpdate One response: ")
 	fmt.Print(err)
