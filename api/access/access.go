@@ -181,7 +181,7 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print( bodyBytes )
+	fmt.Print( r.body )
 
 	regCTX := make( map[string]interface{} )
 	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
