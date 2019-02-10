@@ -181,6 +181,10 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Print("\n\n")
+	fmt.Print(bodyBytes)
+	fmt.Print("\n\n")
+
 	loginCTX := make( map[string]interface{} )
 	if err := json.Unmarshal(bodyBytes, &loginCTX); err != nil {
 		fmt.Print("Sadness: ")
