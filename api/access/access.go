@@ -181,16 +181,14 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print( r.body )
-
-	regCTX := make( map[string]interface{} )
-	if err := json.Unmarshal(bodyBytes, &regCTX); err != nil {
+	loginCTX := make( map[string]interface{} )
+	if err := json.Unmarshal(bodyBytes, &loginCTX); err != nil {
 		fmt.Println("Sadness\n")
 	}
 	fmt.Print("Register: ")
-	fmt.Println(regCTX)
+	fmt.Println(loginCTX)
 
-	du, err := identifyUser(w, regCTX["username"].(string), regCTX["password"].(string))
+	du, err := identifyUser(w, loginCTX["username"].(string), loginCTX["password"].(string))
 	if err != nil {
 		w.Write( []byte( "Could not login...\n" ) )
 		return
