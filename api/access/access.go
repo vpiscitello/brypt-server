@@ -22,7 +22,7 @@ import (
 
 type Resources struct{}
 
-var cookieName = "user_authentication"
+var cookieName = "auth_token"
 
 var hashKey = []byte( securecookie.GenerateRandomKey( 32 ) )
 var blockKey = []byte( securecookie.GenerateRandomKey( 32 ) )
@@ -235,7 +235,7 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 
 	userCTX := make(map[string]interface{})
 	userCTX["username"] = regCTX["username"]
-	userCTX["region"] = regCTX["Region"]
+	userCTX["region"] = regCTX["region"]
 	userCTX["first_name"] = regCTX["first_name"]
 	userCTX["last_name"] = regCTX["last_name"]
 	//userCTX["birthdate"] = regCTX["Birthday"]
