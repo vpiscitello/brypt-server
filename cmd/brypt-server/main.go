@@ -17,7 +17,7 @@ import (
 
    "brypt-server/api/access"
    "brypt-server/api/base"
-   // "brypt-server/api/bridge"
+   "brypt-server/api/bridge"
    "brypt-server/api/dashboard"
    // "brypt-server/api/users"
 
@@ -77,7 +77,7 @@ func main()  {
 
     hr.Map( configuration.Server.AccessDomain, access.Resources{}.Routes() ) // Handle access.host routing requests
 
-    hr.Map( configuration.Server.BridgeDomain, bridgeRouter() ) // Handle bridge.host routing requests
+    hr.Map( configuration.Server.BridgeDomain, bridge.Resources{}.Routes() ) // Handle bridge.host routing requests
 
     hr.Map( configuration.Server.DashboardDomain, dashboard.Resources{}.Routes() )   // Handle dashboard.host routing requests
 
