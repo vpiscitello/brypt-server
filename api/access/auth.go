@@ -20,8 +20,9 @@ func CheckAuth(h http.HandlerFunc) http.HandlerFunc {
 			return
 		} else {
 			fmt.Printf("Not authorized %d\n", 401)
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("Authentication Needed."))
 		}
-
-		http.Redirect(w, r, "https://access.localhost:3006", http.StatusSeeOther)
+		// http.Redirect(w, r, "https://access.localhost:3006", http.StatusSeeOther)
 	}
 }
