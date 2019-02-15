@@ -90,11 +90,11 @@ func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 		networkObject = networkRet["ret"].(db.Network)
 		fmt.Println(networkObject)
 
-		networkJSON, err := json.Marshal(networkRet["ret"])
-		if err != nil {
-		  http.Error(w, err.Error(), http.StatusInternalServerError)
-		  return
-		}
+		// networkJSON, err := json.Marshal(networkRet["ret"])
+		// if err != nil {
+		//   http.Error(w, err.Error(), http.StatusInternalServerError)
+		//   return
+		// }
 
 		// Find all the nodes within that network
 		nodesSearchCTX := make( map[string]interface{} )
@@ -110,15 +110,15 @@ func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 		} else {
 			fmt.Println(nodesRet["ret"])
 
-			nodesJSON, err := json.Marshal(nodesRet["ret"])
-			if err != nil {
-			  http.Error(w, err.Error(), http.StatusInternalServerError)
-			  return
-			}
+			// nodesJSON, err := json.Marshal(nodesRet["ret"])
+			// if err != nil {
+			//   http.Error(w, err.Error(), http.StatusInternalServerError)
+			//   return
+			// }
 
 			outInterface := map[string]interface{}{}
-			outInterface["network"] = networkJSON
-			outInterface["nodes"] = nodesJSON
+			outInterface["network"] = networkRet["ret"]
+			outInterface["nodes"] = nodesRet["ret"]
 
 			outJSON, err := json.Marshal(outInterface)
 			if err != nil {
