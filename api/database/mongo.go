@@ -545,25 +545,82 @@ func getAll(col string, filterCTX map[string]interface{}) (map[string]interface{
 
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	cursor, err := collection.Find(nil, filterCTX)
-
 	if err != nil {
-		log.Println("Error inserting new manager: ", err)
+		log.Println("Error finding all: ", err)
 		return nil, err
 	}
 
-	var users []User
-	for cursor.Next(nil) {
-		user := User{}
-		e := cursor.Decode(&user)
-		if e != nil {
-			print("Decode err...")
-			fmt.Println(e)
-		}
-		users = append(users, user)
-	//	fmt.Println(user)
+	switch col {
+		case "brypt_users":
+				var users []User
+				for cursor.Next(nil) {
+					user := User{}
+					e := cursor.Decode(&user)
+					if e != nil {
+						print("Decode err...")
+						fmt.Println(e)
+					}
+					users = append(users, user)
+				}
+				retCTX["ret"] = users
+			break
+		case "brypt_nodes":
+				var nodes []Node
+				for cursor.Next(nil) {
+					node := Node{}
+					e := cursor.Decode(&node)
+					if e != nil {
+						print("Decode err...")
+						fmt.Println(e)
+					}
+					nodes = append(nodes, node)
+				}
+				retCTX["ret"] = nodes
+			break
+		case "brypt_networks":
+				var networks []Network
+				for cursor.Next(nil) {
+					network := Network{}
+					e := cursor.Decode(&network)
+					if e != nil {
+						print("Decode err...")
+						fmt.Println(e)
+					}
+					networks = append(networks, network)
+				}
+				retCTX["ret"] = networks
+			break
+		case "brypt_managers":
+				var mngrs []Manager
+				for cursor.Next(nil) {
+					mngr := Manager{}
+					e := cursor.Decode(&mngr)
+					if e != nil {
+						print("Decode err...")
+						fmt.Println(e)
+					}
+					mngrs = append(mngrs, mngr)
+				}
+				retCTX["ret"] = mngrs
+			break
+		case "brypt_clusters":
+				var clusters []Cluster
+				for cursor.Next(nil) {
+					cluster := Cluster{}
+					e := cursor.Decode(&cluster)
+					if e != nil {
+						print("Decode err...")
+						fmt.Println(e)
+					}
+					clusters = append(clusters, cluster)
+				}
+				retCTX["ret"] = clusters
+			break
+		default:
+				err = nil	// TODO: Change to "Unknown collection"
+				retCTX["ret"] = nil
+			break
 	}
-
-	retCTX["ret"] = users
 
 	return retCTX, err
 }
@@ -611,16 +668,9 @@ func getOne(col string, filterCTX map[string]interface{}) (map[string]interface{
 			break
 	}
 
-/*	fmt.Printf("%+v\n", res)
-
-	err := res.Decode(&usr)
-*/
 	if err != nil {
 		fmt.Println(err)
 	}
-
-//	fmt.Printf("%+v\n", usr)
-//	retCTX["ret"] = usr
 
 	return retCTX, err
 }

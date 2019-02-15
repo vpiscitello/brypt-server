@@ -96,7 +96,7 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 		nodesSearchCTX := make( map[string]interface{} )
 		nodesSearchCTX["network"] = networkObject.Uid
 
-		nodesObject := db.Node{}
+		// nodesObject := []db.Node
 		// Find user's network based on their user uid
 		nodesRet, err := db.FindAll("brypt_nodes", nodesSearchCTX)
 
@@ -105,10 +105,10 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set( "Content-Type", "text/html" )
 			w.Write( []byte( "Error Occured" ) )
 		} else {
-			nodesObject = nodesRet["ret"].(db.Node)
-			fmt.Println(nodesObject)
+			// nodesObject = nodesRet["ret"].([]db.Node)
+			fmt.Println(nodesRet["ret"])
 
-			nodesJSON, err := json.Marshal(nodesObject)
+			nodesJSON, err := json.Marshal(nodesRet["ret"])
 			if err != nil {
 			  http.Error(w, err.Error(), http.StatusInternalServerError)
 			  return
