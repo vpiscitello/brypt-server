@@ -30,7 +30,7 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	Uid               string						`bson:"uid" json:"uid"`
+	Uid               string			`bson:"uid" json:"uid"`
 	Manager_name      string            `bson:"manager_name" json:"manager_name"`
 }
 
@@ -39,7 +39,7 @@ type Manager struct {
 ** *************************************************************************/
 type Cluster struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string						`bson:"uid" json:"uid"`
+	Uid               string			`bson:"uid" json:"uid"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
 	Coord_port        string            `bson:"coord_port" json:"coord_port"`
@@ -51,7 +51,7 @@ type Cluster struct {
 ** *************************************************************************/
 type Network struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string						`bson:"uid" json:"uid"`
+	Uid               string			`bson:"uid" json:"uid"`
 	Network_name      string            `bson:"network_name" json:"network_name"`
 	Owner_name        string            `bson:"owner_name" json:"owner_name"`
 	Managers          []string          `bson:"managers" json:"managers"`
@@ -70,7 +70,7 @@ type Network struct {
 ** *************************************************************************/
 type User struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string						`bson:"uid" json:"uid"`
+	Uid               string			`bson:"uid" json:"uid"`
 	Username          string            `bson:"username" json:"username"`
 	First_name        string            `bson:"first_name" json:"first_name"`
 	Last_name         string            `bson:"last_name" json:"last_name"`
@@ -91,7 +91,7 @@ type User struct {
 ** *************************************************************************/
 type Node struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string						`bson:"uid" json:"uid"`
+	Uid               string			`bson:"uid" json:"uid"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
@@ -135,11 +135,11 @@ func Setup() {
 }
 
 func Write(collection string, dataCTX map[string]interface{}) string {
-	
+
 	print("In write request handler!\n")
 
 	sterilizeCTXData(dataCTX)	// TODO: Need to implement this function
-		
+
 	var id string
 
 	switch collection {
@@ -233,7 +233,7 @@ func sterilizeCTXData(ctx map[string]interface{}) {
 func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
 	doc := bsonx.NewDocument(bsonx.EC.String("fail", "fail"))	// TODO: Return an error of some sort
-	if okStr {	
+	if okStr {
 			doc = bsonx.NewDocument(bsonx.EC.String(key, valStr))
 	} else {	// Check if int
 			valInt, okInt := ctx[key].(int)
@@ -280,7 +280,7 @@ func insertValue(ctx map[string]interface{}, key string) *bsonx.Document {
 ** *************************************************************************/
 func appendValue(doc *bsonx.Document, ctx map[string]interface{}, key string) {
 	valStr, okStr := ctx[key].(string)	// Check if the type is a string
-	if okStr {	
+	if okStr {
 		doc.Append(bsonx.EC.String(key, valStr))
 	} else {	// Check if int
 		valInt, okInt := ctx[key].(int)
@@ -323,7 +323,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 	objID := objectid.New().Hex()	// Create and store new object id
 
 	NewDoc = bsonx.NewDocument(bsonx.EC.String("uid", objID))
-	
+
 	for k := range ctx {
 		for j := range keys {
 			if k == keys[j] {	// Store value if k matches a key in the users collection
@@ -332,7 +332,7 @@ func createBSONDocument(ctx map[string]interface{}, keys []string) (string, *bso
 		}
 	}
 
-	return objID, NewDoc 
+	return objID, NewDoc
 }
 
 /* **************************************************************************
@@ -362,7 +362,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newObj := createBSONDocument(objCTX, keys)
 	print("\n\n In WriteObject...\n\n")
 	fmt.Print(newObj)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection(collectionName)
 
 	_, err := collection.InsertOne(nil, newObj)
@@ -388,7 +388,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newUser := createBSONDocument(userCTX, keys)
 	print("\n\n In Write User...\n\n")
 	fmt.Print(newUser)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
 
 	_, err := collection.InsertOne(nil, newUser)
@@ -412,7 +412,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newNetwork := createBSONDocument(networkCTX, keys)
 	print("\n\n In Write Network...\n\n")
 	fmt.Print(newNetwork)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_networks")
 
 	_, err := collection.InsertOne(nil, newNetwork)
@@ -436,7 +436,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newNode := createBSONDocument(nodeCTX, keys)
 	print("\n\n In Write Node...\n\n")
 	fmt.Print(newNode)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_nodes")
 
 	_, err := collection.InsertOne(nil, newNode)
@@ -460,7 +460,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newCluster := createBSONDocument(clusterCTX, keys)
 	print("\n\n In Write Cluster...\n\n")
 	fmt.Print(newCluster)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_clusters")
 
 	_, err := collection.InsertOne(nil, newCluster)
@@ -475,7 +475,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 }
 */
 /* **************************************************************************
-** Function: WriteManager 
+** Function: WriteManager
 ** URI:
 ** Description:
 ** *************************************************************************/
@@ -484,7 +484,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 	objID, newManager := createBSONDocument(managerCTX, keys)
 	print("\n\n In Write Manager...\n\n")
 	fmt.Print(newManager)
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
 
 	_, err := collection.InsertOne(nil, newManager)
@@ -499,12 +499,12 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 }
 */
 /* **************************************************************************
-** Function: DeleteMany 
+** Function: DeleteMany
 ** URI:
 ** Description:
 ** *************************************************************************/
 func deleteMany(col string, filterCTX map[string]interface{}) error {
-		
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	_, err := collection.DeleteMany(nil, filterCTX)
 
@@ -517,7 +517,7 @@ func deleteMany(col string, filterCTX map[string]interface{}) error {
 }
 
 /* **************************************************************************
-** Function: DeleteOne 
+** Function: DeleteOne
 ** URI:
 ** Description:
 ** *************************************************************************/
@@ -542,7 +542,7 @@ func deleteOne(col string, filterCTX map[string]interface{}) error {
 func getAll(col string, filterCTX map[string]interface{}) (map[string]interface{}, error) {
 
  	retCTX := make( map[string]interface{} )
-	
+
 	collection := Client.Database("heroku_ckmt3tbl").Collection(col)
 	cursor, err := collection.Find(nil, filterCTX)
 
@@ -612,13 +612,13 @@ func getOne(col string, filterCTX map[string]interface{}) (map[string]interface{
 	}
 
 /*	fmt.Printf("%+v\n", res)
-	
+
 	err := res.Decode(&usr)
 */
 	if err != nil {
 		fmt.Println(err)
 	}
-	
+
 //	fmt.Printf("%+v\n", usr)
 //	retCTX["ret"] = usr
 
@@ -644,7 +644,7 @@ func updateOne(col string, filterCTX map[string]interface{}, updateCTX map[strin
 }
 
 /* **************************************************************************
-** Function: CreateClient 
+** Function: CreateClient
 ** URI:
 ** Description: Creates and configures a new client
 ** *************************************************************************/
@@ -701,7 +701,7 @@ func Connect() {
 ** *************************************************************************/
 /*func Disconnect() {
 	err := Client.Disconnect(nil)	// Disconnection client
-	
+
 	if err != nil {
 		log.Fatal(err)  // Log any errors thrown during disconnect
 	}

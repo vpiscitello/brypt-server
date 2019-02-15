@@ -1,17 +1,17 @@
 package bridge
 
 import (
-	// "fmt"
-	// db "brypt-server/api/database"
+	"fmt"
+	db "brypt-server/api/database"
 	"net/http"
 	// "time"
 
     "brypt-server/internal/handlebars"
-	// "encoding/json"
+	"encoding/json"
 	// "io/ioutil"
 
 	"github.com/go-chi/chi"
-	// "github.com/mongodb/ftdc/bsonx/objectid"
+	"github.com/mongodb/mongo-go-driver/bson"
 
     "brypt-server/api/access"
 )
@@ -73,7 +73,51 @@ func (rs Resources) RegisterNode(w http.ResponseWriter, r *http.Request) {
 ** *************************************************************************/
 func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set( "Content-Type", "text/html" )
-	w.Write( []byte( "Nodes: {}" ) )
+	// Parse which network based on user cookie
+
+	networkSearchCTX := make( map[string]interface{} )
+	networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
+
+	networkObject := db.Network{}
+	// Find user's network based on their user uid
+	networkRet, err := db.FindOne("brypt_networks", networkSearchCTX)
+
+	networkObject = networkRet["ret"].(db.Network)
+
+	if err != nil {
+		fmt.Println(err)
+		w.Header().Set( "Content-Type", "text/html" )
+		w.Write( []byte( "Error Occured" ) )
+	} else {
+		networkObject = networkRet["ret"].(db.Network)
+		fmt.Println(networkObject)
+
+		// Find all the nodes within that network
+		nodesSearchCTX := make( map[string]interface{} )
+		nodesSearchCTX["network"] = networkObject.Uid
+
+		nodesObject := db.Node{}
+		// Find user's network based on their user uid
+		nodesRet, err := db.FindAll("brypt_nodes", nodesSearchCTX)
+
+		if err != nil {
+			fmt.Println(err)
+			w.Header().Set( "Content-Type", "text/html" )
+			w.Write( []byte( "Error Occured" ) )
+		} else {
+			nodesObject = nodesRet["ret"].(db.Node)
+			fmt.Println(nodesObject)
+
+			nodesJSON, err := json.Marshal(nodesObject)
+			if err != nil {
+			  http.Error(w, err.Error(), http.StatusInternalServerError)
+			  return
+			}
+
+			w.Header().Set( "Content-Type", "application/json" )
+			w.Write( nodesJSON )
+
+		}
+	}
 
 }
