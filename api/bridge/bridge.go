@@ -28,7 +28,7 @@ func (rs Resources) Routes() chi.Router {
 
 	r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base bridge page
 	r.Post( "/node", access.CheckAuth( rs.RegisterNode ) )	// Register a node in the user's network
-	r.Get( "/network", access.CheckAuth( rs.GetNodes ) )	// Get the nodes within a user's network
+	r.Get( "/network", access.CheckAuth( rs.GetNetworkInfo ) )	// Get the nodes within a user's network
 
 	return r
 }
@@ -66,12 +66,12 @@ func (rs Resources) RegisterNode(w http.ResponseWriter, r *http.Request) {
 }
 
 /* **************************************************************************
-** Function: GetNodes
+** Function: GetNetworkInfo
 ** URI: birdge.host (GET)
-** Description: Handles getting the nodes within a user's network
+** Description: Handles getting the root network information for a user
 ** Client: Handles returned JSON data
 ** *************************************************************************/
-func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
+func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 
 	// Parse which network based on user cookie
 
@@ -79,11 +79,9 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 	networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
 
 	networkObject := db.Network{}
+
 	// Find user's network based on their user uid
 	networkRet, err := db.FindOne("brypt_networks", networkSearchCTX)
-
-	networkObject = networkRet["ret"].(db.Network)
-
 	if err != nil {
 		fmt.Println(err)
 		w.Header().Set( "Content-Type", "text/html" )
@@ -92,11 +90,16 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 		networkObject = networkRet["ret"].(db.Network)
 		fmt.Println(networkObject)
 
+		networkJSON, err := json.Marshal(networkRet["ret"])
+		if err != nil {
+		  http.Error(w, err.Error(), http.StatusInternalServerError)
+		  return
+		}
+
 		// Find all the nodes within that network
 		nodesSearchCTX := make( map[string]interface{} )
 		nodesSearchCTX["network"] = networkObject.Uid
 
-		// nodesObject := []db.Node
 		// Find user's network based on their user uid
 		nodesRet, err := db.FindAll("brypt_nodes", nodesSearchCTX)
 
@@ -105,7 +108,6 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set( "Content-Type", "text/html" )
 			w.Write( []byte( "Error Occured" ) )
 		} else {
-			// nodesObject = nodesRet["ret"].([]db.Node)
 			fmt.Println(nodesRet["ret"])
 
 			nodesJSON, err := json.Marshal(nodesRet["ret"])
@@ -114,8 +116,18 @@ func (rs Resources) GetNodes(w http.ResponseWriter, r *http.Request) {
 			  return
 			}
 
+			outInterface := map[string]interface{}{}
+			outInterface["network"] = networkJSON
+			outInterface["nodes"] = nodesJSON
+
+			outJSON, err := json.Marshal(outInterface)
+			if err != nil {
+			  http.Error(w, err.Error(), http.StatusInternalServerError)
+			  return
+			}
+
 			w.Header().Set( "Content-Type", "application/json" )
-			w.Write( nodesJSON )
+			w.Write( outJSON )
 
 		}
 	}
