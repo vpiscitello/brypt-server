@@ -98,7 +98,7 @@ func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 
 		// Find all the nodes within that network
 		nodesSearchCTX := make( map[string]interface{} )
-		nodesSearchCTX["network"] = networkObject.Uid
+		nodesSearchCTX["connected_network"] = networkObject.Uid
 
 		// Find user's network based on their user uid
 		nodesRet, err := db.FindAll("brypt_nodes", nodesSearchCTX)

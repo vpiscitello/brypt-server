@@ -99,6 +99,7 @@ type Node struct {
 	Registered_on     time.Time         `bson:"registered_on" json:"registered_on"`
 	Registered_to     string            `bson:"registered_to" json:"registered_to"`
 	Connected_network string            `bson:"connected_network" json:"connected_network"`
+	Data_token        string            `bson:"data_token" json:"data_token"`
 }
 
 
