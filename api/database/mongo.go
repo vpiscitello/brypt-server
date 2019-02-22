@@ -57,8 +57,9 @@ type Network struct {
 	Managers          []string          `bson:"managers" json:"managers"`
 	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
 	Total_peers       int32             `bson:"total_peers" json:"total_peers"`
-	Ip_address        string            `bson:"ip_address" json:"ip_address"`
-	Port              int32             `bson:"port" json:"port"`
+	Root_ap           string            `bson:"root_ap" json:"root_ap"`
+	Root_ip           string            `bson:"root_ip" json:"root_ip"`
+	Root_port         int32             `bson:"root_port" json:"root_port"`
 	Connection_token  string            `bson:"connection_token" json:"connection_token"`
 	Clusters          []string          `bson:"clusters" json:"clusters"`
 	Created_on        time.Time         `bson:"created_on" json:"created_on"`
