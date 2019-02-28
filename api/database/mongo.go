@@ -95,7 +95,6 @@ type Node struct {
 	Uid               string			`bson:"uid" json:"uid"`
 	Serial_number     string            `bson:"serial_number" json:"serial_number"`
 	Type              string            `bson:"type" json:"type"`
-	Created_on        time.Time         `bson:"created_on" json:"created_on"`
 	Registered_on     time.Time         `bson:"registered_on" json:"registered_on"`
 	Registered_to     string            `bson:"registered_to" json:"registered_to"`
 	Connected_network string            `bson:"connected_network" json:"connected_network"`
