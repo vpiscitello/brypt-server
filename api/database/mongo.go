@@ -92,13 +92,13 @@ type User struct {
 ** *************************************************************************/
 type Node struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string			`bson:"uid" json:"uid"`
-	Serial_number     string            `bson:"serial_number" json:"serial_number"`
-	Type              string            `bson:"type" json:"type"`
-	Registered_on     time.Time         `bson:"registered_on" json:"registered_on"`
-	Registered_to     string            `bson:"registered_to" json:"registered_to"`
-	Connected_network string            `bson:"connected_network" json:"connected_network"`
-	Data_token        string            `bson:"data_token" json:"data_token"`
+	Uid						string			`bson:"uid" json:"uid"`
+	Serial_number			string            `bson:"serial_number" json:"serial_number"`
+	Type					string            `bson:"type" json:"type"`
+	Registered_timestamp	time.Time         `bson:"registered_timestamp" json:"registered_timestamp"`
+	Registered_to			string            `bson:"registered_to" json:"registered_to"`
+	Connected_network		string            `bson:"connected_network" json:"connected_network"`
+	Data_token				string            `bson:"data_token" json:"data_token"`
 }
 
 
