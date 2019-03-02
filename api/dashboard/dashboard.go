@@ -1,10 +1,6 @@
 package dashboard
 
 import (
-	"net/http"
-
-    "brypt-server/internal/handlebars"
-
     "github.com/go-chi/chi"
 )
 

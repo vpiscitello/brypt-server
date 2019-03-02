@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 
 	"github.com/go-chi/chi"
-	"github.com/mongodb/ftdc/bsonx/objectid"
 	"github.com/gorilla/securecookie"
 
 	"golang.org/x/crypto/bcrypt"
