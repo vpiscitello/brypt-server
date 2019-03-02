@@ -5,8 +5,6 @@ import (
 	"net/http"
 )
 
-// authenticate node
-
 /* **************************************************************************
 ** Function: CheckAuth
 ** Description: This function reads the cookie and determines whether or not
@@ -23,6 +21,5 @@ func CheckAuth(h http.HandlerFunc) http.HandlerFunc {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Authentication Needed."))
 		}
-		// http.Redirect(w, r, "https://access.localhost:3006", http.StatusSeeOther)
 	}
 }

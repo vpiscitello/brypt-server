@@ -1,25 +1,17 @@
 package database
 
 import (
-
 	"reflect"
 	"fmt"
 	"log"
 	"strings"
-//	"context"
-//	"encoding/json"
 	"time"
 	"os"
 	config "brypt-server/config"
 
-//	"github.com/mongodb/mongo-go-driver/mongo/options"
 	"github.com/mongodb/mongo-go-driver/mongo"
-	// "github.com/mongodb/mongo-go-driver/bson"
 	"github.com/mongodb/ftdc/bsonx"
 	"github.com/mongodb/ftdc/bsonx/objectid"
-//	"github.com/mongodb/ftdc/bsonx/bsontype"
-	//"github.com/mongodb/ftdc/bsonx/elements"
-//	"github.com/mongodb/mongo-go-driver/x/mongo/driver/uuid"
 )
 
 var configuration = config.Configuration{}
@@ -92,7 +84,7 @@ type User struct {
 ** *************************************************************************/
 type Node struct {
 //	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid						string			`bson:"uid" json:"uid"`
+	Uid						string			  `bson:"uid" json:"uid"`
 	Serial_number			string            `bson:"serial_number" json:"serial_number"`
 	Type					string            `bson:"type" json:"type"`
 	Registered_timestamp	time.Time         `bson:"registered_timestamp" json:"registered_timestamp"`
@@ -374,131 +366,7 @@ func writeObject(objCTX map[string]interface{}, obj interface{}, collectionName 
 
 	return objID
 }
-/* **************************************************************************
-** Function: WriteUser
-** URI:
-** Description:
-** *************************************************************************/
 
-//Combine (w, ctx, keys, collectionName)
-//Return an error if an error
-/*func WriteUser(w http.ResponseWriter, userCTX map[string]interface{}) string {
-//	users_collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-	var keys = []string {"username","first_name","last_name","email", "organization", "networks", "birthdate", "join_date", "last_login", "login_attempts", "login_token", "region"}
-
-	objID, newUser := createBSONDocument(userCTX, keys)
-	print("\n\n In Write User...\n\n")
-	fmt.Print(newUser)
-
-	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_users")
-
-	_, err := collection.InsertOne(nil, newUser)
-	if err != nil {
-		log.Println("Error inserting new user: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return objID
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-	return objID
-}
-*/
-/* **************************************************************************
-** Function: WriteNetwork
-** URI:
-** Description:
-** *************************************************************************/
-/*func WriteNetwork(w http.ResponseWriter, networkCTX map[string]interface{}) string {
-	var keys = []string {"network_name", "owner_name", "managers", "direct_peers", "total_peers", "ip_address", "port", "connection_token", "clusters", "created_on", "last_accessed"}
-	objID, newNetwork := createBSONDocument(networkCTX, keys)
-	print("\n\n In Write Network...\n\n")
-	fmt.Print(newNetwork)
-
-	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_networks")
-
-	_, err := collection.InsertOne(nil, newNetwork)
-	if err != nil {
-		log.Println("Error inserting new network: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return objID
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-	return objID
-}
-*/
-/* **************************************************************************
-** Function: WriteNode
-** URI:
-** Description:
-** *************************************************************************/
-/*func WriteNode(w http.ResponseWriter, nodeCTX map[string]interface{}) string {
-	var keys = []string {"serial_number", "type", "created_on", "registered_on", "registered_to", "connected_network"}
-	objID, newNode := createBSONDocument(nodeCTX, keys)
-	print("\n\n In Write Node...\n\n")
-	fmt.Print(newNode)
-
-	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_nodes")
-
-	_, err := collection.InsertOne(nil, newNode)
-	if err != nil {
-		log.Println("Error inserting new node: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return objID
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-	return objID
-}
-*/
-/* **************************************************************************
-** Function: WriteCluster
-** URI:
-** Description:
-** *************************************************************************/
-/*func WriteCluster(w http.ResponseWriter, clusterCTX map[string]interface{}) string {
-	var keys = []string {"connection_token", "coord_ip", "coord_port", "comm_tech"}
-	objID, newCluster := createBSONDocument(clusterCTX, keys)
-	print("\n\n In Write Cluster...\n\n")
-	fmt.Print(newCluster)
-
-	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_clusters")
-
-	_, err := collection.InsertOne(nil, newCluster)
-	if err != nil {
-		log.Println("Error inserting new cluster: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return objID
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-	return objID
-}
-*/
-/* **************************************************************************
-** Function: WriteManager
-** URI:
-** Description:
-** *************************************************************************/
-/*func WriteManager(w http.ResponseWriter, managerCTX map[string]interface{}) string {
-	var keys = []string {"manager_name"}
-	objID, newManager := createBSONDocument(managerCTX, keys)
-	print("\n\n In Write Manager...\n\n")
-	fmt.Print(newManager)
-
-	collection := Client.Database("heroku_ckmt3tbl").Collection("brypt_managers")
-
-	_, err := collection.InsertOne(nil, newManager)
-	if err != nil {
-		log.Println("Error inserting new manager: ", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return objID
-	}
-
-	w.WriteHeader(http.StatusAccepted)
-	return objID
-}
-*/
 /* **************************************************************************
 ** Function: DeleteMany
 ** URI:
@@ -743,17 +611,3 @@ func Connect() {
 	}
 
 }
-
-//TODO: Figure out how to disconnect client without causing internal server error
-/* **************************************************************************
-** Function: Disconnect
-** URI:
-** Description: Disconnects client
-** *************************************************************************/
-/*func Disconnect() {
-	err := Client.Disconnect(nil)	// Disconnection client
-
-	if err != nil {
-		log.Fatal(err)  // Log any errors thrown during disconnect
-	}
-}*/

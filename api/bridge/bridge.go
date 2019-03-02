@@ -4,11 +4,9 @@ import (
 	"fmt"
 	db "brypt-server/api/database"
 	"net/http"
-	// "time"
 
     "brypt-server/internal/handlebars"
 	"encoding/json"
-	// "io/ioutil"
 
 	"github.com/go-chi/chi"
 	"github.com/mongodb/mongo-go-driver/bson"

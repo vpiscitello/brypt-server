@@ -15,9 +15,7 @@ import (
 	"github.com/gorilla/securecookie"
 
 	"golang.org/x/crypto/bcrypt"
-	// "github.com/aymerick/raymond"
 
-	// "brypt-server/api/users"
 )
 
 type Resources struct{}
@@ -77,12 +75,12 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request, id string) {
 against the hashed value stored in the database
 ** *************************************************************************/
 func identifyUser(w http.ResponseWriter, username string, password string) (db.User, error) {
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = username
+	userCTX := make( map[string]interface{} )
+	userCTX["username"] = username
 
 	du := db.User{}
 
-	retCTX, err := db.FindOne("brypt_users", testCTX)
+	retCTX, err := db.FindOne("brypt_users", userCTX)
 	if err != nil {
 		fmt.Println(err)
 		return du, err
@@ -135,12 +133,6 @@ func (rs Resources) Routes() chi.Router {
 ** Client: Displays the compiled page/
 ** *************************************************************************/
 func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
-
-	//TestInsert()	// TODO: REMOVE WHEN FINISHED TESTING DB INSERT
-	//TestUpdate()	// TODO: REMOVE WHEN FINSHED TESTING DB UPDATE, FIX
-	//TestDelete()	// TODO: REMOVE WHEN FINISHED TESTING DB DELETE
-	//TestFind()		// TODO: REMOVE WHEN FINISHED TESTING DB FIND, FIX
-
 	action := r.URL.Query().Get( "action" )
 	accessCTX := make( map[string]interface{} )
 
@@ -295,109 +287,4 @@ func checkUserRegistration(username string) bool {
 ** *************************************************************************/
 func (rs Resources) Link(w http.ResponseWriter, r *http.Request) {
 	w.Write( []byte( "Linking...\n" ) )
-}
-
-/* **************************************************************************
-** Function: TestInsert
-** Description: Just a test function to demonstrate db insert functionality
-**	TODO: Remove when finished testing db insert
-** *************************************************************************/
-func TestInsert() {
-	// db.Connect()
-
-	objID1 := objectid.New().Hex()
-	objID2 := objectid.New().Hex()
-	objID3 := objectid.New().Hex()
-//	var login_attempts int32 = 4
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory6"
-	testCTX["first_name"] = "Mal"
-	testCTX["last_name"] = "Allen"
-	testCTX["region"] = "Wonderland"
-	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 1
-	testCTX["networks"] = []string{objID1, objID2, objID3}
-	testCTX["password"] = "qwerty"
-	id := db.Write("brypt_usrs", testCTX)	// Incorrect collection name (should return nilObjectID)
-	print("\nnil id: ")
-	fmt.Print(id)
-	id = db.Write("brypt_users", testCTX)
-	print("\nid: ")
-	fmt.Print(id)
-	id = db.Write("brypt_users", testCTX)
-	print("\nid: ")
-	fmt.Print(id)
-
-/*	testCTX["username"] = "TotallyTom"
-	testCTX["first_name"] = "Alice"
-	testCTX["last_name"] = "Allen"
-	testCTX["region"] = "Wonderland"
-	testCTX["birthdate"] = time.Now().Round(time.Millisecond)
-	testCTX["login_attempts"] = 4
-	testCTX["networks"] = []objectid.ObjectID{objID1, objID2, objID3}
-	id2 := db.Write(w, "brypt_users", testCTX)
-	print("\nid2: ")
-	fmt.Print(id2)*/
-//	defer db.Disconnect()	// Causes an internal server error for some reason...
-}
-
-func TestDelete() {
-
-	testCTX := make( map[string]interface{} )
-//	testCTX["username"] = "AwesomeAlice"
-//	testCTX["first_name"] = "Alice"
-	testCTX["last_name"] = "Allen"
-	err := db.DeleteOne("brypt_users", testCTX)
-	print("\nDelete One error response: ")
-	fmt.Print(err)
-//	err = db.DeleteAll("brypt_users", testCTX)
-//	print("\nDelete All error response: ")
-//	fmt.Print(err)
-}
-
-func TestFind() {
-
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "m@llory5"
-//	testCTX["username"] = "TotallyTom"
-//	testCTX["first_name"] = "Alice"
-//	testCTX["last_name"] = "Allen"
-
-	/**********FIND ALL TEST**************/
-	retCTX, err := db.FindAll("brypt_users", testCTX)
-
-	print("\nFind All results: \n")
-	fmt.Printf("%+v\n", retCTX)
-
-	print("\nFind All error response: ")
-	fmt.Println(err)
-
-	/**********FIND ONE TEST**************/
-	testCTX["username"] = "notInDB"
-	retCTX, err = db.FindOne("brypt_users", testCTX)
-
-	print("\nFind One result:\n ")
-	fmt.Printf("%+v\n", retCTX["ret"])
-
-	print("\nFind One error response: ")
-	fmt.Println(err)
-
-}
-
-func TestUpdate() {
-	testCTX := make( map[string]interface{} )
-	testCTX["username"] = "TotallyTom"
-	testCTX["first_name"] = "Alice"
-	testCTX["last_name"] = "Allen"
-
-	updateFieldCTX := make( map[string]interface{} )
-	updateFieldCTX["username"] = "Re@llyTom"
-	updateFieldCTX["first_name"] = "Tom"
-	updateCTX := make( map[string]interface{} )
-	updateCTX["$set"] = updateFieldCTX
-	//	updateCTX["first_name"] = "Tom"
-
-	err := db.UpdateOne("brypt_users", testCTX, updateCTX)
-	print("\nUpdate One response: ")
-	fmt.Print(err)
 }

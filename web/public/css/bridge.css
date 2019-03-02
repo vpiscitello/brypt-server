@@ -1,0 +1,137 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background: linear-gradient(to top right, rgb(26, 204, 148) 0%, rgb(126, 238, 203) 100%);
+}
+
+#bridge {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 48px;
+    z-index: 999;
+}
+
+#bridge h3, #bridge p {
+    color: #FBFBFB;
+}
+
+#bridge p {
+    max-width: 520px;
+    margin-top: 12px;
+    opacity: 0.6;
+}
+
+#bridge .context {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#bridge form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    max-width: 520px;
+    padding: 0px 48px;
+    border-radius: 8px;
+    background: transparent;
+    box-shadow: none
+}
+
+#bridge form::before {
+    display: none;
+}
+
+#bridge fieldset {
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+#bridge form input, #bridge form textarea {
+    max-width: 100%;
+    background: #FBFBFB;
+    box-shadow: 2px 4px 6px #E6E9F0;
+}
+
+#bridge fieldset input:focus, #bridge fieldset textarea:focus {
+    border: 2px solid #4a5c62;
+    box-shadow: 2px 4px 6px rgba(60, 74, 79, 0.6);
+}
+
+#bridge fieldset label {
+    position: absolute;
+    top: 50%;
+    margin-left: 14px;
+    font-weight: 700;
+    font-size: 0.85em;
+    letter-spacing: 0.1em;
+    color: #CFCFCF;
+    opacity: 1;
+    transform: translateY(-50%);
+    transition: 0.2s ease all;
+    z-index: 999;
+}
+
+#bridge fieldset textarea + label {
+    top: 28px;
+    transform: translateY(0%);
+}
+
+#bridge fieldset input[type=text]:focus + label,
+#bridge fieldset textarea:focus + label {
+    margin-left: 0px;
+    opacity: 0;
+}
+
+#bridge form button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    bottom: 0px;
+    width: 240px;
+    margin: 0 auto;
+    color: rgba(26, 204, 148, 0.8);
+    border-radius: 4px;
+    background: rgba(251, 251, 251, 0.95);
+    box-shadow: 0px 4px 20px rgba(251, 251, 251, 0.2);
+    transition: 0.4s ease-in-out all;
+}
+
+#bridge form button:hover {
+    bottom: 4px;
+    color: rgba(26, 204, 149, 1);
+    background: rgba(251, 251, 251, 1);
+    box-shadow: 0px 4px 20px rgba(251, 251, 251, 0.6);
+}
+
+#bridge form button h4 {
+    margin-left: 14px;
+    font-size: 0.9em;
+    text-transform: capitalize;
+    letter-spacing: 0.05em;
+}
+
+#bridge form button i {
+    margin-right: 14px;
+}
+
+#particle {
+    position: absolute;
+    left: 0;
+    top: 100px;
+    height: 100%;
+    width: 100%;
+    z-index: -999;
+}

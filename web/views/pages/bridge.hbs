@@ -1,0 +1,22 @@
+{{> header}}
+<main class="">
+    <article id="bridge">
+        <h3>Enter Node Identification Code</h3>
+        <p>To add a node to your network enter the serial number on your embedded device or the code that was provided when you ran the downloaded binary.</p>
+        <div class="context">
+            <form class="fs" action="index.html" method="post">
+                <fieldset class="">
+                    <div class="wrapper">
+                        <input type="text" name="serial" value="">
+                        <label for="serial">Serial Number</label>
+                    </div>
+                    <button type="submit" name="next"><h4>Next</h4><i class="fas fa-arrow-right"></i></button>
+                </fieldset>
+            </form>
+        </div>
+    </article>
+
+    <div id="particle"></div>
+
+</main>
+{{> footer}}
