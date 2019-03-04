@@ -180,17 +180,30 @@ func (rs Resources) Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("Register: ")
 	fmt.Println(loginCTX)
 
-	du, err := identifyUser(w, loginCTX["username"].(string), loginCTX["password"].(string))
+	userObject, err := identifyUser(w, loginCTX["username"].(string), loginCTX["password"].(string))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write( []byte( "Could not login...\n" ) )
 		return
 	}
 
+	outInterface := map[string]interface{}{}
+	outInterface["username"] = userObject.Username
+	outInterface["first_name"] = userObject.FirstName
+	outInterface["last_name"] = userObject.LastName
+	outInterface["email"] = userObject.Email
+
+	outJSON, err := json.Marshal(outInterface)
+	if err != nil {
+	  http.Error(w, err.Error(), http.StatusInternalServerError)
+	  return
+	}
+
 	// On success, add a cookie
-	SetCookieHandler(w, r, du.Uid)
+	SetCookieHandler(w, r, userObject.Uid)
 	w.WriteHeader(http.StatusAccepted)
-	w.Write([]byte("Logged in"))
+	w.Header().Set( "Content-Type", "application/json" )
+	w.Write( outJSON )
 
 }
 

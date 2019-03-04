@@ -22,75 +22,71 @@ type key string
 ** Managers
 ** *************************************************************************/
 type Manager struct {
-	Uid               string			`bson:"uid" json:"uid"`
-	Manager_name      string            `bson:"manager_name" json:"manager_name"`
+	Uid				string			`bson:"uid" json:"uid"`
+	ManagerName		string			`bson:"manager_name" json:"manager_name"`
 }
 
 /* **************************************************************************
 ** Clusters
 ** *************************************************************************/
 type Cluster struct {
-//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string			`bson:"uid" json:"uid"`
-	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Coord_ip          string            `bson:"coord_ip" json:"coord_ip"`
-	Coord_port        string            `bson:"coord_port" json:"coord_port"`
-	Comm_tech         string            `bson:"comm_tech" json:"comm_tech"`
+	Uid					string			`bson:"uid" json:"uid"`
+	ConnectionToken		string			`bson:"connection_token" json:"connection_token"`
+	CoordIP				string			`bson:"coord_ip" json:"coord_ip"`
+	CoordPort			string			`bson:"coord_port" json:"coord_port"`
+	CommTech			string			`bson:"comm_tech" json:"comm_tech"`
 }
 
 /* **************************************************************************
 ** Networks
 ** *************************************************************************/
 type Network struct {
-//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string			`bson:"uid" json:"uid"`
-	Network_name      string            `bson:"network_name" json:"network_name"`
-	Owner_name        string            `bson:"owner_name" json:"owner_name"`
-	Managers          []string          `bson:"managers" json:"managers"`
-	Direct_peers      int32             `bson:"direct_peers" json:"direct_peers"`
-	Total_peers       int32             `bson:"total_peers" json:"total_peers"`
-	Root_ap           string            `bson:"root_ap" json:"root_ap"`
-	Root_ip           string            `bson:"root_ip" json:"root_ip"`
-	Root_port         int32             `bson:"root_port" json:"root_port"`
-	Connection_token  string            `bson:"connection_token" json:"connection_token"`
-	Clusters          []string          `bson:"clusters" json:"clusters"`
-	Created_on        time.Time         `bson:"created_on" json:"created_on"`
-	Last_accessed     time.Time         `bson:"last_accessed" json:"last_accessed"`
+	Uid					string			`bson:"uid" json:"uid"`
+	NetworkName			string			`bson:"network_name" json:"network_name"`
+	OwnerName			string			`bson:"owner_name" json:"owner_name"`
+	Managers			[]string		`bson:"managers" json:"managers"`
+	DirectPeers			int32			`bson:"direct_peers" json:"direct_peers"`
+	TotalPeers			int32			`bson:"total_peers" json:"total_peers"`
+	RootAP				string			`bson:"root_ap" json:"root_ap"`
+	RootIP				string			`bson:"root_ip" json:"root_ip"`
+	RootPort			int32			`bson:"root_port" json:"root_port"`
+	ConnectionToken		string			`bson:"connection_token" json:"connection_token"`
+	Clusters			[]string		`bson:"clusters" json:"clusters"`
+	CreatedOn			time.Time		`bson:"created_on" json:"created_on"`
+	LastAccessed		time.Time		`bson:"last_accessed" json:"last_accessed"`
 }
 
 /* **************************************************************************
 ** Users
 ** *************************************************************************/
 type User struct {
-//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
-	Uid               string			`bson:"uid" json:"uid"`
-	Username          string            `bson:"username" json:"username"`
-	First_name        string            `bson:"first_name" json:"first_name"`
-	Last_name         string            `bson:"last_name" json:"last_name"`
-	Email             string            `bson:"email" json:"email"`
-	Organization      string            `bson:"organization" json:"organization"`
-	Networks          []string          `bson:"networks" json:"networks"`
-	Birthdate         time.Time         `bson:"birthdate" json:"birthdate"`
-	Join_date         time.Time         `bson:"join_date" json:"join_date"`
-	Last_login        time.Time         `bson:"last_login" json:"last_login"`
-	Login_attempts    int32             `bson:"login_attempts" json:"login_attempts"`
-	Login_token       string            `bson:"login_token" json:"login_token"`
-	Region            string            `bson:"region" json:"region"`
-	Password          string            `bson:"password" json:"password"`
+	Uid				string			`bson:"uid" json:"uid"`
+	Username		string			`bson:"username" json:"username"`
+	FirstName		string			`bson:"first_name" json:"first_name"`
+	LastName		string			`bson:"last_name" json:"last_name"`
+	Email			string			`bson:"email" json:"email"`
+	Organization	string			`bson:"organization" json:"organization"`
+	Networks[]		string			`bson:"networks" json:"networks"`
+	Birthdate		time.Time		`bson:"birthdate" json:"birthdate"`
+	JoinDate		time.Time		`bson:"join_date" json:"join_date"`
+	LastLogin		time.Time		`bson:"last_login" json:"last_login"`
+	LoginAttempts	int32			`bson:"login_attempts" json:"login_attempts"`
+	LoginToken		string			`bson:"login_token" json:"login_token"`
+	Region			string			`bson:"region" json:"region"`
+	Password		string			`bson:"password" json:"password"`
 }
 
 /* **************************************************************************
 ** Nodes
 ** *************************************************************************/
 type Node struct {
-//	ID                objectid.ObjectID	`bson:"_id,omitempty" json:"_id,omitempty"`
 	Uid						string			  `bson:"uid" json:"uid"`
-	Serial_number			string            `bson:"serial_number" json:"serial_number"`
+	SerialNumber			string            `bson:"serial_number" json:"serial_number"`
 	Type					string            `bson:"type" json:"type"`
-	Registered_timestamp	time.Time         `bson:"registered_timestamp" json:"registered_timestamp"`
-	Registered_to			string            `bson:"registered_to" json:"registered_to"`
-	Connected_network		string            `bson:"connected_network" json:"connected_network"`
-	Data_token				string            `bson:"data_token" json:"data_token"`
+	RegisteredTimestamp		time.Time         `bson:"registered_timestamp" json:"registered_timestamp"`
+	RegisteredTo			string            `bson:"registered_to" json:"registered_to"`
+	ConnectedNetwork		string            `bson:"connected_network" json:"connected_network"`
+	DataToken				string            `bson:"data_token" json:"data_token"`
 }
 
 
