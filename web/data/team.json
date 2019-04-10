@@ -6,7 +6,7 @@
     "links": {
         "linkedin": "https://www.linkedin.com/in/vpiscitello/",
         "github": "https://github.com/vpiscitello",
-        "email": "v.piscitello@piscitellodesigns.com"
+        "email": "mailto:v.piscitello@piscitellodesigns.com"
     }
 }, {
     "name": "Terri Hewitt",
@@ -16,7 +16,7 @@
     "links": {
         "linkedin": "https://www.linkedin.com/in/terrihewitt/",
         "github": "https://github.com/terri-hewitt",
-        "email": "hewittt@oregonstate.edu"
+        "email": "mailto:hewittt@oregonstate.edu"
     }
 }, {
     "name": "Sean Caster",
@@ -26,7 +26,7 @@
     "links": {
         "linkedin": "https://www.brypt.com/this-person-likes-maintaining-security",
         "github": "https://github.com/Swarles-Barkley",
-        "email": "casters@oregonstate.edu"
+        "email": "mailto:casters@oregonstate.edu"
     }
 }, {
     "name": "Adam Barton",
@@ -36,7 +36,7 @@
     "links": {
         "linkedin": "https://www.linkedin.com/in/adam-barton-a43151133/",
         "github": "https://github.com/Stygain",
-        "email": "bartonad@oregonstate.edu"
+        "email": "mailto:bartonad@oregonstate.edu"
     }
 }, {
     "name": "Ryan Howerton",
@@ -46,6 +46,6 @@
     "links": {
         "linkedin": "https://www.linkedin.com/in/ryan-howerton-301184bb/",
         "github": "https://github.com/rthowerton",
-        "email": "howertor@oregonstate.edu"
+        "email": "mailto:howertor@oregonstate.edu"
     }
 }]
