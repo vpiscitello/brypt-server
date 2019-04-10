@@ -24,7 +24,8 @@ type Resources struct{}
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base bridge page
+	r.Get( "/", rs.Index )	// Implemetation of base bridge page
+	// r.Get( "/", access.CheckAuth( rs.Index ) )	// Implemetation of base bridge page
 	r.Post( "/node", access.CheckAuth( rs.RegisterNode ) )	// Register a node in the user's network
 	r.Get( "/network", access.CheckAuth( rs.GetNetworkInfo ) )	// Get the nodes within a user's network
 
@@ -59,7 +60,7 @@ func (rs Resources) Index(w http.ResponseWriter, r *http.Request) {
 func (rs Resources) RegisterNode(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set( "Content-Type", "text/html" )
-	w.Write( []byte( "Registered Node" ) )
+	w.Write( []byte( "This feature is not yet available" ) )
 
 }
 
@@ -74,7 +75,8 @@ func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 	// Parse which network based on user cookie
 
 	networkSearchCTX := make( map[string]interface{} )
-	networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
+	// networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
+	networkSearchCTX["network_name"] = bson.A{"brypt-alpha"}
 
 	networkObject := db.Network{}
 

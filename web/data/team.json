@@ -1,51 +1,51 @@
 [{
     "name": "Vincenzo Piscitello",
-    "image": "",
+    "image": "https://www.brypt.com/assets/faces/vincenzo.jpg",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
-        "linkedin": "https://linkedin.com",
-        "github": "https://github.com",
-        "email": ""
-    }
-}, {
-    "name": "Sean Caster",
-    "image": "",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "links": {
-        "linkedin": "https://linkedin.com",
-        "github": "https://github.com",
-        "email": ""
+        "linkedin": "https://www.linkedin.com/in/vpiscitello/",
+        "github": "https://github.com/vpiscitello",
+        "email": "v.piscitello@piscitellodesigns.com"
     }
 }, {
     "name": "Terri Hewitt",
-    "image": "",
+    "image": "https://www.brypt.com/assets/faces/terri.jpg",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
-        "linkedin": "https://linkedin.com",
-        "github": "https://github.com",
-        "email": ""
+        "linkedin": "https://www.linkedin.com/in/terrihewitt/",
+        "github": "https://github.com/terri-hewitt",
+        "email": "hewittt@oregonstate.edu"
+    }
+}, {
+    "name": "Sean Caster",
+    "image": "https://www.brypt.com/assets/faces/sean.jpg",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "links": {
+        "linkedin": "https://www.brypt.com/this-person-likes-maintaining-security",
+        "github": "https://github.com/Swarles-Barkley",
+        "email": "casters@oregonstate.edu"
     }
 }, {
     "name": "Adam Barton",
-    "image": "",
+    "image": "https://www.brypt.com/assets/faces/adam.jpg",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
-        "linkedin": "https://linkedin.com",
-        "github": "https://github.com",
-        "email": ""
+        "linkedin": "https://www.linkedin.com/in/adam-barton-a43151133/",
+        "github": "https://github.com/Stygain",
+        "email": "bartonad@oregonstate.edu"
     }
 }, {
     "name": "Ryan Howerton",
-    "image": "",
+    "image": "https://www.brypt.com/assets/faces/ryan.jpg",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
     "links": {
-        "linkedin": "https://linkedin.com",
-        "github": "https://github.com",
-        "email": ""
+        "linkedin": "https://www.linkedin.com/in/ryan-howerton-301184bb/",
+        "github": "https://github.com/rthowerton",
+        "email": "howertor@oregonstate.edu"
     }
 }]

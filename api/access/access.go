@@ -116,7 +116,7 @@ func identifyUser(w http.ResponseWriter, username string, password string) (db.U
 func (rs Resources) Routes() chi.Router {
 	r := chi.NewRouter()
 
-	r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
+	// r.Get( "/", rs.Index )	// Implemetation of base access page which will support login and registration actions
 	r.Post( "/login", rs.Login )		// Post request for user login
 	r.Post( "/register", rs.Register )	// Post request for registering an account
 	r.Post( "/link", rs.Link )	// Post request for linking a device to a user account
@@ -242,9 +242,8 @@ func (rs Resources) Register(w http.ResponseWriter, r *http.Request) {
 	userCTX["region"] = regCTX["region"]
 	userCTX["first_name"] = regCTX["first_name"]
 	userCTX["last_name"] = regCTX["last_name"]
-	//userCTX["birthdate"] = regCTX["Birthday"]
 	userCTX["email"] = regCTX["email"]
-	//userCTX["join_date"] = regCTX["time_registered"]
+	userCTX["join_date"] = time.Now()
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(regCTX["password"].(string)), 0)
 	if err != nil {
