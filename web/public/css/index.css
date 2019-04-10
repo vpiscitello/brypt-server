@@ -391,7 +391,7 @@ h3::after {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    width: 340px;
+    width: 380px;
     height: 85px;
     margin: 42px 24px 0 0;
     border-radius: 12px;
@@ -399,10 +399,10 @@ h3::after {
 }
 
 .tm-card .header {
-    flex: 0 0 65px;
+    flex: 0 0 85px;
     position: relative;
     height: 100%;
-    width: 65px;
+    width: 85px;
     overflow: hidden;
     background: #ababab;
     border-top-left-radius: 12px;
@@ -415,14 +415,14 @@ h3::after {
 }
 
 .tm-card .content {
-    flex: 0 0 275px;
+    flex: 0 0 295px;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     height: 100%;
-    width: 275px;
+    width: 295px;
     padding: 4px 12px 8px 12px;
 }
 

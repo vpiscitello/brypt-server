@@ -1,8 +1,8 @@
 [{
     "name": "Vincenzo Piscitello",
     "image": "https://www.brypt.com/assets/faces/vincenzo.jpg",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description": "Software Engineer and Team Lead of the Brypt project. Designing and developing the application, network, and threading mechanisms.",
+    "description_long": "",
     "links": {
         "linkedin": "https://www.linkedin.com/in/vpiscitello/",
         "github": "https://github.com/vpiscitello",
@@ -11,8 +11,8 @@
 }, {
     "name": "Terri Hewitt",
     "image": "https://www.brypt.com/assets/faces/terri.jpg",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description": "Security Engineer focused in developing the database and network security of the Brypt ecosystem.",
+    "description_long": "",
     "links": {
         "linkedin": "https://www.linkedin.com/in/terrihewitt/",
         "github": "https://github.com/terri-hewitt",
@@ -21,8 +21,8 @@
 }, {
     "name": "Sean Caster",
     "image": "https://www.brypt.com/assets/faces/sean.jpg",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description": "Security Engineer working on creating the cryptosystems deployed in the Brypt network.",
+    "description_long": "",
     "links": {
         "linkedin": "https://www.brypt.com/this-person-likes-maintaining-security",
         "github": "https://github.com/Swarles-Barkley",
@@ -31,8 +31,8 @@
 }, {
     "name": "Adam Barton",
     "image": "https://www.brypt.com/assets/faces/adam.jpg",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description": "Software Engineer developing the Brypt communication structure and connection methods of embedded Wi-Fi nodes.",
+    "description_long": "",
     "links": {
         "linkedin": "https://www.linkedin.com/in/adam-barton-a43151133/",
         "github": "https://github.com/Stygain",
@@ -41,8 +41,8 @@
 }, {
     "name": "Ryan Howerton",
     "image": "https://www.brypt.com/assets/faces/ryan.jpg",
-    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
-    "description_long": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor dolore magna aliqua.",
+    "description": "Software Engineer handling the system administration and LoRa transmission scheme of Brypt base-stations.",
+    "description_long": "",
     "links": {
         "linkedin": "https://www.linkedin.com/in/ryan-howerton-301184bb/",
         "github": "https://github.com/rthowerton",
