@@ -176,11 +176,11 @@ h3::after {
     background: linear-gradient(to top right, #E6E9F0 0%, #F4F7F8 100%);
 }
 
-.out .btn:last-child a {
+/* .out .btn:last-child a {
     justify-content: center;
     color: rgba(26, 204, 148, 1);
     background: linear-gradient(to top right, #2D383C 0%, #3c4a4f 100%);
-}
+} */
 
 .out .btn:first-child a::after {
     content: "\f105";
