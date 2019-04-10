@@ -161,10 +161,8 @@ func baseRouter() chi.Router {
         http.Redirect( w, r, "https://" + configuration.Server.DashboardDomain + redirectURI, http.StatusMovedPermanently )
     })
 
-    router.Get( "/about", base.RenderAbout )
-
-    router.Get( "/contact", base.RenderContact )
-
+    // router.Get( "/about", base.RenderAbout )
+    // router.Get( "/contact", base.RenderContact )
     router.Get( "/policy", base.RenderPolicy )
 
     router.Get( "/", renderIndex )
