@@ -75,8 +75,7 @@ func (rs Resources) GetNetworkInfo(w http.ResponseWriter, r *http.Request) {
 	// Parse which network based on user cookie
 
 	networkSearchCTX := make( map[string]interface{} )
-	// networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
-	networkSearchCTX["network_name"] = bson.M{"network_name": "brypt-alpha"}
+	networkSearchCTX["managers"] = bson.D{{"$all", bson.A{"5c60b34fe25f5a42f00c4569"}}}
 
 	networkObject := db.Network{}
 
